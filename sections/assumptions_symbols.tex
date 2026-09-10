@@ -1,19 +1,43 @@
 \section{模型假设与符号说明}
 
+
 \subsection{模型假设}
-只列出对模型结论有实际影响且能够辩护的假设，并说明每条假设的作用。
+
+以下假设为全题默认沿用，除非某问明确改口：
+
+\begin{enumerate}
+  \item 微网须满足小区负载，不向外网售电（购电量非负），光伏过剩允许弃光。
+  \item 储能容量为 $12000$ kWh，运行窗口为 $[1200,10800]$ kWh，充放电效率均为 $\eta=0.9$。
+  \item 「最大充放电功率 $5000$ kW」指储能与微网接口（PCS）的功率，而非电池内部电量变化速率：充电时微网侧最多取电 $5000$ kW、电池侧电量最多增加 $5000\times0.9=4500$ kW；放电时微网侧最多供电 $5000$ kW、电池侧最多放出 $5000/0.9\approx 5555.56$ kW。
+  \item $c_t$、$d_t$ 记电池侧电量；微网侧充电取电 $c_t/\eta$，放电供电 $\eta d_t$。表 2 的充放电量按电池侧汇总。
+  \item 附件中的时刻为时段终点：$00{:}10$ 表示 $00{:}00$--$00{:}10$，$0{:}00{+}1$ 表示当天 $24{:}00$；时段长 $\Delta t=10$ min $=1/6$ h，电量 $=$ 功率 $\times\Delta t$。
+  \item $2025$ 年 $1$ 月 $1$ 日 $0{:}00$ 储电量为 $6000$ kWh；问题一再加日闭环 $E_0=E_{24}=6000$。
+  \item 当 $\eta<1$ 时最优解一般不同时充放，故不引入 0--1 变量。
+  \item 求解优先采用线性规划（PuLP + CBC），不以遗传算法作为正式基线。
+\end{enumerate}
 
 \subsection{符号说明}
+
 \begin{table}[htbp]
   \centering
   \caption{主要符号及其含义}
   \label{tab:symbols}
-  \begin{tabularx}{0.9\textwidth}{>{\centering\arraybackslash}p{0.22\textwidth}X>{\centering\arraybackslash}p{0.18\textwidth}}
+  \begin{tabular}{@{}lll@{}}
     \toprule
     符号 & 含义 & 单位 \\
     \midrule
-    $x$ & 在此填写变量含义 & 在此填写 \\
-    $D$ & 在此填写参数含义 & 在此填写 \\
+    $\Delta t$ & 时段长度，$1/6$ & h \\
+    $\pi_t$ & 时段 $t$ 电价 & 元/kWh \\
+    $P^{\mathrm{load}}_t$ & 小区负载功率 & kW \\
+    $P^{\mathrm{pv}}_t$ & 光伏功率（问题一为预测值） & kW \\
+    $G_t$ & 计划购电量 & kWh \\
+    $c_t$ & 电池侧充电量 & kWh \\
+    $d_t$ & 电池侧放电量 & kWh \\
+    $w_t$ & 弃光量 & kWh \\
+    $E_t$ & 时段末储电量 & kWh \\
+    $\eta$ & 充/放电效率，$0.9$ & — \\
+    $P_{\max}$ & 接口最大充放电功率，$5000$ & kW \\
     \bottomrule
-  \end{tabularx}
+  \end{tabular}
 \end{table}
+
