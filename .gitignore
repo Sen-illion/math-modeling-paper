@@ -1,0 +1,42 @@
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.nav
+*.snm
+*.vrb
+*.xdv
+*.idx
+*.ilg
+*.ind
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+*.listing
+_minted*
+
+# Compiled PDF at repo root (keep figure PDFs)
+/*.pdf
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+~$*
+.vscode/
+.idea/
