@@ -1,0 +1,32 @@
+name: Sync to Overleaf
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: sync-overleaf
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to Overleaf
+        env:
+          OVERLEAF_GIT_TOKEN: ${{ secrets.OVERLEAF_GIT_TOKEN }}
+          OVERLEAF_PROJECT_ID: 6aa2ba5273a91613909bba9f
+        run: |
+          set -euo pipefail
+          if [ -z "${OVERLEAF_GIT_TOKEN}" ]; then
+            echo "Missing GitHub secret OVERLEAF_GIT_TOKEN"
+            exit 1
+          fi
+          echo "::add-mask::${OVERLEAF_GIT_TOKEN}"
+          git push "https://git:${OVERLEAF_GIT_TOKEN}@git.overleaf.com/${OVERLEAF_PROJECT_ID}" "HEAD:refs/heads/main"

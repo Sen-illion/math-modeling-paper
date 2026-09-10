@@ -2,9 +2,7 @@
 
 ## 1. 同步到 Overleaf
 
-优先使用 GitHub 导入：Overleaf → **New Project → Import from GitHub** → 选择 `math-modeling-paper`。确保 `cumcmthesis.cls` 与 `main.tex` 位于同一级目录。
-
-若未开通 GitHub 同步，可将本仓库打成 zip 后用 **Upload Project** 上传。
+克隆本仓库后，用 Cursor / Codex 打开根目录（`main.tex` 与 `cumcmthesis.cls` 必须在同一级）。改完推送到 GitHub 的 `main`，Action 会同步到 Overleaf。不要在 Overleaf 网页改正文。
 
 ## 2. 设置编译器
 

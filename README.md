@@ -2,14 +2,23 @@
 
 本仓库是 Overleaf 论文源码根目录，基于 `cumcmthesis` 模板整理。`main.tex` 与 `cumcmthesis.cls` 必须位于同一级。
 
-## 连接到 Overleaf
+## 写作与 Overleaf 同步
 
-1. 打开 [Overleaf](https://www.overleaf.com)，确认账号已绑定 GitHub。
-2. **New Project → Import from GitHub**，选择本仓库 `math-modeling-paper`。
-3. 在项目 **Menu** 中将 Compiler 设为 **XeLaTeX**，主文件选 `main.tex`。
-4. 之后用项目左侧 **Integrations → GitHub** 进行推送和拉取。
+论文只在本仓库修改。推送到 `main` 后，GitHub Action 会同步到 Overleaf 网页。不要改建模仓库里的 `paper/`。
 
-GitHub 同步需要 Overleaf 付费计划。若暂不可用，也可把本仓库打成 zip 后用 **Upload Project** 导入。
+队员：
+
+1. 向仓库所有者申请本仓库的 **Write** 权限。
+2. `git clone https://github.com/Sen-illion/math-modeling-paper.git`
+3. 用 Cursor / Codex 打开这个文件夹，只改 `.tex`，不要在 Overleaf 网页改正文。
+4. 提交后只推 GitHub：`git pull --rebase`，然后 `git push origin main`。
+
+仓库所有者：
+
+1. Overleaf **Account Settings → Git Integration** 生成 token。
+2. GitHub 仓库 **Settings → Secrets and variables → Actions** 新增 `OVERLEAF_GIT_TOKEN`。
+3. 把队员加成 GitHub Write 协作者；Overleaf 项目加成 Viewer，仅用于看 PDF。
+4. 网页端只编译、不改正文。同一时间不要两人改同一个文件。
 
 ## 入口文件
 
