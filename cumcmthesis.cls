@@ -6,17 +6,19 @@
 \newif\if@mcm@preface\@mcm@prefacetrue
 % tokens definition
 %%%% 承诺书
-\newcommand\mcm@tokens@keywords{}
-\newcommand*\mcm@tokens@tihao{}
-\newcommand*\mcm@tokens@baominghao{}
-\newcommand*\mcm@tokens@schoolname{}
-\newcommand*\mcm@tokens@membera{}
-\newcommand*\mcm@tokens@memberb{}
-\newcommand*\mcm@tokens@memberc{}
-\newcommand*\mcm@tokens@supervisor{}
-\newcommand*\mcm@tokens@yearinput{}
-\newcommand*\mcm@tokens@monthinput{}
-\newcommand*\mcm@tokens@dayinput{}
+
+%\newcommand\mcm@tokens@keywords{}
+%\newcommand*\mcm@tokens@tihao{}
+%\newcommand*\mcm@tokens@baominghao{}
+%\newcommand*\mcm@tokens@schoolname{}
+%\newcommand*\mcm@tokens@membera{}
+%\newcommand*\mcm@tokens@memberb{}
+%\newcommand*\mcm@tokens@memberc{}
+%\newcommand*\mcm@tokens@supervisor{}
+%\newcommand*\mcm@tokens@yearinput{}
+%\newcommand*\mcm@tokens@monthinput{}
+%\newcommand*\mcm@tokens@dayinput{}
+
 %%%% 编号专用页
 % 没有
 %% Declaration of Options

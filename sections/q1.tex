@@ -1,144 +1,222 @@
-\section{问题一：确定性模型}
+\section{问题一：确定性日前购电计划}
 
 \subsection{问题分析}
 
-问题一要求在已知当天电价、小区负载与光伏发电预测功率的条件下，于每天 $0{:}00$ 制定微网当天的计划购电策略：微网供给不低于小区负载，储能设备在 $0{:}00$ 与 $24{:}00$ 的储电量相同，并最小化全天购电费用。这是一个单日、确定性、多时段的能量调度问题，可建模为线性规划（LP）：所有输入均为已知常数，储能只受容量、接口功率与效率约束，不含预测误差与紧急购电，因此存在唯一的全局最优解。
+本题要求根据附件 1 给出的某典型日全天电价、小区负荷与光伏发电预测功率，以及附录 1 给出的储能设备参数，制定使全天计划购电费最小的购电与储能充放电计划：微电网供电不得低于小区负荷、不得向外网售电，且储能设备在 0:00 与 24:00 的电量相等。
 
-按附件口径，一天被划分为 $N=144$ 个等长时段，$\Delta t=1/6$ 小时；认为附件中的时刻为时段起点，即 $00{:}10$ 表示 $00{:}10$--$00{:}20$，$0{:}00{+}1$ 表示次日 $0{:}00$--$0{:}10$。
+第一问已经给出决策变量与硬约束，属于确定性规划问题，无需先做冗长的探索性数据分析，只需先明确口径与可行域，再直接建立优化模型。三条口径如下。
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{时段与电量}：全天划分为 $144$ 个 $10\,\mathrm{min}$ 时段，$\Delta t=1/6\,\mathrm{h}$，电量（$\mathrm{kWh}$）=功率（$\mathrm{kW}$）$\times\Delta t$。附件时刻为时段起点，$00{:}10$ 表示 $00{:}10$--$00{:}20$，$0{:}00{+}1$ 表示次日 $00{:}00$--$00{:}10$；将附件电价循环对齐到日历日 $00{:}00$--$24{:}00$ 后建模。
+  \item \textbf{功率上限的位置}：附录 1 中“最大充放电功率 5000\,kW”指储能与微网接口（PCS）功率，而非电池内部能量变化率。充电时微网侧最多取电 $5000\,\mathrm{kW}$，电池侧最多增加 $5000\times0.9=4500\,\mathrm{kW}$；放电时微网侧最多获得 $5000\,\mathrm{kW}$，电池侧最多放出 $5000/0.9\approx5555.6\,\mathrm{kW}$。因此 $c_t$、$d_t$ 记电池侧电量，功率约束写作 $c_t/\eta\le5000\Delta t$、$\eta d_t\le5000\Delta t$。
+  \item \textbf{不可售电、允许弃光}：购电量 $G_t\ge0$；光伏过剩时允许弃光 $w_t\ge0$。
+\end{enumerate}
+
+方法选择：目标函数与全部约束均为线性，且充放电效率 $\eta=0.9<1$ 时同时充放电必然产生额外损耗而非最优，故无需引入 0-1 变量区分充放电状态；采用线性规划即可在短时间内求得全局最优，相比遗传算法等启发式无需调参且解有最优性保证。本文使用 PuLP 建模、CBC 求解器求解。
 
 \subsection{模型建立}
 
-\subsubsection{决策变量与参数}
-
-对第 $t$ 个时段（$t=1,\dots,144$）定义决策变量：
-\begin{itemize}
-  \item $G_t$：计划购电量（kWh）；
-  \item $c_t$、$d_t$：电池侧充电量、放电量（kWh）；
-  \item $w_t$：弃光电量（kWh）；
-  \item $E_t$：时段末储电量（kWh）。
-\end{itemize}
-模型参数：$\pi_t$ 为电价（元/kWh），$P^{\mathrm{load}}_t$ 为小区负载功率（kW），$P^{\mathrm{pv}}_t$ 为光伏发电预测功率（kW），$\eta=0.9$ 为储能充放电效率，$E_{\min}=1200$、$E_{\max}=10800$（kWh）为储电量上下限，$E_0=6000$ kWh 为 $0{:}00$ 初始储电量，$P_{\max}=5000$ kW 为微网接口最大充放电功率。
-
 \subsubsection{目标函数}
 
-以全天计划购电费用最小为目标：
+本节所用符号（与全文符号表一致）：$\pi_t$ 为时段 $t$ 电价（元/kWh），$P_t^{\mathrm{load}}$、$P_t^{\mathrm{pv}}$ 分别为小区负荷与光伏预测功率（kW），$G_t,c_t,d_t,w_t,E_t$ 分别为计划购电量、电池侧充电量、电池侧放电量、弃光量与时段末储电量（kWh），$\eta=0.9$ 为充放电效率，$P_{\max}=5000\,\mathrm{kW}$ 为接口最大充放电功率。
+
+对时段 $t=1,\ldots,144$，决策变量 $G_t,c_t,d_t,w_t,E_t\ge0$。目标为最小化全天购电费
 \begin{equation}
-\min \sum_{t=1}^{144}\pi_t G_t \label{eq:q1_obj}
+\min \sum_{t=1}^{144}\pi_t G_t.
 \end{equation}
 
 \subsubsection{约束条件}
 
-\begin{enumerate}
-  \item 电量平衡。每个时段外网购电、光伏发电与储能放电共同满足负载、储能充电与弃光：
-  \begin{equation}
-  G_t+P^{\mathrm{pv}}_t\Delta t+\eta d_t
-  =P^{\mathrm{load}}_t\Delta t+\frac{c_t}{\eta}+w_t,\quad t=1,\dots,144 \label{eq:q1_balance}
-  \end{equation}
-  \item 储电量递推与日闭环。$E_0=E_{144}=6000$ 保证 $0{:}00$ 与 $24{:}00$ 储电量相同：
-  \begin{equation}
-  E_t=E_{t-1}+c_t-d_t,\qquad E_0=E_{144}=6000 \label{eq:q1_soc}
-  \end{equation}
-  \item 储电量范围，防止过充与过放：
-  \begin{equation}
-  E_{\min}\le E_t\le E_{\max} \label{eq:q1_soc_range}
-  \end{equation}
-  \item 微网接口功率上限。电池侧充电时交流侧取电 $c_t/\eta$，放电时交流侧供电 $\eta d_t$，二者均不得超过接口额定功率 $P_{\max}$：
-  \begin{equation}
-  0\le\frac{c_t}{\eta}\le P_{\max}\Delta t,\qquad
-  0\le\eta d_t\le P_{\max}\Delta t \label{eq:q1_power}
-  \end{equation}
-  \item 非负约束：
-  \begin{equation}
-  G_t\ge 0,\quad c_t\ge 0,\quad d_t\ge 0,\quad w_t\ge 0 \label{eq:q1_nonneg}
-  \end{equation}
-\end{enumerate}
+\textbf{（1）时段电量平衡约束。} 每个时段的外网购电量、光伏发电量与储能有效放电量，应等于负载用电量、储能充电取电量及弃电量之和：
+\begin{equation}
+G_t+P_t^{\mathrm{pv}}\Delta t+\eta d_t=P_t^{\mathrm{load}}\Delta t+\frac{c_t}{\eta}+w_t,\qquad t=1,\dots,144,
+\end{equation}
 
-由式~\eqref{eq:q1_soc} 结合 $E_0=E_{144}$ 可知电池侧全天充放电量相等，即 $\sum_t c_t=\sum_t d_t$；因 $\eta<1$，交流侧放电量小于充电取电量，差额由多购电弥补。由于同一时段同时充放电只会引入效率损耗、增加购电，最优解中不会出现 $c_t d_t>0$。
+该约束统一计入充放电损耗，并保证各时段负载得到满足。
+
+\textbf{（2）储电量状态转移约束。} 相邻时段的储电量满足
+\begin{equation}
+E_t=E_{t-1}+c_t-d_t,
+\qquad t=1,\ldots,144.
+\label{eq:soc_transition}
+\end{equation}
+
+由于充放电量已经按电池侧定义，状态方程不再重复乘除效率系数。
+
+\textbf{（3）储能容量约束。} 为使储能在规定范围内运行，要求
+\begin{equation}
+1200\le E_t\le10800,
+\qquad t=1,\ldots,144.
+\end{equation}
+
+\textbf{（4）日初、日末储电量约束。} 设置
+\begin{equation}
+E_0=E_{144}=6000.
+\label{eq:soc_terminal}
+\end{equation}
+
+对式~\eqref{eq:soc_transition} 在全天求和，可得
+\begin{equation}
+\sum_{t=1}^{144}c_t=\sum_{t=1}^{144}d_t.
+\label{eq:daily_energy_balance}
+\end{equation}
+
+式~\eqref{eq:daily_energy_balance} 表示电池侧全天充放电量相等；微网侧的充电取电量与放电供电量仍存在损耗差额。
+
+\textbf{（5）接口充放电功率约束。} 5000 kW上限作用于微网接口，因此有
+\begin{equation}
+0\le\frac{c_t}{\eta}\le P_{\max}\Delta t,
+\qquad
+0\le\eta d_t\le P_{\max}\Delta t.
+\end{equation}
+
+代入参数后，等价的电池侧时段电量上限为
+\begin{equation}
+0\le c_t\le750,
+\qquad
+0\le d_t\le925.9259.
+\end{equation}
+
+上述上限单位为kWh/时段，不能将接口功率上限直接用于电池内部储电量变化率。
+
+\textbf{（6）非负约束。} 购电量与弃电量满足
+\begin{equation}
+G_t\ge0,\qquad w_t\ge0.
+\end{equation}
+
+\subsection{模型求解}
+
+本模型的目标函数及约束均为决策变量的线性表达式，因此采用线性规划方法，对全天144个时段的购电与储能调度进行联合优化。具体求解步骤如下。
+
+\textbf{4.1 模型的矩阵化表示}
+
+将全天各时段的购电量、充电量、放电量、弃电量和储电量按类别排列，构成决策变量向量
+
+\[
+\boldsymbol{x}=
+(G_1,\ldots,G_{144},c_1,\ldots,c_{144},d_1,\ldots,d_{144},w_1,\ldots,w_{144},E_1,\ldots,E_{144})^{\mathsf T}.
+\]
+
+为便于统一求解，将前述各项约束整理为线性规划的标准矩阵形式：
+
+\[
+\begin{aligned}
+\min_{\boldsymbol{x}}\quad &\boldsymbol{p}^{\mathsf T}\boldsymbol{x},\\
+\text{s.t.}\quad
+&A_{\mathrm{eq}}\boldsymbol{x}=\boldsymbol{b}_{\mathrm{eq}},\\
+&A_{\mathrm{ub}}\boldsymbol{x}\le\boldsymbol{b}_{\mathrm{ub}},\\
+&\boldsymbol{\ell}\le\boldsymbol{x}\le\boldsymbol{u}.
+\end{aligned}
+\]
+
+其中，$\boldsymbol{p}$ 为目标函数的系数向量。购电变量 $G_t$ 对应的系数为各时段电价 $\pi_t$；其余变量不直接产生购电费用，因此对应系数为零。
+
+$A_{\mathrm{eq}}$ 为等式约束的系数矩阵，$\boldsymbol{b}_{\mathrm{eq}}$ 为相应的已知量向量，二者共同表示各时段的电量平衡、储电量递推以及日末储电量要求；$A_{\mathrm{ub}}$ 和 $\boldsymbol{b}_{\mathrm{ub}}$ 分别为不等式约束的系数矩阵和上界向量，用于表示接口充放电功率等限制；$\boldsymbol{\ell}$ 和 $\boldsymbol{u}$ 分别表示各决策变量的下界和上界。
+
+通过上述矩阵化处理，可将原有各项约束统一表示为标准线性规划形式；同时，储电量递推关系将相邻时段联结起来，从而实现全天 144 个时段的联合优化。
+
+\textbf{4.2 CBC求解与跨时段联合优化}
+
+在线性约束确定的可行域内，以全天购电费用最小为目标，采用 \textbf{CBC 求解器}对所建立的线性规划模型进行求解，联合确定各时段的购电量、充放电量及储电量轨迹。通过储电量递推关系，将当前充放电决策与后续可用电量相联系，从而综合考虑电价变化、光伏出力和负载缺口，在满足充放电效率、接口功率、储能容量及日末储电量要求的条件下，确定全天电量转移方案。
+
+求解器返回最优状态后，得到最优决策向量 $\boldsymbol{x}^{*}$，对应的最小购电费用为
+
+\[
+C^{*}=\sum_{t=1}^{144}\pi_t G_t^{*}.
+\]
+
+由于模型的目标函数和约束均为线性形式，该最优解为给定数据及约束条件下的全局最优解，由此形成全天144个时段的最优购电与储能调度方案。
 
 \subsection{模型求解与结果}
 
-模型为连续线性规划，使用 PuLP 调用 CBC 求解器，共 $5\times144=720$ 个连续变量与 $6\times144$ 个线性约束，求解器在秒级返回全局最优解（状态 Optimal）。当天负荷总电量为 $111024.81$ kWh，光伏总电量为 $55482.84$ kWh，净缺口为 $55541.97$ kWh。
-
-最优策略下，全天计划购电量为 $59482.70$ kWh，全天购电费用为 $35126.95$ 元，$0{:}00$ 与 $24{:}00$ 储电量均为 $6000$ kWh，弃光为 $0$，接口最大充电功率达到 $5000$ kW、最大放电功率为 $4293.92$ kW。表~\ref{tab:q1_purchase} 给出题目指定时段的购电量及全天购电量和购电费，表~\ref{tab:q1_storage} 给出储能按 4 小时聚合的充放电量及起止储电量（表~\ref{tab:q1_storage} 中的充放电量为电池侧电量）。
+将附件 1 清洗并对齐时段后代入上述线性规划，模型共 $144$ 个时段、$720$ 个连续变量与约 $720$ 个约束，使用 PuLP 调用 CBC 求解器，$0.16\,\mathrm{s}$ 内返回 Optimal。主要结果为：全天计划购电量 $59482.70\,\mathrm{kWh}$，全天购电费 $35126.85$ 元；电池侧全天充电 $18666.60\,\mathrm{kWh}$、放电 $18666.60\,\mathrm{kWh}$（满足日闭环），弃光为 $0$；$0{:}00$ 与 $24{:}00$ 储电量均为 $6000\,\mathrm{kWh}$；接口最大充电功率触达 $5000\,\mathrm{kW}$，最大放电功率为 $4293.92\,\mathrm{kW}$（未触上限）。
 
 \begin{table}[htbp]
   \centering
-  \caption{问题一：指定时段购电量及全天购电量和购电费}
+  \caption{指定时段的计划购电量及全天购电量、购电费}
   \label{tab:q1_purchase}
-  \makebox[\textwidth][c]{\begin{tabularx}{1.08\textwidth}{>{\centering\arraybackslash}X>{\centering\arraybackslash}X|>{\centering\arraybackslash}X>{\centering\arraybackslash}X}
+  \begin{tabular}{lc}
     \toprule
-    时间段 & 购电量(kWh) & 时间段 & 购电量(kWh) \\
+    时间段 & 计划购电量（kWh）\\
     \midrule
-    10:00--10:10 & 0.00 & 16:00--16:10 & 445.43 \\
-    12:00--12:10 & 480.41 & 18:00--18:10 & 531.89 \\
-    14:00--14:10 & 0.00 & 20:00--20:10 & 0.00 \\
+    10:00--10:10 & 0.00\\
+    12:00--12:10 & 486.40\\
+    14:00--14:10 & 0.00\\
+    16:00--16:10 & 394.93\\
+    18:00--18:10 & 636.98\\
+    20:00--20:10 & 0.00\\
     \midrule
-    \multicolumn{2}{c|}{全天购电量(kWh)} & \multicolumn{2}{c}{59482.70} \\
-    \multicolumn{2}{c|}{全天购电费(元)} & \multicolumn{2}{c}{35126.95} \\
+    全天购电量（kWh） & 59482.70\\
+    全天购电费（元） & 35126.85\\
     \bottomrule
-  \end{tabularx}}
+  \end{tabular}
 \end{table}
+
+由表~\ref{tab:q1_purchase} 可见：10:00 与 14:00 两个正午时段的购电量为 0，是因为此时光伏出力高于负荷，负荷由光伏覆盖、富余电量存入电池；20:00 购电量为 0，是因为晚高峰负荷由电池放电覆盖。12:00 购电 $486.40\,\mathrm{kWh}$ 并非净负荷缺口，而是正午电价（约 $0.44$ 元/kWh）为全天低点，微网在光伏富余之外仍按接口上限额外购电为电池充电，以备晚高峰放电，体现“低价购电、高价放电”。16:00 与 18:00 光伏出力已明显下降而负荷尚未回落，需购电补足净负荷，其中 18:00--18:10 光伏接近停发、购电量最大，为 $636.98\,\mathrm{kWh}$。
 
 \begin{table}[htbp]
   \centering
-  \caption{问题一：储能设备充放电量及起止储电量（电池侧）}
+  \caption{储能设备分时段充放电量与 0:00、24:00 储能量（电池侧）}
   \label{tab:q1_storage}
-  \makebox[\textwidth][c]{\begin{tabularx}{1.08\textwidth}{>{\raggedright\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X}
+  \begin{tabular}{lcc}
     \toprule
-    时间段 & 充电量(kWh) & 放电量(kWh) \\
+    时间段 & 充电量（kWh） & 放电量（kWh）\\
     \midrule
-    0:00--4:00 & 4050.00 & 0.00 \\
-    4:00--8:00 & 750.00 & 7073.16 \\
-    8:00--12:00 & 4309.17 & 1892.22 \\
-    12:00--16:00 & 4757.43 & 101.22 \\
-    16:00--20:00 & 0.00 & 6422.37 \\
-    20:00--24:00 & 4800.00 & 3177.63 \\
+    0:00--4:00 & 4050.00 & 0.00\\
+    4:00--8:00 & 750.00 & 6608.24\\
+    8:00--12:00 & 3559.17 & 2357.13\\
+    12:00--16:00 & 5507.43 & 101.22\\
+    16:00--20:00 & 0.00 & 5631.87\\
+    20:00--24:00 & 4800.00 & 3968.13\\
     \midrule
-    $0{:}00$ 储电量(kWh) & \multicolumn{2}{c}{6000} \\
-    $24{:}00$ 储电量(kWh) & \multicolumn{2}{c}{6000} \\
+    0:00 储能量（kWh） & \multicolumn{2}{c}{6000.00}\\
+    24:00 储能量（kWh） & \multicolumn{2}{c}{6000.00}\\
     \bottomrule
-  \end{tabularx}}
+  \end{tabular}
 \end{table}
 
-图~\ref{fig:q1_price_load_pv} 给出了电价、负载与光伏预测功率曲线，图~\ref{fig:q1_purchase_soc} 给出了最优计划购电量与储电量变化，图~\ref{fig:q1_charge_discharge} 给出了储能电池侧充放电量。电价呈明显的早晚双峰结构，储能利用低价时段充电、高价时段放电，从而平抑净负荷并降低购电费用。
+由表~\ref{tab:q1_storage} 可见：电池充电集中在 0:00--4:00（$4050.00\,\mathrm{kWh}$）、12:00--16:00（$5507.43\,\mathrm{kWh}$）与 20:00--24:00（$4800.00\,\mathrm{kWh}$），对应夜间低价与正午光伏富余时段；放电集中在 4:00--8:00（$6608.24\,\mathrm{kWh}$）与 16:00--20:00（$5631.87\,\mathrm{kWh}$），对应早晚两个电价高峰。全天弃光为 0，说明正午富余光伏被电池全部吸纳；$0{:}00$ 与 $24{:}00$ 储能量均为 $6000\,\mathrm{kWh}$，满足日闭环。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{Q1_fig1_price_load_pv.png}
-  \caption{典型日小区负荷、光伏预测功率与分时电价。}
+  \includegraphics[width=0.7\textwidth]{Q1_price_load_pv.png}
+  \caption{典型日负荷与光伏出力曲线及电价峰谷分布}
   \label{fig:q1_price_load_pv}
 \end{figure}
 
-\begin{figure}[H]
+由图~\ref{fig:q1_price_load_pv} 可见：电价呈“夜间低谷、早晚双峰、正午次低谷”形态，全天最低 $0.3713$ 元/kWh（05:40）、最高 $1.3952$ 元/kWh（20:40）；光伏仅在 05:00--19:00 出力、正午峰值约 $7600\,\mathrm{kW}$；负荷全天 $3300$--$5900\,\mathrm{kW}$、08:00--17:00 维持高位。光伏与电价低点重叠于正午，而电价高峰出现在早晚，为储能“低价充电、高价放电”提供了空间。
+
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{Q1_fig2_purchase_soc.png}
-  \caption{最优策略下的计划购电量与储电量。}
+  \includegraphics[width=0.7\textwidth]{Q1_purchase_soc.png}
+  \caption{计划购电量与储能 SOC 的日内变化}
   \label{fig:q1_purchase_soc}
 \end{figure}
 
-\begin{figure}[H]
+由图~\ref{fig:q1_purchase_soc} 可见：SOC 在夜间与正午两次爬升、在早高峰与晚高峰两次回落，最终回到 $6000\,\mathrm{kWh}$；计划购电在夜间低价与正午低价时段维持高位，在早晚高峰由电池放电顶替而明显下降。
+
+\begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\textwidth]{Q1_fig3_charge_discharge.png}
-  \caption{储能电池侧逐时段充电量与放电量。}
+  \includegraphics[width=0.7\textwidth]{Q1_charge_discharge.png}
+  \caption{电池侧充放电量与电价峰谷反向调度}
   \label{fig:q1_charge_discharge}
 \end{figure}
+
+由图~\ref{fig:q1_charge_discharge} 可见：电池侧充电集中在夜间与正午、放电集中在早晚高峰，与电价峰谷相反，全天充电量与放电量相等，实现削峰填谷。
+
 \subsection{模型检验}
 
-为验证模型有效性，设置两个对照模型：B0（无储能，$G_t=\max(P^{\mathrm{load}}_t-P^{\mathrm{pv}}_t,0)\Delta t$）和 B1（分时贪婪：低价尽量充电、高价尽量放电，再补净负荷）。三种模型的购电费用见表~\ref{tab:q1_baseline}。
+\textbf{可行性校验}：对全部 $144$ 个时段逐段校验电量平衡残差、SOC 落在 $[1200,10800]$、接口充放电功率不超过 $5000\,\mathrm{kW}$、购电/充放电/弃光非负、无同时充放电、$E_0=E_{144}=6000$ 以及购电费 $=\sum_t\pi_t G_t$，在相对容差 $10^{-4}$、绝对容差 $10^{-3}\,\mathrm{kWh}$ 下全部通过。
 
-\begin{table}[htbp]
+\textbf{基线对照}：无储能方案（B0）按净负荷直接购电，购电 $61789.94\,\mathrm{kWh}$、费用 $48052.05$ 元，弃光 $6247.96\,\mathrm{kWh}$；分时贪婪启发式（B1）购电 $62581.85\,\mathrm{kWh}$、费用 $38870.13$ 元。正式方案（M0）费用为 $35126.85$ 元，较 B0 降低 $12925.20$ 元（$-26.90\%$），较 B1 降低 $3743.28$ 元（$-9.63\%$）；无储能时的弃光在加入储能后降为 0，富余光伏被存储利用，说明储能配合线性规划显著节省购电费。
+
+\begin{figure}[H]
   \centering
-  \caption{问题一：模型与基线对照}
-  \label{tab:q1_baseline}
-  \makebox[\textwidth][c]{\begin{tabularx}{1.08\textwidth}{>{\raggedright\arraybackslash}X>{\centering\arraybackslash}X>{\centering\arraybackslash}X}
-    \toprule
-    模型 & 全天购电量(kWh) & 全天购电费(元) \\
-    \midrule
-    B0 无储能 & 61789.94 & 48052.05 \\
-    B1 分时贪婪 & 62708.52 & 38683.83 \\
-    M0 线性规划 & 59482.70 & 35126.95 \\
-    \bottomrule
-  \end{tabularx}}
-\end{table}
+  \includegraphics[width=0.7\textwidth]{Q1_baseline_cost.png}
+  \caption{三种方案的日购电费对比}
+  \label{fig:q1_baseline_cost}
+\end{figure}
 
-M0 的购电费比无储能 B0 降低 $26.90\%$，比分时贪婪 B1 降低 $9.20\%$，且 M0 的购电量也最小、弃光为 $0$，说明储能的峰谷套利能够有效降低购电费用并实现光伏的完全消纳。进一步对最优解做可行性检查：各时段电量平衡残差小于 $10^{-3}$ kWh，储电量始终落在 $[1200,10800]$ kWh 内，$E_0=E_{144}=6000$，接口充放电功率不超过 $5000$ kW，且各时段不存在同时充放电，验证了模型与求解的正确性。
+由图~\ref{fig:q1_baseline_cost} 可见：正式线性规划方案（M0）的日购电费最低，为 $35126.85$ 元，显著优于无储能（B0）与分时贪婪（B1）两种对照。
+
+\textbf{口径敏感性}：若把 5000\,kW 上限误置于电池侧（$c_t,d_t\le5000\Delta t$），费用为 $35101.57$ 元，仅比正式结果低 $25.28$ 元（$0.072\%$），但接口充电峰值将达约 $5556\,\mathrm{kW}$，超过附录“最大充放电功率 5000\,kW”的接口约束；故正式结果采用更严格、与题面一致的接口口径，且购电费对该口径的敏感性很小。
