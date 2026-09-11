@@ -102,27 +102,26 @@
 
 图~\ref{fig:q1_price_load_pv} 给出了电价、负载与光伏预测功率曲线，图~\ref{fig:q1_purchase_soc} 给出了最优计划购电量与储电量变化，图~\ref{fig:q1_charge_discharge} 给出了储能电池侧充放电量。电价呈明显的早晚双峰结构，储能利用低价时段充电、高价时段放电，从而平抑净负荷并降低购电费用。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
-  \includegraphics[width=0.92\textwidth]{Q1_fig1_price_load_pv.png}
+  \includegraphics[width=0.8\textwidth]{Q1_fig1_price_load_pv.png}
   \caption{电价、小区负载与光伏发电预测功率}
   \label{fig:q1_price_load_pv}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
-  \includegraphics[width=0.92\textwidth]{Q1_fig2_purchase_soc.png}
+  \includegraphics[width=0.8\textwidth]{Q1_fig2_purchase_soc.png}
   \caption{最优计划购电量与储电量变化}
   \label{fig:q1_purchase_soc}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
-  \includegraphics[width=0.92\textwidth]{Q1_fig3_charge_discharge.png}
+  \includegraphics[width=0.8\textwidth]{Q1_fig3_charge_discharge.png}
   \caption{储能电池侧充放电量（正为充电、负为放电）}
   \label{fig:q1_charge_discharge}
 \end{figure}
-
 \subsection{模型检验}
 
 为验证模型有效性，设置两个对照模型：B0（无储能，$G_t=\max(P^{\mathrm{load}}_t-P^{\mathrm{pv}}_t,0)\Delta t$）和 B1（分时贪婪：低价尽量充电、高价尽量放电，再补净负荷）。三种模型的购电费用见表~\ref{tab:q1_baseline}。
