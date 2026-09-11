@@ -88,17 +88,15 @@ G_t\ge0,\qquad w_t\ge0.
 
 本模型的目标函数及约束均为决策变量的线性表达式，因此采用线性规划方法，对全天144个时段的购电与储能调度进行联合优化。具体求解步骤如下。
 
-\textbf{4.1 模型的矩阵化表示}
+\sub{4.1 模型的矩阵化表示}
 
 将全天各时段的购电量、充电量、放电量、弃电量和储电量按类别排列，构成决策变量向量
-
 \[
 \boldsymbol{x}=
 (G_1,\ldots,G_{144},c_1,\ldots,c_{144},d_1,\ldots,d_{144},w_1,\ldots,w_{144},E_1,\ldots,E_{144})^{\mathsf T}.
 \]
 
 为便于统一求解，将前述各项约束整理为线性规划的标准矩阵形式：
-
 \[
 \begin{aligned}
 \min_{\boldsymbol{x}}\quad &\boldsymbol{p}^{\mathsf T}\boldsymbol{x},\\
