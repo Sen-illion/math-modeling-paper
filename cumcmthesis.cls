@@ -5,19 +5,18 @@
 \newif\if@mcm@bwprint\@mcm@bwprintfalse
 \newif\if@mcm@preface\@mcm@prefacetrue
 % tokens definition
-%%%% 承诺书
-
-%\newcommand\mcm@tokens@keywords{}
-%\newcommand*\mcm@tokens@tihao{}
-%\newcommand*\mcm@tokens@baominghao{}
-%\newcommand*\mcm@tokens@schoolname{}
-%\newcommand*\mcm@tokens@membera{}
-%\newcommand*\mcm@tokens@memberb{}
-%\newcommand*\mcm@tokens@memberc{}
-%\newcommand*\mcm@tokens@supervisor{}
-%\newcommand*\mcm@tokens@yearinput{}
-%\newcommand*\mcm@tokens@monthinput{}
-%\newcommand*\mcm@tokens@dayinput{}
+%%%% 题目与队伍信息（承诺书页已按要求不输出，这些命令仍给摘要页使用）
+\newcommand\mcm@tokens@keywords{}
+\newcommand*\mcm@tokens@tihao{}
+\newcommand*\mcm@tokens@baominghao{}
+\newcommand*\mcm@tokens@schoolname{}
+\newcommand*\mcm@tokens@membera{}
+\newcommand*\mcm@tokens@memberb{}
+\newcommand*\mcm@tokens@memberc{}
+\newcommand*\mcm@tokens@supervisor{}
+\newcommand*\mcm@tokens@yearinput{}
+\newcommand*\mcm@tokens@monthinput{}
+\newcommand*\mcm@tokens@dayinput{}
 
 %%%% 编号专用页
 % 没有
@@ -343,50 +342,8 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 }
 \def\@maketitle{%
   \newpage
-  \if@mcm@preface
-  \null
- % 承诺书
- \vskip2ex
-  \thispagestyle{empty}
-  {\zihao{4}\noindent\mcm@commit@string@headname\\[-8pt]
-  \noindent\rule[5pt]{\textwidth-1.34em}{.5pt}\par}
-  \begin{center}%
-    {\zihao{-3}\bfseries\heiti \mcm@commit@string@titlea \par}%
-    {\vskip1ex\zihao{3}\bfseries\songti \mcm@commit@string@titleb \par}
-  \end{center}
-    {\zihao{-4} \mcm@commit@string@contents \par}
-    {\vskip1ex\zihao{-4}
-    \renewcommand{\ULthickness}{0.4pt}\setlength{\ULdepth}{2pt}
-    \hspace*{2em}\mcm@commit@string@problemnum\uline{\mbox{\kern1em}\mcm@tokens@tihao\hfill}\makebox[0.66em]{}\par
-    \mcm@commit@string@signupnum\uline{\mbox{\kern1em}\mcm@tokens@baominghao\hfill}\makebox[0.66em]{}\par
-    \mcm@commit@string@schoolname\uline{\hfill\mcm@tokens@schoolname\hfill}\makebox[0.66em]{}\par
-    \newlength{\mcm@lenB}
-    \settowidth{\mcm@lenB}{\mcm@commit@string@membername\mbox{\hspace{1em}}1.}
-    \setlength{\mcm@lenB}{\textwidth-\mcm@lenB}
-    % 不这样做右边难以对齐!
-    \mcm@commit@string@membername
-    \begin{minipage}[t]{\mcm@lenB}
-   	1.\uline{\mbox{\kern1em}\mcm@tokens@membera\hfill} \makebox[0.46em]{}\par
-   	2.\uline{\mbox{\kern1em}\mcm@tokens@memberb\hfill} \makebox[0.46em]{}\par
-   	3.\uline{\mbox{\kern1em}\mcm@tokens@memberc\hfill} \makebox[0.46em]{}\par
-   \end{minipage}\par\vskip1ex
-    \mcm@commit@string@supervisorname\uline{\mbox{\hspace{1em}}\mcm@tokens@supervisor\hfill}\makebox[0.66em]{}\par
-    \hspace{0.1cm} （{\kaishu 指导教师签名意味着对参赛队的行为和论文的真实性负责}）
-    %{\kaishu\mcm@commit@string@inform\par}
-    \vskip2ex
-    \newlength{\mcm@lenA}
-    \settowidth{\mcm@lenA}{请仔细核对，提交后将不再允许做任何修改。如}% 虽然"日期"刚好在"错误"下面, 但注意"日期"还会缩进, 所以要省去"填写""两字
-    \hspace*{\mcm@lenA}\mcm@commit@string@date\hspace{0.5em}\uline{\hfill\mbox{\kern1em}\mcm@tokens@yearinput\mbox{\kern1em}\hfill}%
-    \mcm@commit@string@year\uline{\hfill\mcm@tokens@monthinput\hfill}\mcm@commit@string@month%
-    \uline{\hfill\mcm@tokens@dayinput\hfill}\mcm@commit@string@day\makebox[1em]{}\par}
-    \vskip1ex
-    {\kaishu\bfseries\mcm@commit@string@inform\par}
-	\vfill
-	\null
-% 编号专用页
-	\else
-	\fi
-	\makeothertitle
+  % 按要求不输出承诺书页；编号专用页仍由 \makeothertitle 按 withoutpreface 决定。
+  \makeothertitle
 	}
 
 %% 定义 编号专用页
