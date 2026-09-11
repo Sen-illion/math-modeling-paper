@@ -167,19 +167,19 @@ C^{\mathrm{em}}=\sum_{t=1}^{144}5\pi_t e_t \label{eq:q2_emergency}
   \end{tabular}
 \end{table}
 
-图~\ref{fig:q2_daily_cost} 给出全年逐日计划购电费与紧急购电费，图~\ref{fig:q2_soc} 给出全年逐日 $0{:}00$ 与 $24{:}00$ 的实际储电量。可见紧急购电仅零散出现在少数日期的个别时段，金额远小于计划购电费；储电量始终被约束在 $[1200,10800]$ kWh 内，并在低价时段充电、高价时段放电之间动态波动，而非如问题一那样每天回到固定值。
+图~\ref{fig:q2_daily_cost} 给出全年逐日计划购电费、含紧急购电的总费用及紧急购电费，图~\ref{fig:q2_soc} 给出全年逐日 $0{:}00$ 与 $24{:}00$ 的实际储电量。可见紧急购电仅零散出现在少数日期的个别时段，金额远小于计划购电费；储电量始终被约束在 $[1200,10800]$ kWh 内，并在低价时段充电、高价时段放电之间动态波动，而非如问题一那样每天回到固定值。
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.92\textwidth]{Q2_fig1_daily_cost.png}
-  \caption{全年逐日计划购电费与紧急购电费（上）及逐日紧急购电费（下）}
+  \caption{全年逐日购电费用。上图为计划购电费与含紧急购电的总费用，下图为紧急购电费。}
   \label{fig:q2_daily_cost}
 \end{figure}
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.92\textwidth]{Q2_fig2_soc.png}
-  \caption{全年逐日 $0{:}00$ 与 $24{:}00$ 实际储电量（虚线为 $[1200,10800]$ kWh 上下限）}
+  \caption{全年逐日 $0{:}00$ 与 $24{:}00$ 的实际储电量（虚线为容量上下限）。}
   \label{fig:q2_soc}
 \end{figure}
 
@@ -216,6 +216,6 @@ V2 的计划购电费比 V1 增加 $1\,244\,939.58$ 元，但紧急购电费由 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{Q2_fig3_model_compare.png}
-  \caption{不同预测策略在正式窗口（$334$ 天）的全年总购电费（前四根为第一版同口径对照，最后一根为正式策略）}
+  \caption{不同预测策略在正式窗口（$334$ 天）的全年总购电费。前四组为第一版同口径对照，最后一组为正式策略。}
   \label{fig:q2_model_compare}
 \end{figure}

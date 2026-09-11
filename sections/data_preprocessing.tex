@@ -75,7 +75,7 @@
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{att1_typical_day_power_price.png}
-  \caption{附件1典型日：(a) 负荷、光伏预测与净负荷；(b) 分时电价。}
+  \caption{典型日负荷、光伏预测与分时电价。(a) 负荷、光伏预测功率及净负荷；(b) 分时电价。}
   \label{fig:att1}
 \end{figure}
 
@@ -84,16 +84,16 @@
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{att2_load_pv_calendar.png}
-  \caption{附件2全年日历热图：(a) 小区负荷；(b) 光伏实测功率。}
+  \caption{全年负荷与光伏日历热图。(a) 小区负荷；(b) 光伏实测功率。}
   \label{fig:att2_calendar}
 \end{figure}
 
-净负荷持续曲线（图~\ref{fig:att2_energy}）显示，净负荷为正的时段占 $80.7\%$，全年大部分时间都需要外购电或储能放电；净负荷范围 $[-6602,6688]$ kW，正负两端均超过储能接口功率 5000 kW。由此可见，储能既无法完全消纳光伏过剩，也无法补足最大缺口，因此模型必须同时设置弃光和紧急购电两个变量。
+图~\ref{fig:att2_energy}(a) 给出负荷、光伏与净缺口的日电量及 7 日均值：负荷全年相对平稳，光伏夏高冬低，净缺口则与光伏大致反向。图~\ref{fig:att2_energy}(b) 的净负荷持续曲线显示，净负荷为正的时段占 $80.7\%$，全年大部分时间都需要外购电或储能放电；净负荷范围 $[-6602,6688]$ kW，正负两端均超过储能接口功率 5000 kW。由此可见，储能既无法完全消纳光伏过剩，也无法补足最大缺口，因此模型必须同时设置弃光和紧急购电两个变量。
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{att2_daily_energy_duration.png}
-  \caption{附件2能量结构：(a) 日负荷电量及 7 日均值；(b) 净负荷持续曲线。}
+  \caption{全年日电量与净负荷持续曲线。(a) 负荷、光伏与净缺口的日电量及 7 日均值；(b) 净负荷持续曲线。}
   \label{fig:att2_energy}
 \end{figure}
 
@@ -102,7 +102,7 @@
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{att2_seasonal_diurnal.png}
-  \caption{附件2四季日内曲线：负荷与光伏的中位数及四分位带。}
+  \caption{四季日内负荷与光伏曲线。(a) 冬季；(b) 春季；(c) 夏季；(d) 秋季。实线为中位数，阴影为四分位带。}
   \label{fig:att2_season}
 \end{figure}
 
@@ -111,7 +111,7 @@
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.7\textwidth]{combined_14_weekday_weekend.png}
-  \caption{小区负载工作日/周末平均日曲线（含峰值标注）}
+  \caption{工作日与周末的平均负荷日曲线。}
   \label{fig:weekday}
 \end{figure}
 
@@ -120,7 +120,7 @@
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{att3_pv_forecast_error.png}
-  \caption{附件3光伏预报误差：(a) 四发布时刻的 MAE；(b) 0:00 发布预报与实测对比。}
+  \caption{光伏预报误差。(a) 四个发布时间的平均绝对误差；(b) $0{:}00$ 发布预报均值与实测整点均值。}
   \label{fig:att3}
 \end{figure}
 
@@ -129,7 +129,7 @@
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{att4_price_calendar.png}
-  \caption{附件4全年电价：(a) 日历热图；(b) 日内中位数与四分位带。}
+  \caption{全年分时电价。(a) 日历热图；(b) 日内中位数、四分位带及附件1典型日电价。}
   \label{fig:att4}
 \end{figure}
 
