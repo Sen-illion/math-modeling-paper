@@ -1,92 +1,138 @@
 \section{数据说明与预处理}
 
-\subsection{数据来源与口径}
+\subsection{数据来源与说明}
 
-本文使用的原始数据来自附件1与附件2。附件1提供某一天不同时间的电价（元/kWh）、小区负载（kW）与光伏发电预测功率（kW），共144个10分钟时段；附件2提供2025年1月1日至12月31日每天的小区负载（kW）与光伏发电实际功率（kW），每天同样为144个10分钟时段。储能参数见附录1，相关数据由附件5提供。
+本题数据来自附件1至附件5，均为 Excel 格式。附件1 是某一典型日的电价、小区负载与光伏预测，用于问题一的确定性调度；附件2 是全年 365 天的负载与光伏实测，用于问题二的滚动预测与回测；附件3、附件4 分别是光伏日前预报和全年电价，用于问题三、四的不确定性分析；附件5 是各题共用的储能参数与结果模板。
 
-附件中的时刻均为时段终点，即$00{:}10$表示$00{:}00$--$00{:}10$，$0{:}00{+}1$表示当天$24{:}00$；时段长$\Delta t=10$ min $=1/6$ h，电量与功率满足$E=P\Delta t$。图~\ref{fig:data_q1_profile}给出了附件1的电价、负载与光伏预测功率曲线，电价呈明显的早晚双峰结构，负载与光伏的峰谷时段与电价结构共同决定了储能套利与购电策略的可行空间。
+数据基本构成见表~\ref{tab:fields}。
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.72\textwidth]{Q1_eda_1_price_load_pv.png}
-  \caption{附件1：电价、小区负载与光伏发电预测功率}
-  \label{fig:data_q1_profile}
-\end{figure}
+\begin{table}[htbp]
+\centering
+\small
+\caption{数据字段说明}
+\label{tab:fields}
+\begin{tabular}{llll}
+\toprule
+字段名称 & 字段含义 & 数据类型 & 单位 \\
+\midrule
+电价 & 分时购电价格（附件1 单日、附件4 全年） & 数值型 & 元/kWh \\
+小区负载 & 小区用电功率（附件1 单日、附件2 全年） & 数值型 & kW \\
+光伏发电预测功率 & 光伏出力预测（附件1） & 数值型 & kW \\
+光伏发电实际功率 & 光伏出力实测（附件2） & 数值型 & kW \\
+光伏日前预报 & 按发布时刻给的光伏预报（附件3） & 数值型 & kW \\
+日期 / 时间 & 记录时刻（10 min 间隔） & 时间型 & — \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\subsection{数据质量检查}
+\subsection{数据预处理}
 
-对附件1与附件2进行完整性、一致性与合理性检查。附件1共144行、4列，无缺失；电价最小$0.3713$元/kWh、最大$1.3952$元/kWh。附件2共365天、每天144个时段，日期覆盖2025年1月1日至12月31日且逐日连续，两表日期与时间列完全一致；全年缺失值0个、负值0个、重复日期0个。图~\ref{fig:data_completeness}给出每日缺失时段统计，可见数据完整、无需插补。
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.72\textwidth]{Q2_eda_1_completeness.png}
-  \caption{附件2：每日缺失/异常时段统计}
-  \label{fig:data_completeness}
-\end{figure}
-
-从分布角度看，附件2全年负载功率范围为$1995.7\sim7978.9$ kW，日总电量均值为$666148.8$ kWh；光伏功率范围为$0\sim10216.2$ kW，日总电量范围为$206163\sim451338$ kWh。图~\ref{fig:data_load_profile}与图~\ref{fig:data_pv_profile}分别给出负载与光伏的全年平均日曲线及P10–P90分位带：负载呈早晚双峰、工作日高于周末、冬季最高；光伏仅在白天出力、正午达峰、夏季最高。
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.72\textwidth]{Q2_eda_2_load_profile_band.png}
-  \caption{附件2：小区负载全年平均日曲线与P10–P90分位带}
-  \label{fig:data_load_profile}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.72\textwidth]{Q2_eda_7_pv_profile_band.png}
-  \caption{附件2：光伏发电实际功率全年平均日曲线与P10–P90分位带}
-  \label{fig:data_pv_profile}
-\end{figure}
-
-图~\ref{fig:data_load_monthly}与图~\ref{fig:data_pv_monthly}进一步给出负载与光伏的12个月平均日曲线，体现明显的季节差异。图~\ref{fig:data_netload_heatmap}为净负荷（负载减去光伏）的日$\times$小时热力图，图~\ref{fig:data_netload_dist}为净负荷分布：净负荷为正的时段占$80.73\%$，表明全年大部分时段仍需外网购电或储能放电。
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.72\textwidth]{Q2_eda_4_load_monthly.png}
-  \caption{附件2：小区负载各月平均日曲线}
-  \label{fig:data_load_monthly}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.72\textwidth]{Q2_eda_8_pv_monthly.png}
-  \caption{附件2：光伏发电实际功率各月平均日曲线}
-  \label{fig:data_pv_monthly}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{Q2_eda_10_netload_heatmap.png}
-  \caption{附件2：净负荷（负载$-$光伏）日$\times$小时热力图}
-  \label{fig:data_netload_heatmap}
-\end{figure}
-
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.72\textwidth]{Q2_eda_11_netload_dist.png}
-  \caption{附件2：净负荷分布}
-  \label{fig:data_netload_dist}
-\end{figure}
-
-\subsection{预处理规则}
-
-为保证问题一与问题二口径一致，按以下规则处理原始数据。
+经逐表核查，4 个附件的缺失值、负值、重复行均为 0，IQR 检出的异常点经核对属于极端天气、季节与峰谷电价造成的真实波动，因此\textbf{不做缺失插补、异常值剔除和标准化}。真正需要处理的是时间口径、单位与面向模型的特征构造，具体如下。
 
 \begin{enumerate}
-  \item \textbf{时间对齐}：将附件中的时刻统一解析为“时段终点分钟数”，$00{:}10\to10$、$0{:}00{+}1\to1440$，并按物理区间改写时间标签（$00{:}00$--$00{:}10$、$\dots$、$23{:}50$--$24{:}00$），避免官方模板相对真实时段错后10分钟。
-  \item \textbf{单位统一}：功率统一为kW、电价统一为元/kWh，电量按$E=P\Delta t$换算为kWh。
-  \item \textbf{特征构造}：为问题二的滚动预测构造11个特征——时刻编号$slot$、星期$dow$、月份$month$、年内日序$doy$，以及前1/2/7天同刻值$lag_{1d},lag_{2d},lag_{7d}$与过去3/7/30天同刻均值、过去7天同刻标准差$mean_{3d},mean_{7d},mean_{30d},std_{7d}$。所有特征只使用预测日$D$之前的历史数据，避免未来信息泄漏。
-  \item \textbf{光伏夜间置零}：对附件2中历史同刻恒为0的43个夜间时段，预测值强制置0。
-  \item \textbf{残差分位保守修正}：用$day<D$的历史预测残差，对负荷取$q_{L}=0.8$高分位、对光伏取$q_{PV}=0.2$低分位进行修正，使净负荷预测更保守，以降低紧急购电风险。
-  \item \textbf{储能口径}：问题二以2025年2月1日$0{:}00$储电量$6000$ kWh为初值，1月数据仅用于预报训练与残差分位统计；2月1日之后跨日传递实际运行末值，储电量始终约束在$[1200,10800]$ kWh。
+  \item \textbf{时间口径对齐}：由于附件时刻是“时段终点”（$00{:}10$ 实际代表 $00{:}00$--$00{:}10$ 区间，$0{:}00{+}1$ 代表当天 $24{:}00$），直接使用会使电价、负荷、光伏错位 10 分钟，因此把时刻改写为物理区间，使 144 个时段的功率与电价严格对齐。
+  \item \textbf{单位换算}：由于目标函数 $\min\sum_t\pi_tG_t$ 与储能递推 $E_t=E_{t-1}+0.9c_t-d_t/0.9$ 均用电量（kWh），而附件给的是功率（kW），因此统一按 $E=P\Delta t$（$\Delta t=1/6$ h）把功率换算为电量。
+  \item \textbf{光伏夜间置零}：光伏夜间物理上必为 0，但预测可能给出非零噪声，因此对附件2 中历史同刻恒为 0 的 43 个夜间时段强制置 0，避免夜间错误充放电或弃光。
+  \item \textbf{附件3 时间尺度对齐}：附件3 的预报按整点给出，与 10 分钟实测尺度不一致，因此按被预报钟点提取整点预报、与附件2 实测对齐，以便计算误差。
+  \item \textbf{特征构造}：XGBoost 是表格模型，需要显式的时间特征，因此构造 11 个特征——时刻编号、星期、月份、年内日序，以及前 1/2/7 天同刻值、过去 3/7/30 天同刻均值、过去 7 天同刻标准差，且只用预测日之前的数据，避免未来信息泄漏。
+  \item \textbf{残差分位保守修正}：点预测存在偏差，负荷低估或光伏高估会转化为供电缺口，因此用历史残差对负荷取 $q_L=0.8$ 高分位、光伏取 $q_P=0.2$ 低分位，使净负荷预测偏保守，降低紧急购电风险。
 \end{enumerate}
 
-清洗后的数据与处理脚本在支撑材料中保留，正文所引用的全部数字均来自可复现的清洗与求解流程。
+\subsection{数据探索性分析}
 
-\subsection{数据质量检查}
-给出样本量、覆盖范围、缺失比例和必要的分布检查。
+\subsubsection{描述性统计}
 
-\subsection{预处理规则}
-逐条说明清洗、转换、标准化、特征构造及其可复现方式。
+核心指标的描述性统计见表~\ref{tab:desc}。
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{核心指标描述性统计}
+\label{tab:desc}
+\begin{tabular}{lccccc}
+\toprule
+指标 & 均值 & 标准差 & 最小值 & 最大值 & 中位数 \\
+\midrule
+电价（附件1，元/kWh） & 0.77 & 0.31 & 0.37 & 1.40 & 0.81 \\
+小区负载（附件1，kW） & 4626.03 & 977.47 & 3309.39 & 5958.97 & 4377.57 \\
+光伏预测（附件1，kW） & 2311.78 & 2854.40 & 0 & 7612.32 & 387.61 \\
+小区负载（附件2 全年，kW） & 4626.03 & 1411.73 & 1995.72 & 7978.88 & 4270.68 \\
+光伏实测（附件2 全年，kW） & 2311.79 & 2948.64 & 0 & 10216.20 & 18.86 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+由表~\ref{tab:desc} 可见，光伏全年中位数仅 $18.86$ kW，均值却达 $2311.79$ kW，二者相差悬殊，说明光伏存在大量夜间零出力时段、白天集中出力；负载全年标准差 $1411.73$ kW 明显高于单日的 $977.47$ kW，反映出负载存在较大的季节与逐日波动。
+
+\subsubsection{相关性分析}
+
+负荷与光伏的逐时段 Pearson 相关系数全年均值仅 $0.031$（范围 $[-0.205, 0.448]$），二者相关性较弱，因此可以分别建模。相邻日总电量自相关方面，负载为 $0.374$、光伏高达 $0.964$，说明光伏日间规律强、负载波动大，由此决定问题二负荷采用 XGBoost、光伏采用 7 天同刻平均。此外，附件4 与附件1 相关性最高的一天为 2025-04-22，相关系数 $0.992$，表明附件1 足以代表全年电价形态。
+
+\subsubsection{可视化分析}
+
+附件1 的典型日曲线（图~\ref{fig:att1}）显示，负荷峰值 $5958.97$ kW 出现在 09:00 前后，光伏峰值 $7612.32$ kW 出现在 12:00 前后，二者峰谷错开；电价则呈早晚双峰，峰谷差达 $1.02$ 元/kWh。正是由于电价峰谷差较大、且负荷与光伏的峰错开，储能可以在低谷电价时段充电、高峰时段放电，从而为问题一的套利调度提供了空间。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{att1_typical_day_power_price.png}
+  \caption{附件1典型日：(a) 负荷、光伏预测与净负荷；(b) 分时电价。}
+  \label{fig:att1}
+\end{figure}
+
+从全年日历热图（图~\ref{fig:att2_calendar}）可以看出，负荷在冬夏两季整体偏高、逐日又存在明显的周内波动，光伏则只在白天出力、夏季明显强于冬季。这表明负荷与光伏同时存在季节周期和日内周期，因此预测模型必须具备捕捉周期特征的能力。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{att2_load_pv_calendar.png}
+  \caption{附件2全年日历热图：(a) 小区负荷；(b) 光伏实测功率。}
+  \label{fig:att2_calendar}
+\end{figure}
+
+净负荷持续曲线（图~\ref{fig:att2_energy}）显示，净负荷为正的时段占 $80.7\%$，全年大部分时间都需要外购电或储能放电；净负荷范围 $[-6602,6688]$ kW，正负两端均超过储能接口功率 5000 kW。由此可见，储能既无法完全消纳光伏过剩，也无法补足最大缺口，因此模型必须同时设置弃光和紧急购电两个变量。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{att2_daily_energy_duration.png}
+  \caption{附件2能量结构：(a) 日负荷电量及 7 日均值；(b) 净负荷持续曲线。}
+  \label{fig:att2_energy}
+\end{figure}
+
+四季日内曲线（图~\ref{fig:att2_season}）表明，负荷四季差异较小但夜间始终偏高，光伏夏季日均 $2673$ kW、约为冬季 $1681$ kW 的 $1.6$ 倍，季节差异显著。这说明光伏预测需要引入季节特征，同时储能全年都要兼顾削峰与消纳。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{att2_seasonal_diurnal.png}
+  \caption{附件2四季日内曲线：负荷与光伏的中位数及四分位带。}
+  \label{fig:att2_season}
+\end{figure}
+
+工作日与周末的平均日曲线（图~\ref{fig:weekday}）显示，工作日峰值 $6195$ kW、周末峰值 $5367$ kW，工作日高约 $15\%$，且两者峰形相近。这一差异说明负载存在明显的周周期，因此问题二的负荷预测应引入星期特征 $dow$。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{combined_14_weekday_weekend.png}
+  \caption{小区负载工作日/周末平均日曲线（含峰值标注）}
+  \label{fig:weekday}
+\end{figure}
+
+光伏预报误差（图~\ref{fig:att3}）集中在白天，夜间 MAE 接近 0，0:00 发布的平均 MAE 达 $341$ kW，误差不可忽略。由于点预测在白天存在明显偏差，直接使用会造成供电缺口，因此需要对负荷取 $q_L=0.8$、光伏取 $q_P=0.2$ 做分位保守修正。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{att3_pv_forecast_error.png}
+  \caption{附件3光伏预报误差：(a) 四发布时刻的 MAE；(b) 0:00 发布预报与实测对比。}
+  \label{fig:att3}
+\end{figure}
+
+附件4 全年电价（图~\ref{fig:att4}）范围 $0.0076\sim1.7936$ 元/kWh，日内峰谷明显；其中与附件1 相关性最高的日期为 2025-04-22，相关系数高达 $0.992$。这说明附件1 能充分代表全年电价形态，可用于后续策略验证。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{att4_price_calendar.png}
+  \caption{附件4全年电价：(a) 日历热图；(b) 日内中位数与四分位带。}
+  \label{fig:att4}
+\end{figure}
+
+\subsection{数据处理结果小结}
+
+综上，原始数据完整、无缺失、无负值，异常点均为真实波动予以保留，处理工作集中在时间口径对齐与面向模型的特征构造。处理后得到统一 10 分钟尺度的规范数据集：附件2、附件4 各 $365\times144=52560$ 条，附件1 为 144 条，附件3 对齐至 10 分钟尺度，并构造出问题二所需的 11 个特征。后续问题一基于附件1 开展确定性线性规划，问题二基于附件2 开展滚动预测、日前优化与回测，问题三、四基于附件3、附件4 开展不确定性分析与全年电价建模。
