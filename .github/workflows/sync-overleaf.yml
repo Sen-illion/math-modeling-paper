@@ -12,6 +12,7 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    environment: OVERLEAF_GIT_TOKEN
     steps:
       - name: Checkout
         uses: actions/checkout@v4
