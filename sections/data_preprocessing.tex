@@ -74,8 +74,21 @@
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{att1_typical_day_power_price.png}
-  \caption{典型日负荷、光伏预测与分时电价。(a) 负荷、光伏预测功率及净负荷；(b) 分时电价。}
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.92\textwidth]{att1_panel_a.png}
+    \caption{负荷、光伏预测功率及净负荷}
+    \label{fig:att1_a}
+  \end{subfigure}
+
+  \vspace{0.5em}
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.92\textwidth]{att1_panel_b.png}
+    \caption{分时电价}
+    \label{fig:att1_b}
+  \end{subfigure}
+  \caption{典型日负荷、光伏预测与分时电价。}
   \label{fig:att1}
 \end{figure}
 
@@ -83,17 +96,42 @@
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{att2_load_pv_calendar.png}
-  \caption{全年负荷与光伏日历热图。(a) 小区负荷；(b) 光伏实测功率。}
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.92\textwidth]{att2_cal_a.png}
+    \caption{小区负荷}
+    \label{fig:att2_calendar_a}
+  \end{subfigure}
+
+  \vspace{0.5em}
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.92\textwidth]{att2_cal_b.png}
+    \caption{光伏实测功率}
+    \label{fig:att2_calendar_b}
+  \end{subfigure}
+  \caption{全年负荷与光伏日历热图。}
   \label{fig:att2_calendar}
 \end{figure}
 
-图~\ref{fig:att2_energy}(a) 给出负荷、光伏与净缺口的日电量及 7 日均值：负荷全年相对平稳，光伏夏高冬低，净缺口则与光伏大致反向。图~\ref{fig:att2_energy}(b) 的净负荷持续曲线显示，净负荷为正的时段占 $80.7\%$，全年大部分时间都需要外购电或储能放电；净负荷范围 $[-6602,6688]$ kW，正负两端均超过储能接口功率 5000 kW。由此可见，储能既无法完全消纳光伏过剩，也无法补足最大缺口，因此模型必须同时设置弃光和紧急购电两个变量。
+图~\ref{fig:att2_energy_a} 给出负荷、光伏与净缺口的日电量及 7 日均值：负荷全年相对平稳，光伏夏高冬低，净缺口则与光伏大致反向。图~\ref{fig:att2_energy_b} 的净负荷持续曲线显示，净负荷为正的时段占 $80.7\%$，全年大部分时间都需要外购电或储能放电；净负荷范围 $[-6602,6688]$ kW，正负两端均超过储能接口功率 5000 kW。由此可见，储能既无法完全消纳光伏过剩，也无法补足最大缺口，因此模型必须同时设置弃光和紧急购电两个变量。
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{att2_daily_energy_duration.png}
-  \caption{全年日电量与净负荷持续曲线。(a) 负荷、光伏与净缺口的日电量及 7 日均值；(b) 净负荷持续曲线。}
+  \begin{subfigure}[t]{0.56\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{att2_energy_a.png}
+    \caption{负荷、光伏与净缺口的日电量及 7 日均值}
+    \label{fig:att2_energy_a}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.42\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{att2_energy_b.png}
+    \caption{净负荷持续曲线}
+    \label{fig:att2_energy_b}
+  \end{subfigure}
+  \caption{全年日电量与净负荷持续曲线。}
   \label{fig:att2_energy}
 \end{figure}
 
@@ -146,8 +184,20 @@
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{att3_pv_forecast_error.png}
-  \caption{光伏预报误差。(a) 四个发布时间的平均绝对误差；(b) $0{:}00$ 发布预报均值与实测整点均值。}
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{att3_panel_a.png}
+    \caption{四个发布时间的平均绝对误差}
+    \label{fig:att3_a}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{att3_panel_b.png}
+    \caption{$0{:}00$ 发布预报均值与实测整点均值}
+    \label{fig:att3_b}
+  \end{subfigure}
+  \caption{光伏预报误差。}
   \label{fig:att3}
 \end{figure}
 
@@ -155,8 +205,21 @@
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.85\textwidth]{att4_price_calendar.png}
-  \caption{全年分时电价。(a) 日历热图；(b) 日内中位数、四分位带及附件1典型日电价。}
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.92\textwidth]{att4_panel_a.png}
+    \caption{日历热图}
+    \label{fig:att4_a}
+  \end{subfigure}
+
+  \vspace{0.5em}
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=0.92\textwidth]{att4_panel_b.png}
+    \caption{日内中位数、四分位带及附件1典型日电价}
+    \label{fig:att4_b}
+  \end{subfigure}
+  \caption{全年分时电价。}
   \label{fig:att4}
 \end{figure}
 
