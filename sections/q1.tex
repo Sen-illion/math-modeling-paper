@@ -83,8 +83,6 @@ E_0=E_{144}=6000.
 \label{eq:q1_power_equiv}
 \end{equation}
 
-由此既满足功率限制，又正确计入储能充放电过程中的能量损耗，避免将 $5000\,\mathrm{kW}$ 的功率上限直接作用于储能设备内部储电量变化。
-
 \textbf{（6）非负约束}
 
 由于微电网不允许向外网售电，计划购电量不能取负值；当光伏发电超过当前负载及储能可接纳电量时，允许产生弃电。因此有
@@ -94,7 +92,7 @@ G_t\ge0,\qquad w_t\ge0,
 \label{eq:q1_nonnegative}
 \end{equation}
 
-综上，以式~\eqref{eq:q1_objective} 为目标函数，并结合式~\eqref{eq:q1_energy_balance}--\eqref{eq:q1_nonnegative} 所示约束，即构成问题一的确定性线性规划模型。该模型通过储电量状态转移关系将全天各时段联系起来，在满足负载需求及储能运行条件的基础上，对外网购电与储能充放电进行联合优化。
+综上，以式~\eqref{eq:q1_objective} 为目标函数，并结合式~\eqref{eq:q1_energy_balance}--\eqref{eq:q1_nonnegative} 所示约束，即构成问题一的确定性线性规划模型。
 
 \subsection{模型求解}
 
