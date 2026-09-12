@@ -24,10 +24,20 @@
 
 \subsubsection{负载预测与净负载分位签合同}
 
-负载在 $0{:}00$ 用与问题二同源的因果扩展 XGBoost 预测，日内用已发生负载比例校正。记净负载点预报为 $\hat N_t=\hat L_t-\hat P_t^{\mathrm{pv}}$，历史负载残差 $r^L=L-\hat L$、光伏残差 $r^{\mathrm{pv}}=P^{\mathrm{pv}}-\hat P^{\mathrm{pv}}$（只用决策日之前的数据）。由于结算不对称，合同按报童分位签，将负载上移 $q$ 分位、光伏下移（取 $1-q$ 分位），得到保守净负载
+负载在 $0{:}00$ 用与问题二同源的因果扩展 XGBoost 预测，日内用已发生负载比例校正。记净负载点预报、负载残差与光伏残差为
+\begin{equation}
+\begin{aligned}
+\hat N_t&=\hat L_t-\hat P_t^{\mathrm{pv}},\\
+r^L&=L-\hat L,\\
+r^{\mathrm{pv}}&=P^{\mathrm{pv}}-\hat P^{\mathrm{pv}},
+\end{aligned}
+\label{eq:q3_netdef}
+\end{equation}
+三者只用决策日之前的数据。由于结算不对称，合同按问题二的临界覆盖率取分位：负载上移 $q$ 分位、光伏下移（取 $1-q$ 分位），得到保守净负载
 \begin{equation}
   \hat N_t^{-}=\bigl[\hat L_t+Q_{q(t)}\bigl(r^L_t\bigr)\bigr]
                  -\bigl[\hat P_t^{\mathrm{pv}}+Q_{1-q(t)}\bigl(r^{\mathrm{pv}}_t\bigr)\bigr],
+\label{eq:q3_nminus}
 \end{equation}
 其中 $Q_q$ 为历史残差的分位数。分位 $q(t)$ 按三段取：\textbf{锁死段}（发布时刻之后 $6$ 小时、$36$ 个时段，$18{:}00$ 发布时即覆盖晚高峰）取 $q=0.60$；\textbf{当天剩余可调段}取 $q=0.50$；\textbf{次日展望段}取 $q=0.50$。锁死段的 $0.60$ 是按“$1$ 月 $15$--$31$ 日现金流与库存最小、$2$--$12$ 月仅作确认”的门禁选出的；全年费用最低点其实是 $0.65$，但按因果门禁不取全样本 argmin，而是取 $0.60$。启用分位后不再叠加 $\beta\sigma$ 余量。
 

@@ -55,36 +55,69 @@ XGBoost 是梯度提升树\cite{chen2016xgboost}：依次添加回归树拟合�
 \subsubsection{净负载分位与日前线性规划}
 
 点预测不能表达误差方向。题面只给出：少买 $1$\,kWh 须按紧急电价 $5\pi$ 补购，多买 $1$\,kWh 仍按计划电价 $\pi$ 结算。将前者记为缺货成本 $C_u$、后者记为超储成本 $C_o$，则临界覆盖率为
-\[
-\frac{C_u}{C_u+C_o}=\frac{5\pi}{5\pi+\pi}=\frac{5}{5+1}=0.8.
-\]
-因此不对负载、光伏分别取分位，而在净负载 $N_t=P^{\mathrm{load}}_{t}-P^{\mathrm{pv}}_{t}$ 上做保守修正：记点预测净负载 $\hat N_t=\hat P^{\mathrm{load}}_{t}-\hat P^{\mathrm{pv}}_{t}$，历史残差 $r^N_t=N_t-\hat N_t$（只含日期 $<D$），取 expanding 残差池的 $0.8$ 分位
 \begin{equation}
-\tilde N_t=\hat N_t+Q_{0.8}(r^N_{\cdot,t}). \label{eq:q2_net_quantile}
+\frac{C_u}{C_u+C_o}=\frac{5\pi}{5\pi+\pi}=\frac{5}{5+1}=0.8.
+\label{eq:q2_critical}
 \end{equation}
-送入日前 LP 时，光伏点预测保持不变（夜间仍归零），把保守净负载加回负载 $\tilde P^{\mathrm{load}}_{t}=\max(\hat P^{\mathrm{pv}}_{t}+\tilde N_t,0)$。这样计划覆盖的是偏高的净缺口，而不是把负荷上偏、光伏下偏拆成两次平移。
+因此不对负载、光伏分别取分位，而在净负载上做保守修正。记实测净负载、点预测净负载与残差为
+\begin{equation}
+\begin{aligned}
+N_t&=P^{\mathrm{load}}_{t}-P^{\mathrm{pv}}_{t},\\
+\hat N_t&=\hat P^{\mathrm{load}}_{t}-\hat P^{\mathrm{pv}}_{t},\\
+r^N_t&=N_t-\hat N_t,
+\end{aligned}
+\label{eq:q2_netdef}
+\end{equation}
+其中残差只含日期 $<D$。取 expanding 残差池的 $0.8$ 分位
+\begin{equation}
+\tilde N_t=\hat N_t+Q_{0.8}(r^N_{\cdot,t}).
+\label{eq:q2_net_quantile}
+\end{equation}
+送入日前 LP 时，光伏点预测保持不变（夜间仍归零），把保守净负载加回负载
+\begin{equation}
+\tilde P^{\mathrm{load}}_{t}=\max\bigl(\hat P^{\mathrm{pv}}_{t}+\tilde N_t,0\bigr).
+\label{eq:q2_load_back}
+\end{equation}
+这样计划覆盖的是偏高的净缺口，而不是把负荷上偏、光伏下偏拆成两次平移。
 
 以修正后的预测覆盖全天净负载，在 $0{:}00$ 求解日前线性规划
 \begin{equation}
-\min \sum_{t=1}^{144}\pi_t G_t \label{eq:q2_obj}
+\begin{aligned}
+\min\quad &\sum_{t=1}^{144}\pi_t G_t \\
+\mathrm{s.t.}\quad
+&G_t+\tilde P^{\mathrm{pv}}_{t}\Delta t+d_t=\tilde P^{\mathrm{load}}_{t}\Delta t+c_t+w_t,\\
+&E_t=E_{t-1}+\eta c_t-d_t/\eta,\\
+&E_{\min}\le E_t\le E_{\max},\\
+&0\le c_t,d_t\le P_{\max}\Delta t,\qquad G_t,w_t\ge0,\\
+&E_{144}=S^{*}=2400\,\mathrm{kWh},
+\end{aligned}
+\label{eq:q2_lp}
 \end{equation}
-约束为：
-\begin{enumerate}
-  \item 电量平衡 $G_t+\tilde P^{\mathrm{pv}}_{t}\Delta t+d_t=\tilde P^{\mathrm{load}}_{t}\Delta t+c_t+w_t$；
-  \item 储电量递推 $E_t=E_{t-1}+\eta c_t-d_t/\eta$，其中 $E_0$ 取上一日实际执行末值（$2$ 月 $1$ 日为 $6000$\,kWh）；
-  \item 运行窗 $E_{\min}\le E_t\le E_{\max}$；
-  \item 接口功率 $0\le c_t,d_t\le P_{\max}\Delta t$，$G_t,w_t\ge0$；
-  \item 日末硬约束 $E_{144}=S^{*}=2400$\,kWh。
-\end{enumerate}
-第（5）条只约束计划轨迹，实际执行并不重置到 $2400$。不加日末留电奖励 $\mu E_{144}$：当 $\mu\eta<\min\pi$ 时该项惰性，正式模型取 $\mu=0$。日前 LP 只锁死计划购电 $G_t$，充放电计划不作为日内硬约束。
+其中 $E_0$ 取上一日实际执行末值（$2$ 月 $1$ 日为 $6000$\,kWh）。日末约束只作用于计划轨迹，实际执行并不重置到 $2400$。不加日末留电奖励 $\mu E_{144}$：当 $\mu\eta<\min\pi$ 时该项惰性，正式模型取 $\mu=0$。日前 LP 只锁死计划购电 $G_t$，充放电计划不作为日内硬约束。
 
 \subsubsection{日内 $\rho$ 保护回放}
 
-计划购电锁死后，逐时段用当天真实负载与光伏做因果回放。记净残差 $r_t=P^{\mathrm{load}}_{t}\Delta t-P^{\mathrm{pv}}_{t}\Delta t-G_t$。若 $r_t\le0$，仍按贪心充电、剩余弃光，紧急电不用于充电。若 $r_t>0$，并不把储能设备放到 $E_{\min}$，而是先按日前计划储电量构造预留线
+计划购电锁死后，逐时段用当天真实负载与光伏做因果回放。记净残差
 \begin{equation}
-\underline{E}_t=E_{\min}+\rho\bigl(E^{\mathrm{plan}}_{t}-E_{\min}\bigr), \label{eq:q2_reserve}
+r_t=P^{\mathrm{load}}_{t}\Delta t-P^{\mathrm{pv}}_{t}\Delta t-G_t.
+\label{eq:q2_resid}
 \end{equation}
-放电上限为 $\min\bigl(r_t,\;\eta(E_{t-1}-\underline{E}_t),\;P_{\max}\Delta t\bigr)$，其余记紧急购电 $e_t$，按 $5\pi_t$ 结算。$\rho=0$ 即原来的贪心放到 $1200$\,kWh；正式取 $\rho=0.625$。全天总费用 $C=\sum_t\pi_t G_t+\sum_t 5\pi_t e_t$，回放末值 $E_{144}$ 作为次日实际 $E_0$。
+若 $r_t\le0$，仍按贪心充电、剩余弃光，紧急电不用于充电。若 $r_t>0$，并不把储能设备放到 $E_{\min}$，而是先按日前计划储电量构造预留线
+\begin{equation}
+\underline{E}_t=E_{\min}+\rho\bigl(E^{\mathrm{plan}}_{t}-E_{\min}\bigr),
+\label{eq:q2_reserve}
+\end{equation}
+放电上限为
+\begin{equation}
+\min\bigl(r_t,\;\eta(E_{t-1}-\underline{E}_t),\;P_{\max}\Delta t\bigr),
+\label{eq:q2_dmax}
+\end{equation}
+其余记紧急购电 $e_t$，按 $5\pi_t$ 结算。$\rho=0$ 即原来的贪心放到 $1200$\,kWh；正式取 $\rho=0.625$。全天总费用为
+\begin{equation}
+C=\sum_{t}\pi_t G_t+\sum_{t}5\pi_t e_t,
+\label{eq:q2_cost}
+\end{equation}
+回放末值 $E_{144}$ 作为次日实际 $E_0$。
 
 \subsubsection{参数取值与依据}
 
