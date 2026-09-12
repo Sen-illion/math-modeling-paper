@@ -99,12 +99,12 @@ C^{\mathrm{em}}=\sum_{t=1}^{144}5\pi_t e_t \label{eq:q2_emergency}
 
 \subsection{模型求解与结果}
 
-日前 LP 为连续线性规划，每个日期含 $5\times144=720$ 个连续变量，使用 PuLP 调用 CBC 求解，秒级返回全局最优解（状态 Optimal）。全年逐日滚动：每天 $0{:}00$ 训练/更新预测、求解日前 LP、锁死 $G_t$ 后因果回放，共 $334$ 个正式日。预测精度方面，负载点预测（XGBoost 扩展窗）全年 MAE 为 $136.42$ kW，光伏点预测（$7$ 日同刻均值）MAE 为 $153.40$ kW；经 $q_L=0.8$、$q_{PV}=0.2$ 分位保守修正后，负荷与光伏的 MAE 分别为 $201.08$ kW 与 $179.58$ kW，说明模型有意牺牲点精度以换取更少的紧急购电。
-
 全年（2025年2月1日至12月31日）正式结果为：总购电费用 $\textbf{13\,765\,167.58}$ 元，其中计划购电费 $13\,369\,773.46$ 元、紧急购电费 $395\,394.12$ 元；紧急购电量为 $66\,910.43$ kWh，分布在 $120$ 天共 $542$ 个时段；全年计划购电量 $21\,775\,550.32$ kWh，弃光量 $2\,718\,045.66$ kWh。实际储电量全程位于 $[1200,10800]$ kWh 内（最高 $5658.57$ kWh、最低 $1200$ kWh），$2$ 月 $1$ 日初始储电量为 $6000$ kWh，无同时充放电、无非负预测、无约束校验错误。表~\ref{tab:q2_purchase} 给出题目指定日期各时段的计划购电量及全天购电费，表~\ref{tab:q2_storage} 给出指定日期储能充放电量及起止储电量，表~\ref{tab:q2_emergency} 给出紧急购电明细。
 
 \begin{table}[htbp]
   \centering
+  \small
+  \setlength{\tabcolsep}{4pt}
   \caption{问题二：指定日期计划购电量及全天购电费——冬季日购电量显著高于夏季（kWh / 元）}
   \label{tab:q2_purchase}
   \begin{tabular}{lcccc}
@@ -128,6 +128,8 @@ C^{\mathrm{em}}=\sum_{t=1}^{144}5\pi_t e_t \label{eq:q2_emergency}
 
 \begin{table}[htbp]
   \centering
+  \small
+  \setlength{\tabcolsep}{4pt}
   \caption{问题二：指定日期储能充放电量及起止储电量——凌晨低价充电、早晚高峰放电（微网侧，kWh）}
   \label{tab:q2_storage}
   \begin{tabular}{lcccccccc}
@@ -150,6 +152,8 @@ C^{\mathrm{em}}=\sum_{t=1}^{144}5\pi_t e_t \label{eq:q2_emergency}
 
 \begin{table}[htbp]
   \centering
+  \small
+  \setlength{\tabcolsep}{4pt}
   \caption{问题二：指定日期紧急购电明细——仅 9 月 23 日出现缺口（kWh）}
   \label{tab:q2_emergency}
   \begin{tabular}{lcc}
@@ -164,21 +168,22 @@ C^{\mathrm{em}}=\sum_{t=1}^{144}5\pi_t e_t \label{eq:q2_emergency}
 
 由表~\ref{tab:q2_purchase} 至表~\ref{tab:q2_emergency} 可见：计划购电集中在光伏归零后的 $16{:}00$、$18{:}00$ 晚高峰时段，而 $10{:}00$、$20{:}00$ 分别由富余光伏与储能放电覆盖，购电量为 $0$；储能呈“凌晨低价充电、早晚高峰放电”的规律，$24{:}00$ 储电量不再固定为 $6000$，而是在 $[1200,10800]$ kWh 内动态滚动。
 
-图~\ref{fig:q2_daily_cost} 给出全年逐日计划购电费、含紧急购电的总费用及紧急购电费，图~\ref{fig:q2_soc} 给出全年逐日 $0{:}00$ 与 $24{:}00$ 的实际储电量。可见紧急购电仅零散出现在少数日期的个别时段，金额远小于计划购电费；储电量始终被约束在 $[1200,10800]$ kWh 内，并在低价时段充电、高价时段放电之间动态波动，而非如问题一那样每天回到固定值。
+为展示信息不完全条件下一日调度的时段结构，将指定日 2025-03-20 的 $144$ 个 $10\,\mathrm{min}$ 时段画成环形视图（图~\ref{fig:q2-circular}）。图沿顺时针自 $00{:}00$ 起读，由外向内依次为：分时电价色带、净负荷环（负荷减光伏，柱越长净负荷越大）、充放电调度环（浅柱向外为充电，深柱向内为放电）以及储电量 SOC 轨迹。电价取附件 1 典型日分时电价，负荷与光伏取附件 2 当日实测，计划购电为日前锁死量，充放电与 SOC 由日内因果贪心回放得到。该日负荷 $117.82\,\mathrm{MWh}$、光伏 $55.44\,\mathrm{MWh}$、净缺口 $62.38\,\mathrm{MWh}$；计划购电 $73567.46\,\mathrm{kWh}$，购电费 $45215.68$ 元，紧急购电为 $0$。
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.92\textwidth]{Q2_fig1_daily_cost.png}
-  \caption{全年逐日购电费用：紧急购电仅零散出现、金额远小于计划购电费。}
-  \label{fig:q2_daily_cost}
+  \includegraphics[width=\textwidth]{q2_circular_dispatch.pdf}
+  \caption{指定日 2025-03-20：夜间低价补能、早晚高峰放电，SOC 触及 $10800\,\mathrm{kWh}$ 上限且全日无紧急购电。}
+  \label{fig:q2-circular}
 \end{figure}
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.92\textwidth]{Q2_fig2_soc.png}
-  \caption{全年逐日 $0{:}00$ 与 $24{:}00$ 实际储电量：始终落在 $[1200,10800]$ kWh 内并动态波动。}
-  \label{fig:q2_soc}
-\end{figure}
+由图~\ref{fig:q2-circular} 可得出四点：
+\begin{enumerate}
+  \item 调度与电价、净负荷同相位，而非按 $6000\,\mathrm{kWh}$ 做日闭环：SOC 在 $[1200,10800]\,\mathrm{kWh}$ 内随电价滚动，日初 $2118.07\,\mathrm{kWh}$、日末 $2005.28\,\mathrm{kWh}$ 交还次日。
+  \item 谷充峰放成立、储能容量被充分使用：$0{:}00$--$4{:}00$ 最低电价（$0.3713$ 元/kWh）充电 $8253.54\,\mathrm{kWh}$ 并触顶；$6{:}00$ 起（$\ge 0.91$ 元/kWh）与 $16{:}00$--$20{:}00$（峰值 $1.3952$ 元/kWh）放电 $3949.51$ / $4737.33\,\mathrm{kWh}$，SOC 降至全日最低 $1494.26\,\mathrm{kWh}$。
+  \item 信息不完全下，保守日前计划叠加日内因果回放使当日紧急购电为 $0$。
+  \item 容量上限是唯一消纳损失来源：SOC 多次触顶导致弃光 $7.59\,\mathrm{MWh}$，此外无紧急电、无缺供。
+\end{enumerate}
 
 \subsection{模型检验}
 
@@ -192,6 +197,8 @@ C^{\mathrm{em}}=\sum_{t=1}^{144}5\pi_t e_t \label{eq:q2_emergency}
 
 \begin{table}[htbp]
   \centering
+  \small
+  \setlength{\tabcolsep}{4pt}
   \caption{问题二：正式策略与第一版对照——多计划购电、少紧急购电更经济}
   \label{tab:q2_baseline}
   \begin{tabular}{lcccc}
@@ -220,4 +227,3 @@ V2 的计划购电费比 V1 增加 $1\,244\,939.58$ 元，但紧急购电费由 
 \end{figure}
 
   \footnotesize 注：上图中前四组为第一版同口径，初值由 $1$ 月预热滚动得到（$2$ 月 $1$ 日 SOC$_0$ 不等）；最后一组为正式策略，$2$ 月 $1$ 日 SOC$_0=6000$ kWh。
-
