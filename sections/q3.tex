@@ -233,8 +233,28 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
 \begin{table}[!htbp]
   \centering
   \begin{minipage}[t]{0.55\textwidth}
+  \begin{minipage}[t]{0.46\textwidth}
     \centering\footnotesize
     \setlength{\tabcolsep}{3.5pt}
+    \setlength{\tabcolsep}{2pt}
+    \caption{问题三新增符号及其含义}
+    \label{tab:q3_symbols}
+    \begin{tabularx}{\linewidth}{lXl}
+      \toprule
+      符号 & 含义 & 单位 \\
+      \midrule
+      $G^{\mathrm{plan}}_t$ & 时段 $t$ 的计划购电量 & kWh \\
+      $G^{\mathrm{adj}}_t$ & 时段 $t$ 调整（最终执行）购电量 & kWh \\
+      $\Delta^{+}_t,\Delta^{-}_t$ & 上调、下调购电偏差量 & kWh \\
+      $G^{\mathrm{em}}_t$ & 时段 $t$ 的紧急购电量 & kWh \\
+      $q_L,\ q_O,\ q_E$ & 锁死段/可改段/次日段分位（$q_O=q_E=0.50$，$q_L=0.60$） & --- \\
+      $\tau$ & 决策时点，$\tau\in\{0,6,12,18\}$ & h \\
+      \bottomrule
+    \end{tabularx}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.50\textwidth}
+    \centering\scriptsize
+    \setlength{\tabcolsep}{2pt}
     \caption{全年消融：48h 与分位可叠加，谷点在 $q_L=0.65$}
     \label{tab:q3_abl}
     \begin{tabular}{lrrrr}
@@ -252,6 +272,7 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
     \bottomrule
   \end{tabular}
   \end{minipage}
+\end{table}
 
   \medskip
 
@@ -261,6 +282,11 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
     \caption{一月定参：$q_L=0.60$ 评分最低}
     \label{tab:q3_jan}
     \begin{tabular}{lr}
+\begin{table}[!htbp]
+  \centering
+  \caption{一月定参：$q_L=0.60$ 评分最低}
+  \label{tab:q3_jan}
+  \begin{tabular}{lr}
     \toprule
     $q_L$ & 评分 $J$/元 \\
     \midrule
@@ -274,6 +300,7 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
     \bottomrule
     \end{tabular}
   \end{minipage}
+  \end{tabular}
 \end{table}
 
 表~\ref{tab:q3_abl} 表明两条杠杆有效且能叠加：48 h 展望单独省 $3.75$ 万元，并把日末贴底从 $106$ 天降到 $0$；分位单独（24 h$+0.65$）省 $16.46$ 万元；在分位基础上再叠 48 h 展望，还能再省约 $3.0$ 万元，合计约 $19.48$ 万元。网格呈 V 形，谷点在 $q_L=0.65$ 附近而非第二问的 $0.80$：第三问能在 $6/12/18$ 修改合同，锁死段只需要比分位更低的缓冲。取 $q_L=0.65$ 时费用与紧急电量\emph{同向变好}（紧急电量从 $82{,}228$ 降到 $39{,}679$ kWh），说明分位修的是晚间电量预算缺口，不是拿更多紧急电去换账面费用。
