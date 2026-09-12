@@ -342,68 +342,15 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 }
 \def\@maketitle{%
   \newpage
-  % 按要求不输出承诺书页；编号专用页仍由 \makeothertitle 按 withoutpreface 决定。
+  % 按要求不输出承诺书页和编号专用页。
   \makeothertitle
 	}
 
-%% 定义 编号专用页
+%% 编号专用页已关闭：\maketitle 只输出论文题目，不再插入「编号专用页」。
 \def\makeothertitle{%
-  \if@mcm@preface
-  \par
-\newpage
-\null
-\thispagestyle{empty}
-{\zihao{4}\noindent\begin{tabularx}{\textwidth}{cXcX@{}}
-\mcm@numberpage@string@headname & & \mcm@numberpage@string@allcountrynum&\\[-5pt]
-\mcm@numberpage@string@headnameb & &\mcm@numberpage@string@allcountrynumb&\\
-\cline{2-2}\cline{4-4}
-\end{tabularx}
-
-\vspace*{1.2em}
-
-\noindent\rule{\textwidth}{1pt}\par}
-\begin{center}
-{\zihao{4}\bfseries\heiti \mcm@numberpage@string@titlea\par}
-{\vskip1ex\zihao{3}\songti \bfseries\mcm@numberpage@string@titleb\par}
-\end{center}\par
-{%
-\zihao{4}
-\vskip3em
-\hspace*{2em}\mcm@numberpage@string@appraiselog
-\par
-\newlength{\mcm@lenC}
-\setlength{\mcm@lenC}{\textwidth-8.72em}
-\setlength{\mcm@lenC}{\mcm@lenC/6}
-\newlength{\mcm@lenD}
-\settoheight{\mcm@lenD}{\mcm@numberpage@string@reviewer}
-\setlength{\mcm@lenD}{\mcm@lenD+2em}
-\newlength{\mcm@lenF}
-\settoheight{\mcm@lenF}{\mcm@numberpage@string@remarks}
-\setlength{\mcm@lenF}{\mcm@lenF+2em}
-\newcolumntype{P}{@{}p{\mcm@lenC}@{}}
-\hspace*{1.5em}\begin{tabular}{|!{\hspace{4pt}}c!{\hspace{4pt}}|*{6}{P|}}
- \hline
- \rule{0pt}{\mcm@lenD}\raisebox{0.6em}[0pt][0pt]{\mcm@numberpage@string@reviewer} & & & & & &  \\\cline{1-7}
- \rule{0pt}{\mcm@lenF}\raisebox{0.6em}[0pt][0pt]{\mcm@numberpage@string@remarks} & & & & & &  \\
- \hline
-\end{tabular}\par
-\vskip5em
-\hspace*{2em}\mcm@numberpage@string@countrynum}
-
-\vfill
-{\zihao{-4}\kaishu\bfseries\mcm@numberpage@string@inform\par}
-
-\null
-\newpage
-\null
-\setcounter{page}{1}
-{\centering \zihao{3}\bfseries \@title\par}
-\vskip1ex
-\else
-\setcounter{page}{1}
-{\centering \zihao{3}\bfseries \@title\par}
-\vskip1ex
-\fi
+  \setcounter{page}{1}
+  {\centering \zihao{3}\bfseries \@title\par}
+  \vskip1ex
 }
 
 % 中文标题名称设置
