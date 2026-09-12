@@ -143,7 +143,7 @@
 
 \begin{figure}[htbp]
   \centering
-%  \includegraphics[width=0.88\linewidth]{fig_q3_rolling.png}
+  \includegraphics[width=0.88\linewidth]{fig_q3_rolling.png}
   \caption{滚动时域决策示意：以 6:00 为例，紧邻 6 小时为锁死段（$q_L=0.60$），当天剩余为可改段（$q_O=0.50$），次日为展望段（$q_E=0.50$）}
   \label{fig:q3_rolling}
 \end{figure}
@@ -181,6 +181,7 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
   \tilde P^{\mathrm{pv}}_t&=\max\!\big(\hat P^{\mathrm{pv}}_t+\hat F^{-1}_{\mathrm{pv},t}(1-q),\,0\big). \label{eq:q3_quantile_pv}
 \end{align}
 再用 $\tilde L_t=\tilde P^{\mathrm{load}}_t-\tilde P^{\mathrm{pv}}_t$ 代入式~\eqref{eq:q3_lp0}、\eqref{eq:q3_lp_adj}。分位水平 $q$ 由时段属性决定：
+为便于分源调整，把覆盖水平 $q$ 分源施加：负荷上移 $q$、光伏下移 $1-q$。当负荷与光伏两类残差相互独立时，上式等价于对净负荷取 $q$ 分位；一般情形下因两源叠加而偏保守，符合``宁多勿缺''的取向。再用 $\tilde L_t=\tilde P^{\mathrm{load}}_t-\tilde P^{\mathrm{pv}}_t$ 代入式~\eqref{eq:q3_lp0}、\eqref{eq:q3_lp_adj}。分位水平 $q$ 由时段属性决定：
 
 \begin{center}
 \begin{tabular}{llll}
@@ -203,7 +204,7 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
 
 \begin{figure}[htbp]
   \centering
-%  \includegraphics[width=0.9\linewidth]{fig_q3_newsvendor.png}
+  \includegraphics[width=0.9\linewidth]{fig_q3_newsvendor.png}
   \caption{报童分位论证：缺货净成本 $4\pi$ 高于过量成本 $\pi$，临界分位 $0.80$ 只作为 $q_L$ 的搜索上界}
   \label{fig:q3_newsvendor}
 \end{figure}
@@ -245,7 +246,7 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
     48 h$+\beta$ & 13,421,219.84 & $-37{,}510.46$ & 70,433.46 & 0 \\
     24 h$+q_L{=}0.70$ & 13,338,687.71 & $-120{,}042.59$ & 30,313.53 & 22 \\
     24 h$+q_L{=}0.65$ & 13,294,093.95 & $-164{,}636.35$ & 44,783.43 & 37 \\
-    \textbf{48 h$+q_L{=}0.60$（本文）} & \textbf{13,274,667.54} & \textbf{$-184{,}062.76$} & \textbf{58,355.20} & \textbf{1} \\
+    \textbf{48 h$+q_L{=}0.60$（正式）} & \textbf{13,274,667.54} & \textbf{$-184{,}062.76$} & \textbf{58,355.20} & \textbf{1} \\
     48 h$+q_L{=}0.65$ & 13,263,910.99 & $-194{,}819.31$ & 39,678.65 & 1 \\
     48 h$+q_L{=}0.70$ & 13,308,698.92 & $-150{,}031.38$ & 26,711.59 & 1 \\
     48 h$+q_L{=}0.75$ & 13,402,722.60 & $-56{,}007.70$ & 17,308.57 & 0 \\
@@ -257,7 +258,7 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
 
 \begin{figure}[htbp]
   \centering
-%  \includegraphics[width=0.82\linewidth]{fig_q3_ablation.png}
+  \includegraphics[width=0.82\linewidth]{fig_q3_ablation.png}
   \caption{全年消融的 V 形谷点：48 h 展望叠加分位后在 $q_L=0.65$ 处最低，冻结值取一月定参的 $q_L=0.60$}
   \label{fig:q3_ablation}
 \end{figure}
@@ -290,11 +291,11 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
   \end{tabular}
 \end{table}
 
-以 $q_L=0.60$ 冻结后重跑全年，LA 总费用为 $13{,}274{,}667.54$ 元，比在回测样本内选定的 $q_L=0.65$ 高 $10{,}756.55$ 元（$+0.08\%$），代价很小，但避免了用回测样本选参。
+以 $q_L=0.60$ 冻结后重跑全年，LA 总费用为 $13{,}274{,}667.54$ 元，比上一版样本内 $q_L=0.65$ 高 $10{,}756.55$ 元（$+0.08\%$），代价很小，但消除了用评分年选参的问题，选参过程更站得住。
 
 \begin{figure}[htbp]
   \centering
-%  \includegraphics[width=0.78\linewidth]{fig_q3_jan_calib.png}
+  \includegraphics[width=0.78\linewidth]{fig_q3_jan_calib.png}
   \caption{锁死段分位的一月定参：评分 $J$ 在 $q_L=0.60$ 处最低}
   \label{fig:q3_jan_calib}
 \end{figure}
@@ -401,7 +402,7 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
 
 \begin{figure}[htbp]
   \centering
-%  \includegraphics[width=0.9\linewidth]{fig_q3_dispatch_0621.png}
+  \includegraphics[width=0.9\linewidth]{fig_q3_dispatch_0621.png}
   \caption{夏季代表日（2025-06-21）滚动购电策略：白天光伏给储能充电、晚间放电削峰，调整购电略低于计划购电}
   \label{fig:q3_dispatch}
 \end{figure}
@@ -418,7 +419,7 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
     \toprule
     策略 & 全年总费用/元 & 计划购电费/元 & 紧急购电费/元 & 紧急电量/kWh & 日内调整天数 \\
     \midrule
-    \textbf{LA（本文）} & \textbf{13,274,667.54} & 12,335,982.09 & 342,008.68 & 58,355.20 & 334 \\
+    \textbf{LA（赢家）} & \textbf{13,274,667.54} & 12,335,982.09 & 342,008.68 & 58,355.20 & 334 \\
     M0L & 14,075,494.43 & 12,343,660.77 & 1,301,484.79 & 204,224.31 & 182 \\
     N0 & 15,199,483.56 & 12,344,229.47 & 2,855,254.09 & 464,543.52 & 0 \\
     \bottomrule
@@ -429,21 +430,21 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
 
 \subsection{模型检验与稳健性}
 
-\paragraph{约束与一致性检验。}
-导出 result3.xlsx 后，用一个独立的 `check\_result3.py` 从单元格与附件 1 电价重新计算逐日合同费、偏差结算、SOC 平衡与跨日连续，不复用滚动代码。全部通过：回测输出恰好 $334$ 天；计划/调整各 144 个非负购电且列序与模板一致；回放电量平衡、SOC 始终在 $[1200,10800]$、功率不超 $5000$ kW；1 月 1 日 $0{:}00$ 储电量为 $6000$ kWh，相邻日 $24{:}00$ 与次日 $0{:}00$ 相等；当日调整表购电费 $=$ 偏差结算 $+$ 紧急费；全程无泄漏错误（$6/12/18$ 决策不使用任何未发生的实测值）。
+\paragraph{门禁与一致性检验。}
+导出 result3.xlsx 后，用一个独立的 `check\_result3.py` 从单元格与附件 1 电价重新计算逐日合同费、偏差结算、SOC 平衡与跨日连续，不复用滚动代码。全部通过：正式结果恰好 334 天；计划/调整各 144 个非负购电且列序与模板一致；回放电量平衡、SOC 始终在 $[1200,10800]$、功率不超 $5000$ kW；1 月 1 日 $0{:}00$ 储电量为 $6000$ kWh，相邻日 $24{:}00$ 与次日 $0{:}00$ 相等；当日调整表购电费 $=$ 偏差结算 $+$ 紧急费；全程无泄漏错误（$6/12/18$ 决策不使用任何未发生的实测值）。
 
 \paragraph{与先知下界的距离。}
 阶段 1（2 月 1--14 日）上，先知（使用实测净负荷的完美信息 LP）总费用为 $587{,}989.94$ 元，LA 为 $635{,}814.01$ 元，仅高 $8.1\%$；同期 N0 为 $654{,}938.05$ 元。可见 LA 的滚动决策已经逼近先知给出的费用下界，余下的差距主要来自负荷与光伏的预报残差，而非滚动 LP 或回放规则的结构性损失。
 
 \paragraph{参数稳健性。}
-锁死段分位在 V 形谷底附近不敏感：$q_L=0.60$ 与 $0.65$ 的全年费用只差 $0.08\%$，$q_L=0.70$ 也只差 $0.26\%$，说明结论对分位的精确取值稳健，不存在对分位取值过度敏感的情形。一月定参 $q_L=0.60$ 在 $2$--$12$ 月确认重跑中全部通过一致性检验，与因果重跑逐位一致。分月统计显示月费用呈双峰结构（7 月与 12 月最高、4 月与 9 月为低谷），但 334 天中每天都完成了有效的日内调整，模型在各季节均稳定运行。
+锁死段分位在 V 形谷底附近不敏感：$q_L=0.60$ 与 $0.65$ 的全年费用只差 $0.08\%$，$q_L=0.70$ 也只差 $0.26\%$，说明结论对分位的精确取值稳健，不存在``刀尖上的最优''。一月定参 $q_L=0.60$ 在 2--12 月的确认重跑中全部通过门禁，与因果重跑逐位一致。分月统计显示月费用呈双峰结构（7 月与 12 月最高、4 月与 9 月为低谷），但 334 天中每天都完成了有效的日内调整，模型在各季节均稳定运行。
 
 \paragraph{失效模式诊断。}
 对旧 24 h$+\beta$ 方案的逐时段回放表明，紧急购电的 $88.8\%$ 来自\textbf{晚间储能电量耗尽}而非功率触顶，仅 $20{:}00$ 单小时就占 $47.4\%$；日末储电量有 $106$ 天贴近下限 $1200$ kWh。这能解释``加大光伏余量''与``回放阶段留 SOC''两种修补为何无效：前者动的是白天光伏，后者动的是合同已锁定之后的回放，都没碰到``晚间电量预算''这个真正的约束。新方案把修正做进 LP 本身（48 h 展望 $+$ 净负荷分位），日末贴底天数降到 $1$ 天、20 时紧急电量占比明显下降，正好对应这一失效机理。
 
 \begin{figure}[htbp]
   \centering
-  %\includegraphics[width=0.85\linewidth]{fig_q3_emergency.png}
+  \includegraphics[width=0.85\linewidth]{fig_q3_emergency.png}
   \caption{紧急购电逐小时构成：88.8\% 来自晚间储能电量耗尽，20:00 单小时占 47.4\%}
   \label{fig:q3_emergency}
 \end{figure}
