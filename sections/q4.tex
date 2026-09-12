@@ -72,7 +72,38 @@
 
 由表~\ref{tab:q4_all}(a) 可见，在波动电价下，Q4-2 全年总费用 $14\,411\,957.36$ 元，较固定 $q=0.8$ 的 $14\,480\,739.96$ 元省 $68\,782.60$ 元（约 $0.47\%$），紧急电量由 $65\,421.48$ 升至 $79\,132.69$ kWh。这与问题二“略多紧急电、更低总费用”的方向一致；因 Q4-2 未按问题二最新的净分位$+\rho$ 策略重跑，二者费用不能直接逐元对照。
 
+图~\ref{fig:q4_dispatch} 给出 Q4-2 正式回测的日级轨迹。日前链已与问题二对齐为净分位 $+$ 日末 $2400$\,kWh $+$ $\rho$ 回放，全年总费用 $14\,413\,479.02$ 元，与表~\ref{tab:q4_all}(a) 冻结自适应口径相差约 $1522$ 元，排序不变。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\textwidth]{q4_official_dispatch_details.png}
+  \caption{Q4-2 正式方案日级调度：SOC 在 $1950\sim6757$\,kWh 滚动、日末约束 $2400$\,kWh，购电与弃光呈冬高夏低，应急成本集中在少数高时段日。}
+  \label{fig:q4_dispatch}
+\end{figure}
+
+由图~\ref{fig:q4_dispatch} 可见：储电量始终落在 $[1200,10800]$\,kWh 内，日初 SOC 贴着 $2400$\,kWh 约束线上方滚动，并未再做 $6000$\,kWh 日闭环；购电量与弃光同季节起伏，应急购电只出现在少数天数，且应急成本随应急时段数上升。
+
 由表~\ref{tab:q4_all}(b) 可见，Q4-3 正式方案 LA 全年总费用 $13\,987\,150.03$ 元，比不调整的 N0（$15\,786\,744.39$ 元）省 $1\,799\,594.36$ 元（约 $11.40\%$）、紧急电量降 $89.3\%$；比 $24$ h$+\beta\sigma$ 的 M1（$14\,233\,917.43$ 元）再省 $246\,767.40$ 元（约 $1.73\%$）。$48$ 小时展望与净负载分位在波动电价下依然有效。
+
+图~\ref{fig:q4_cost}--图~\ref{fig:q4_daily} 按现行 N0/M0L/LA 回测绘制，LA 全年 $14\,000\,103.12$ 元，与表~\ref{tab:q4_all}(b) 冻结口径相差约 $1.3$ 万元，三策略排序不变。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\textwidth]{q4_cost_structure.png}
+  \caption{Q4-3 三种策略全周期成本：LA 累计 $1400.01$ 万元最低，应急占比 $2.65\%$，低于 M0L 的 $9.32\%$ 与 N0 的 $18.61\%$。}
+  \label{fig:q4_cost}
+\end{figure}
+
+由图~\ref{fig:q4_cost} 可见：各月计划购电仍是主体，N0 的斜纹应急块全年都厚，LA 几乎贴底；应急占比在冬春被 LA 压到最低，累计曲线在正式窗内始终是 $\mathrm{LA}<\mathrm{M0L}<\mathrm{N0}$。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\textwidth]{q4_daily_cost_distribution.png}
+  \caption{Q4-3 日总成本分布：N0 右偏最重，LA 的均值、中位数与 $P_{90}$ 均最低。}
+  \label{fig:q4_daily}
+\end{figure}
+
+由图~\ref{fig:q4_daily} 可见：LA 把高费用尾部压下去，N0 的 ECDF 在高分位明显落后，说明日内不调整会留下更多极端高费日，而不是只抬高均值。
 
 指定日期的购电量、购电费与紧急购电量见表~\ref{tab:q4_dates}，完整的计划/调整购电量、充放电量与紧急购电明细分别保存于 \texttt{result4-2.xlsx} 与 \texttt{result4-3.xlsx}。
 
@@ -105,7 +136,16 @@
 
 \subsubsection{电价预测的贡献（Oracle 诊断）}
 
-为分离“电价预测误差”与“电价波动环境”的影响，做 Oracle 对照：决策若使用当天真实电价、结算仍用附件~4 真值，则 Q4-2 的 \texttt{hat0} 相对 Oracle 仅高约 $0.57\%$。这说明费用相对附件~1 世界（问题二 $13\,697\,499.17$ 元）的跳升主要来自附件~4 的波动电价环境本身，而非 $\hat p_0$ 的预测误差，三层扩展电价预测已足够接近可用上界。
+为分离“电价预测误差”与“电价波动环境”的影响，做 Oracle 对照：决策若使用当天真实电价、结算仍用附件~4 真值，则 Q4-2 的 \texttt{hat0} 相对 Oracle 仅高约 $0.57\%$。这说明费用相对附件~1 世界（问题二 $13\,697\,499.17$ 元）的跳升主要来自附件~4 的波动电价环境本身，而非 $\hat p_0$ 的预测误差，三层扩展电价预测已足够接近可用上界。图~\ref{fig:q4_oracle} 把该分解画成瀑布图；诊断口径为 Q4-2 的固定 $q{=}0.8$ 方案与 Q4-3 的 M1，不是表~\ref{tab:q4_all} 的正式自适应/LA。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.78\textwidth]{q4_error_decomposition.png}
+  \caption{全周期成本误差分解：环境间隙约 $+4.6\%$，预测间隙约 $+0.57\%$，合计约 $+5.2\%$，费用跳升主要来自附件~4 电价环境。}
+  \label{fig:q4_oracle}
+\end{figure}
+
+由图~\ref{fig:q4_oracle} 可见：以典型日电价基准为起点，真实电价环境把 Oracle 成本抬高约 $4.60\%$（Q4-2）与 $4.67\%$（Q4-3 M1）；在此之上，负荷与光伏预测误差再抬 $0.57\%$ 与 $0.59\%$。环境间隙约占合计偏差的九成，与正文“预测代价不到 $0.57\%$”一致。
 
 \subsubsection{约束与泄漏门禁}
 
