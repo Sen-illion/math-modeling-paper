@@ -33,9 +33,10 @@ $0{:}00$ 做计划时，当天负载与光伏均未知。决策只用点预测 $
 \end{equation}
 窗长取日历周 $W=7$。$1$ 月 $15$--$31$ 日同刻 MAE 在 $W=5\sim7$ 处最低（$92\sim96$\,kW），$W=1$ 与 $W=21$ 均为 $119$\,kW。若用同星期均值，会跨越不同季节，$2$--$12$ 月 MAE 为 $493$\,kW。若把含星期的树用于光伏，MAE 为 $159.33$\,kW，高于 $7$ 日均值 $153.40$\,kW。负载与光伏逐时段 Pearson 相关全年均值仅 $0.031$，故分开建模。本文点预测为负载扩展窗 XGB 与光伏 $7$ 日同刻均值；分位、$S^{*}$、$\rho$ 均作用在该组点预测之后。图~\ref{fig:q2_model_compare} 前四组费用口径不同：其中最高一组是负载也改用了 $7$ 日均值。
 
-\begin{figure}[H]
+\Needspace{10\baselineskip}
+\begin{figure}[!htbp]
   \centering
-  \makebox[\textwidth][c]{\includegraphics[width=0.88\textwidth]{Q2_fig3_model_compare.png}}
+  \makebox[\textwidth][c]{\includegraphics[width=0.82\textwidth]{Q2_fig3_model_compare.png}}
   \caption{不同预测与控制策略的全年总购电费比较}
   \label{fig:q2_model_compare}
 \end{figure}
@@ -136,7 +137,7 @@ C=\sum_{t}\pi_t G_t+\sum_{t}5\pi_t e_t,
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.88\textwidth]{q2_monthly_cost_boxplot.pdf}
-  \caption{回测区间日购电费冬高夏低：$12$ 月日均 $5.46$ 万元最高，$4$--$5$ 月 $3.07$--$3.27$ 万元最低，$6$ 月离群点来自应急购电。}
+  \caption{回测区间日购电费冬高夏低：$12$ 月日均 $5.46$ 万元最高，$4$--$5$ 月 $3.07$--$3.27$ 万元最低，$6$ 月离群点来自应急购电}
   \label{fig:q2_monthly}
 \end{figure}
 
@@ -206,7 +207,8 @@ C=\sum_{t}\pi_t G_t+\sum_{t}5\pi_t e_t,
 
 指定日 2025-03-20 的 $144$ 个 $10\,\mathrm{min}$ 时段调度如图~\ref{fig:q2-circular}。
 
-\begin{figure}[H]
+\Needspace{10\baselineskip}
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.78\textwidth]{q2_circular_dispatch.pdf}
   \caption{指定日 2025-03-20 分时电价、净负载、充放电与储电量环形对照（顺时针自 $00{:}00$，由外向内四环）}

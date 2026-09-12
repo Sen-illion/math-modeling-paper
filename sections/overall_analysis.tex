@@ -9,17 +9,18 @@
   \caption{四问关键结果对照}
   \label{tab:overall}
   \small
-  \begin{tabularx}{\textwidth}{l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X}
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
     \toprule
-    问题 & 适用条件与新增机制 & 本文方案 & 关键费用（元） & 同口径对照（元）与节省 \\
+    问题 & 适用条件与新增机制 & 本文方案 & 关键费用（元） & 同口径对照与节省 \\
     \midrule
     一 & 典型日、确定性日前计划 & 线性规划 & 日购电费 $35\,126.85$ & 无储能 $48\,052.05$，省 $26.90\%$ \\
     \addlinespace
-    二 & 全年日前计划；负载/光伏预测；$5$ 倍紧急购电 & 净分位 $+$ 日末 $2400$ $+$ $\rho$ 回放 & 全年 $13\,695\,403.61$ & 固定分量 $0.8$ 为 $13\,765\,167.58$，省 $0.51\%$ \\
+    二 & 全年日前计划；负载/光伏预测；$5$ 倍紧急购电 & 净分位 $+$ 日末 $2400$ $+$ $\rho$ 回放 & 全年 $13\,695\,403.61$ & 固定 $0.8$ 为 $13\,765\,167.58$，省 $0.51\%$ \\
     \addlinespace
     三 & 日内滚动调整；少买 $0.5$ 倍、多买 $1.5$ 倍偏差结算 & $48$ h 展望 $+$ 净负载分位 & 全年 $13\,263\,910.99$ & 不调整 N0 $15\,173\,294.55$，省 $12.58\%$ \\
     \addlinespace
-    四 & 实时波动电价；决策用 $\hat p_0$、结算用附件~4 & 三层电价预测 $+$ 净分位 $+\rho$ / LA $q{=}0.60$ & Q4-2 $14\,413\,479.02$；Q4-3 $14\,000\,103.12$ & Q4-2 固定 $14\,480\,739.96$，省 $0.46\%$；Q4-3 N0 $15\,985\,058.29$，省 $12.42\%$ \\
+    四 & 实时波动电价；决策用 $\hat p_0$、结算用附件~4 & 三层电价预测 $+$ 净分位 $+\rho$ / LA $q{=}0.60$ & Q4-2 $14\,413\,479.02$；Q4-3 $14\,000\,103.12$ & 固定 $14\,480\,739.96$，省 $0.46\%$；N0 $15\,985\,058.29$，省 $12.42\%$ \\
     \bottomrule
   \end{tabularx}
 \end{table}

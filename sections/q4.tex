@@ -197,7 +197,8 @@ b_{1,t}=p_t^{(1)},\qquad
 
 图~\ref{fig:q4_dispatch} 进一步给出了 Q4-2 本文方案的日级运行情况。
 
-\begin{figure}[htbp]
+\Needspace{10\baselineskip}
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.72\textwidth]{q4_official_dispatch_details.png}
   \caption{Q4-2 本文方案日级运行情况}
@@ -210,23 +211,27 @@ b_{1,t}=p_t^{(1)},\qquad
 
 这表明，在实时电价波动条件下，仅依靠日前计划难以充分应对当天负载和光伏预测误差。利用 $6{:}00$、$12{:}00$ 和 $18{:}00$ 获得的新信息重新调整后续购电计划，可以显著减少高价紧急购电，从而降低全年总费用。
 
-\begin{figure}[htbp]
+\Needspace{10\baselineskip}
+\begin{figure}[!htbp]
   \centering
-  \includegraphics[width=0.72\textwidth]{q4_cost_structure.png}
-  \caption{Q4-3 三种策略的全年成本结构}
-  \label{fig:q4_cost}
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{q4_cost_structure.png}
+    \caption{全年成本结构}
+    \label{fig:q4_cost}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{q4_daily_cost_distribution.png}
+    \caption{日总成本分布}
+    \label{fig:q4_daily}
+  \end{subfigure}
+  \caption{Q4-3 三种策略的费用结构与日费用分布}
+  \label{fig:q4_cost_daily}
 \end{figure}
 
-由图~\ref{fig:q4_cost} 可见，三种策略的费用差异主要来自紧急购电。N0 的紧急购电费用占比较高，而 LA 通过日内滚动调整明显压低了该部分费用，因此全年累计费用始终低于 M0L 和 N0。
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.72\textwidth]{q4_daily_cost_distribution.png}
-  \caption{Q4-3 三种策略的日总成本分布}
-  \label{fig:q4_daily}
-\end{figure}
-
-由图~\ref{fig:q4_daily} 可见，LA 不仅降低了日总费用的整体水平，也明显减少了高费用日期的出现。这说明日内滚动调整的作用不仅体现在降低全年平均费用，还能够减少由预测偏差造成的极端高费用情况。
+由图~\ref{fig:q4_cost} 可见，三种策略的费用差异主要来自紧急购电。N0 的紧急购电费用占比较高，而 LA 通过日内滚动调整明显压低了该部分费用，因此全年累计费用始终低于 M0L 和 N0。由图~\ref{fig:q4_daily} 可见，LA 不仅降低了日总费用的整体水平，也明显减少了高费用日期的出现。这说明日内滚动调整的作用不仅体现在降低全年平均费用，还能够减少由预测偏差造成的极端高费用情况。
 
 指定日期的购电量、购电费用与紧急购电量见表~\ref{tab:q4_dates}。
 
@@ -290,7 +295,8 @@ b_{1,t}=p_t^{(1)},\qquad
 
 诊断结果如图~\ref{fig:q4_oracle} 所示。
 
-\begin{figure}[htbp]
+\Needspace{10\baselineskip}
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.72\textwidth]{q4_error_decomposition.png}
   \caption{实时电价环境与电价预测误差的费用影响}
