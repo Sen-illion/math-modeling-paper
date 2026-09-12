@@ -83,18 +83,20 @@
 
 从全年日历热图（图~\ref{fig:att2_calendar}）可以看出，负载在冬夏两季整体偏高、逐日又存在明显的周内波动，光伏则只在白天出力、夏季明显强于冬季。这表明负载与光伏同时存在季节周期和日内周期，因此预测模型必须具备捕捉周期特征的能力。
 
-\begin{figure}[htbp]
+\begin{figure}[!htbp]
   \centering
-  \begin{subfigure}[t]{0.48\textwidth}
+  \begin{subfigure}[t]{0.92\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{att2_cal_a.png}
+    \includegraphics[width=\linewidth]{att2_cal_a.pdf}
     \caption{小区负载}
     \label{fig:att2_calendar_a}
   \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.48\textwidth}
+
+  \vspace{0.35em}
+
+  \begin{subfigure}[t]{0.92\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{att2_cal_b.png}
+    \includegraphics[width=\linewidth]{att2_cal_b.pdf}
     \caption{光伏实测功率}
     \label{fig:att2_calendar_b}
   \end{subfigure}
