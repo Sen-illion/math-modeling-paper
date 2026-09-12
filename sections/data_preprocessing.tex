@@ -139,28 +139,7 @@
   \label{fig:att2_season}
 \end{figure}
 
-工作日负载峰值 $6195$ kW、周末峰值 $5367$ kW，工作日高约 $15\%$，星期结构由问题二的负载回归处理。
-
-光伏预报误差（图~\ref{fig:att3}）集中在白天，夜间 MAE 接近 0，0:00 发布的平均 MAE 达 $341$ kW，误差不可忽略。由于点预测在白天存在明显偏差，直接使用会造成供电缺口，因此需要对负载取 $q_L=0.8$、光伏取 $q_P=0.2$ 做分位保守修正。
-
-\begin{figure}[htbp]
-  \centering
-  \begin{subfigure}[t]{0.48\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{att3_panel_a.png}
-    \caption{四个发布时间的平均绝对误差}
-    \label{fig:att3_a}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[t]{0.48\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{att3_panel_b.png}
-    \caption{$0{:}00$ 发布预报均值与实测整点均值}
-    \label{fig:att3_b}
-  \end{subfigure}
-  \caption{光伏预报误差}
-  \label{fig:att3}
-\end{figure}
+工作日负载峰值 $6195$ kW、周末峰值 $5367$ kW，工作日高约 $15\%$，星期结构由问题二的负载回归处理。附件3 的 $0{:}00$ 光伏预报平均 MAE 约 $341$ kW，误差集中在白天，分析见问题三。
 
 附件4 全年电价（图~\ref{fig:att4}）范围 $0.0076\sim1.7936$ 元/kWh，日内峰谷明显；其中与附件1 相关性最高的日期为 2025-04-22，相关系数高达 $0.992$。这说明附件1 能充分代表全年电价形态，可用于后续策略验证。
 
