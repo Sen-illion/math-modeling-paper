@@ -22,7 +22,6 @@
 \textbf{（1）时段电量平衡约束}
 
 为保证每个时段的小区用电需求得到满足，需要维持微电网内部的电量平衡。记时段 $t$ 的小区负载功率和光伏预测功率分别为 $P_t^{\mathrm{load}}$ 和 $P_t^{\mathrm{pv}}$（kW），单个时段长度为 $\Delta t=1/6\,\mathrm{h}$；储能充放电效率记为 $\eta=0.9$。则每个时段的外网购电量、光伏发电量和储能有效放电量之和，应等于负载用电量、储能充电所需电量和弃电量之和，即
-
 \begin{equation}
 G_t+P_t^{\mathrm{pv}}\Delta t+\eta d_t
 =
@@ -36,7 +35,6 @@ P_t^{\mathrm{load}}\Delta t+\frac{c_t}{\eta}+w_t,
 \textbf{（2）储电量状态转移约束}
 
 储能设备能够将当前时段的电能保留至后续时段，因此前后时段的储电量需要连续变化。根据电池侧充放电量的定义，时段末储电量满足
-
 \begin{equation}
 E_t=E_{t-1}+c_t-d_t,
 \qquad t=1,\ldots,144.
@@ -48,7 +46,6 @@ E_t=E_{t-1}+c_t-d_t,
 \textbf{（3）储能容量约束}
 
 为保证储能设备始终在允许的容量范围内运行，根据附录给出的储能参数，对各时段末储电量设置上下限：
-
 \begin{equation}
 1200\le E_t\le10800,
 \qquad t=1,\ldots,144.
@@ -60,7 +57,6 @@ E_t=E_{t-1}+c_t-d_t,
 \textbf{（4）日初、日末储电量约束}
 
 题目要求储能设备在 $0{:}00$ 和 $24{:}00$ 的储电量相同。根据给定的初始储电量，设置
-
 \begin{equation}
 E_0=E_{144}=6000.
 \label{eq:soc_terminal}
@@ -75,7 +71,7 @@ E_0=E_{144}=6000.
 \label{eq:daily_energy_balance}
 \end{equation}
 
-式~\eqref{eq:daily_energy_balance} 表明，在电池侧口径下，全天总充电量与总放电量相等，从而保证储能经过一天调度后恢复至初始储电水平。
+式~\eqref{eq:daily_energy_balance} 表明，储能设备全天总充电量与总放电量相等，从而保证储能经过一天调度后恢复至初始储电水平。
 
 \textbf{（5）接口充放电功率约束}
 
