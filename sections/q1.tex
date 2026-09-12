@@ -142,6 +142,54 @@ C^{*}=\sum_{t=1}^{144}\pi_t G_t^{*}.
 
 由于模型的目标函数和约束均为线性形式，该最优解为给定数据及约束条件下的全局最优解，由此形成全天144个时段的最优购电与储能调度方案。
 
+\subsection{模型求解}
+
+根据上述目标函数与约束条件，问题一可转化为标准线性规划问题。本文采用 CBC 求解器对全天 $144$ 个时段进行统一求解，以确定各时段的购电量、储能充放电量及储电量变化，并获得全天计划购电费用最小的调度方案。
+
+\subsubsection{模型的矩阵化表示}
+
+为便于求解，将各时段的计划购电量、充电量、放电量、弃电量和储电量依次排列，构成决策变量向量
+
+\begin{equation}
+\boldsymbol{x}=
+(G_1,\ldots,G_{144},
+c_1,\ldots,c_{144},
+d_1,\ldots,d_{144},
+w_1,\ldots,w_{144},
+E_1,\ldots,E_{144})^{\mathsf T}.
+\end{equation}
+
+将前述目标函数及各项约束整理后，可写成标准线性规划形式：
+
+\begin{equation}
+\begin{aligned}
+\min_{\boldsymbol{x}}\quad
+&\boldsymbol{p}^{\mathsf T}\boldsymbol{x},\\
+\mathrm{s.t.}\quad
+&A_{\mathrm{eq}}\boldsymbol{x}=\boldsymbol{b}_{\mathrm{eq}},\\
+&A_{\mathrm{ub}}\boldsymbol{x}\le\boldsymbol{b}_{\mathrm{ub}},\\
+&\boldsymbol{\ell}\le\boldsymbol{x}\le\boldsymbol{u}.
+\end{aligned}
+\end{equation}
+
+其中，目标系数向量（$\boldsymbol{p}$）由各时段电价 $\pi_t$ 构成，购电量 $G_t$ 对应相应时段的电价系数，其余变量不直接产生购电费用，对应系数为零；等式约束矩阵（$A_{\mathrm{eq}}$）及其右端向量（$\boldsymbol{b}_{\mathrm{eq}}$）表示各时段的电量平衡、储电量状态转移和日末储电量要求；不等式约束矩阵（$A_{\mathrm{ub}}$）及其右端向量（$\boldsymbol{b}_{\mathrm{ub}}$）表示充放电功率等运行限制；$\boldsymbol{\ell}$ 和 $\boldsymbol{u}$ 分别表示决策变量的下界和上界。
+
+通过上述处理，可将微电网全天购电与储能调度问题统一转化为标准线性规划问题，为后续求解提供统一的数学形式。
+
+\subsubsection{模型求解}
+
+采用 CBC 求解器对上述线性规划模型进行求解。求解过程中，将全天 $144$ 个时段同时纳入优化，并通过储电量状态转移关系反映前后时段之间的影响，使求解器能够根据全天电价、光伏出力和负载需求，统一确定各时段的购电与储能充放电安排。
+
+求解完成后得到最优决策向量 $\boldsymbol{x}^{*}$，其中包含各时段的最优购电量 $G_t^{*}$、充电量 $c_t^{*}$、放电量 $d_t^{*}$、弃电量 $w_t^{*}$ 和储电量 $E_t^{*}$。对应的最小全天计划购电费用为
+
+\begin{equation}
+C^{*}
+=
+\sum_{t=1}^{144}\pi_t G_t^{*}.
+\end{equation}
+
+由此得到问题一的全天计划购电方案及储能运行轨迹，为后续分析储能在不同时段的充放电规律及其对购电费用的影响提供依据。
+
 \subsection{求解结果}
 
 主要结果为：全天计划购电量 $59482.70\,\mathrm{kWh}$，全天购电费 $35126.85$ 元；电池侧全天充电 $18666.60\,\mathrm{kWh}$、放电 $18666.60\,\mathrm{kWh}$（满足日闭环），弃光为 $0$；$0{:}00$ 与 $24{:}00$ 储电量均为 $6000\,\mathrm{kWh}$；接口最大充电功率触达 $5000\,\mathrm{kW}$，最大放电功率为 $4293.92\,\mathrm{kW}$（未触上限）。
