@@ -53,7 +53,7 @@ XGBoost 负载 / $7$ 日光伏 $\;\to\;$
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.85\textwidth]{Q2_fig3_model_compare.png}
+  \includegraphics[width=0.78\textwidth]{Q2_fig3_model_compare.png}
   \caption{预测与控制策略全年总购电费：XGB 扩展窗最低，正式净分位$+\rho$ 再降至 $1369.54$ 万元。}
   \label{fig:q2_model_compare}
 \end{figure}
@@ -171,11 +171,11 @@ XGBoost 负载 / $7$ 日光伏 $\;\to\;$
 
 由表~\ref{tab:q2_purchase} 至表~\ref{tab:q2_emergency} 可见：计划购电集中在光伏回落的 $16{:}00$、$18{:}00$ 晚高峰，$10{:}00$ 与 $20{:}00$ 分别由富余光伏与储能放电覆盖；储能仍是“凌晨低价充电、早晚高峰放电”，但 $24{:}00$ 储电量不再钉在 $6000$，而是在运行窗内滚动，四天日末均高于计划硬约束 $2400$。指定四天中仅 $9$ 月 $23$ 日出现紧急购电，且集中在 $20{:}30$ 之后的晚高峰尾段。
 
-为展示信息不完全条件下一日调度的时段结构，将指定日 2025-03-20 的 $144$ 个 $10\,\mathrm{min}$ 时段画成环形视图（图~\ref{fig:q2-circular}）。图沿顺时针自 $00{:}00$ 起读，由外向内依次为：分时电价色带、净负载环、充放电调度环以及储电量 SOC 轨迹。电价取附件 1 典型日分时电价，负载与光伏取附件 2 当日实测，计划购电与充放电、SOC 均来自正式策略的日前锁死量与 $\rho$ 因果回放。该日负载 $117.82\,\mathrm{MWh}$、光伏 $55.44\,\mathrm{MWh}$、净缺口 $62.38\,\mathrm{MWh}$；计划购电 $70698.38\,\mathrm{kWh}$，购电费 $43184.03$ 元，紧急购电为 $0$。
+为展示信息不完全条件下一日调度的时段结构，将指定日 2025-03-20 的 $144$ 个 $10\,\mathrm{min}$ 时段画成环形视图（图~\ref{fig:q2-circular}）。图沿顺时针自 $00{:}00$ 起读，由外向内依次为：分时电价色带、净负载环、充放电调度环以及储电量 SOC 轨迹。电价取附件 1 典型日分时电价，负载与光伏取附件 2 当日实测，计划购电与充放电、SOC 均来自正式策略的日前锁死量与 $\rho$ 因果回放。该日负载 $117.82\,\mathrm{MWh}$、光伏 $55.44\,\mathrm{MWh}$、净缺口 $62.38\,\mathrm{MWh}$；计划购电 $70\,698.38$ kWh，购电费 $43\,184.03$ 元，紧急购电为 $0$。
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{q2_circular_dispatch.pdf}
+  \includegraphics[width=0.78\textwidth]{q2_circular_dispatch.pdf}
   \caption{指定日 2025-03-20：夜间低价补能、早晚高峰放电，SOC 触及 $10800\,\mathrm{kWh}$ 上限且全日无紧急购电。}
   \label{fig:q2-circular}
 \end{figure}
