@@ -154,12 +154,12 @@
   \hat P^{\mathrm{pv}}(t)=\max\!\big(\operatorname{interp}(t\Delta t;\ 0,1,\dots,24),\ 0\big),
   \label{eq:q3_pv}
 \end{equation}
-其中插值起点 $p_0$ 取\textbf{发布前最后一个已完成 10 分钟时段的实测光伏}，而不是硬设为零：夏季 $6{:}00$、$18{:}00$ 的起点光伏明显不为零，硬设为零会系统性低估全天光伏电量。实测起点严格因果，$0{:}00$ 发布时取前一日末段（数值上为 0），因此与旧口径等价，可用作对照。图~\ref{fig:q3_pv_err} 表明年均值几乎贴合会掩盖坏天：晴天代表日（2025-12-06）白天 MAE 仅 $81$ kW，多云代表日（2025-08-25）高达 $995$ kW；四个发布时点的误差都集中在日照时段，$0{:}00$ 发布的白天平均 MAE 约 $311$ kW。这正是后文对净负荷做分位修正的直接依据。
+其中插值起点 $p_0$ 取\textbf{发布前最后一个已完成 10 分钟时段的实测光伏}，而不是硬设为零：夏季 $6{:}00$、$18{:}00$ 的起点光伏明显不为零，硬设为零会系统性低估全天光伏电量。实测起点严格因果，$0{:}00$ 发布时取前一日末段（数值上为 0），因此与旧口径等价，可用作对照。图~\ref{fig:q3_pv_err} 显示四个发布时点的预报误差都集中在日照时段，$0{:}00$ 发布的全预见期平均 MAE 约 $341$ kW，这正是后文对净负荷做分位修正的直接依据。
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=0.90\linewidth]{att3_pv_forecast_error.png}
-  \caption{晴天白天 MAE 仅 $81$ kW、多云日达 $995$ kW；误差集中在日照时段，分位余量不可省}
+  \includegraphics[width=0.82\linewidth]{att3_pv_forecast_error.png}
+  \caption{光伏预报误差集中在日照时段，$0{:}00$ 发布的平均 MAE 达 $341$ kW，分位余量不可省}
   \label{fig:q3_pv_err}
 \end{figure}
 
@@ -232,10 +232,10 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
 
 \begin{table}[!htbp]
   \centering
-  \begin{minipage}[t]{0.62\textwidth}
-    \centering\footnotesize
-    \setlength{\tabcolsep}{2.5pt}
-    \caption{全年消融：48h 与分位可叠加，谷点在 $q_L=0.65$}
+  \begin{minipage}[t]{0.63\textwidth}
+    \centering\scriptsize
+    \setlength{\tabcolsep}{2pt}
+    \captionof{table}{全年消融：48h 与分位可叠加，谷点在 $q_L=0.65$}
     \label{tab:q3_abl}
     \begin{tabular}{lrrrr}
     \toprule
@@ -250,12 +250,12 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
     48h$+0.70$ & 13,308,698.92 & $-150{,}031.38$ & 26,711.59 & 1 \\
     48h$+0.75$ & 13,402,722.60 & $-56{,}007.70$ & 17,308.57 & 0 \\
     \bottomrule
-  \end{tabular}
+    \end{tabular}
   \end{minipage}\hfill
-  \begin{minipage}[t]{0.34\textwidth}
+  \begin{minipage}[t]{0.33\textwidth}
     \centering\footnotesize
-    \setlength{\tabcolsep}{3.5pt}
-    \caption{一月定参：$q_L=0.60$ 评分最低}
+    \setlength{\tabcolsep}{3pt}
+    \captionof{table}{一月定参：$q_L=0.60$ 评分最低}
     \label{tab:q3_jan}
     \begin{tabular}{lr}
     \toprule
@@ -271,6 +271,7 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
     \bottomrule
     \end{tabular}
   \end{minipage}
+  \par
 \end{table}
 
 表~\ref{tab:q3_abl} 表明两条杠杆有效且能叠加：48 h 展望单独省 $3.75$ 万元，并把日末贴底从 $106$ 天降到 $0$；分位单独（24 h$+0.65$）省 $16.46$ 万元；在分位基础上再叠 48 h 展望，还能再省约 $3.0$ 万元，合计约 $19.48$ 万元。网格呈 V 形，谷点在 $q_L=0.65$ 附近而非第二问的 $0.80$：第三问能在 $6/12/18$ 修改合同，锁死段只需要比分位更低的缓冲。取 $q_L=0.65$ 时费用与紧急电量\emph{同向变好}（紧急电量从 $82{,}228$ 降到 $39{,}679$ kWh），说明分位修的是晚间电量预算缺口，不是拿更多紧急电去换账面费用。
@@ -485,4 +486,4 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
 
 \subsection{本问结论}
 
-本问需要引入 $6{:}00$、$12{:}00$、$18{:}00$ 时点预报来调整购电策略：不调整的 N0 全年费用 $15{,}199{,}483.56$ 元，比最优策略 LA 高 $192.5$ 万元（$+14.5\%$），说明日内调整必要；每次都调整优于选择性调整（M0L 比 LA 贵 $80$ 万元）。最优策略为 LA——48 h 展望加三段净负荷分位（$q_L=0.60$，一月定参），全年总费用 $13{,}274{,}667.54$ 元，紧急电量较 N0 下降 $87.4\%$。完整策略见 result3.xlsx。
+本问需要引入 $6{:}00$、$12{:}00$、$18{:}00$ 时点预报来调整购电策略：不调整的 N0 全年费用 $15{,}199{,}483.56$ 元，比最优策略 LA 高 $192.5$ 万元（$+14.5\%$），说明日内调整必要；每次都调整优于选择性调整（M0L 比 LA 贵 $80$ 万元）。最优策略为 LA——48 h 展望加三段净负荷分位（$q_L=0.60$，一月定参），全年总费用 $13{,}274{,}667.54$ 元，紧急电量较 N0 下降 $87.4\%$。完整策略见 result3.xlsx。表明年均值几乎贴合会掩盖坏天：晴天代表日（2025-12-06）白天 MAE 仅 $81$ kW，多云代表日（2025-08-25）高达 $995$ kW；白天1。90晴天白天 MAE 仅 $81$ kW、多云日达 $995$ kW；误差集中在日照时段22.5\hfill4
