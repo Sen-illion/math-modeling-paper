@@ -253,7 +253,10 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
     48h$+0.75$ & 13,402,722.60 & $-56{,}007.70$ & 17,308.57 & 0 \\
     \bottomrule
   \end{tabular}
-  \end{minipage}\hfill
+  \end{minipage}
+
+  \medskip
+
   \begin{minipage}[t]{0.41\textwidth}
     \centering\footnotesize
     \setlength{\tabcolsep}{3.5pt}
@@ -271,6 +274,24 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
     0.50 & 877,864.13 & 876,970.04 & 6,439.14 \\
     0.75 & 887,440.74 & 886,346.10 & 561.29 \\
     \bottomrule
+    \end{tabular}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.52\textwidth}
+    \centering\scriptsize
+    \setlength{\tabcolsep}{1pt}
+    \caption{指定日期调整后购电量与全天购电费用：夏季日费用最低、冬季日最高}
+    \label{tab:q3_t1}
+    \begin{tabular}{l r r r r r r r r}
+        \toprule
+        日期 & \multicolumn{6}{c}{指定时段购电量/kWh} & 全天购电量/kWh & 全天总购电费/元 \\
+        \cmidrule(lr){2-7}
+        & 10:00--10:10 & 12:00--12:10 & 14:00--14:10 & 16:00--16:10 & 18:00--18:10 & 20:00--20:10 & & \\
+        \midrule
+        2025-03-20 & 0.00 & 523.80 & 0.00 & 620.65 & 715.88 & 0.00 & 61,909.72 & 40,736.96 \\
+        2025-06-21 & 0.00 & 0.00 & 0.00 & 55.53 & 411.32 & 0.00 & 40,973.80 & 22,107.38 \\
+        2025-09-23 & 0.00 & 357.38 & 0.00 & 505.11 & 789.37 & 0.00 & 66,868.91 & 45,502.61 \\
+        2025-12-21 & 0.00 & 1006.90 & 0.00 & 836.82 & 719.13 & 0.00 & 95,888.88 & 64,039.30 \\
+        \bottomrule
     \end{tabular}
   \end{minipage}
 \end{table}
@@ -309,24 +330,6 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
 \begin{table}[htbp]
   \centering\footnotesize
 
-  \begin{minipage}[t]{0.52\textwidth}
-    \centering\scriptsize
-    \setlength{\tabcolsep}{1pt}
-    \caption{指定日期调整后购电量与全天购电费用：夏季日费用最低、冬季日最高}
-    \label{tab:q3_t1}
-    \begin{tabular}{l r r r r r r r r}
-        \toprule
-        日期 & \multicolumn{6}{c}{指定时段购电量/kWh} & 全天购电量/kWh & 全天总购电费/元 \\
-        \cmidrule(lr){2-7}
-        & 10:00--10:10 & 12:00--12:10 & 14:00--14:10 & 16:00--16:10 & 18:00--18:10 & 20:00--20:10 & & \\
-        \midrule
-        2025-03-20 & 0.00 & 523.80 & 0.00 & 620.65 & 715.88 & 0.00 & 61,909.72 & 40,736.96 \\
-        2025-06-21 & 0.00 & 0.00 & 0.00 & 55.53 & 411.32 & 0.00 & 40,973.80 & 22,107.38 \\
-        2025-09-23 & 0.00 & 357.38 & 0.00 & 505.11 & 789.37 & 0.00 & 66,868.91 & 45,502.61 \\
-        2025-12-21 & 0.00 & 1006.90 & 0.00 & 836.82 & 719.13 & 0.00 & 95,888.88 & 64,039.30 \\
-        \bottomrule
-    \end{tabular}
-  \end{minipage}\hfill
   \begin{minipage}[t]{0.44\textwidth}
     \centering
     \setlength{\tabcolsep}{1.5pt}
@@ -407,11 +410,8 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
         \bottomrule
       \end{tabular}
     \end{minipage}
-  \end{minipage}
-
-  \medskip
-
-  \begin{minipage}{\textwidth}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.50\textwidth}
     \centering
     \setlength{\tabcolsep}{4pt}
     \caption{指定日期紧急购电量：集中在早、晚净负荷高峰}
