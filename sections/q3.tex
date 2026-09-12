@@ -166,7 +166,7 @@
 \end{figure}
 
 \paragraph{负载预报：因果 XGB 与日内比例校正。}
-$0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征含星期/月份/年内日序、滞后 $1/2/7$ 日与 $3/7/30$ 日均值等，训练只用目标日之前的数据；训练样本不足时退回上周同一星期几。$6/12/18$ 时点则用``今日已发生均值与 $0{:}00$ 预报同时段均值之比''缩放剩余负荷：
+$0{:}00$ 的负载点预报沿用第二问的因果 Expanding XGBoost：特征含星期/月份/年内日序、滞后 $1/2/7$ 日与 $3/7/30$ 日均值等，训练只用目标日之前的数据；训练样本不足时退回上周同一星期几。$6/12/18$ 时点则用``今日已发生均值与 $0{:}00$ 预报同时段均值之比''缩放剩余负：
 \begin{equation}
   \hat P^{\mathrm{load}}_t \leftarrow \hat P^{\mathrm{load}}_t\cdot
   \frac{\overline{P^{\mathrm{load}}}_{\tau^-}}{\overline{\hat P^{\mathrm{load}}}_{\tau^-}},\qquad t>\tau,
