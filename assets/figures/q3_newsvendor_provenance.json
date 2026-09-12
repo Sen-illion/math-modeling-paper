@@ -1,0 +1,25 @@
+{
+  "question": "Q3",
+  "figure_label": "fig:q3_newsvendor",
+  "kind": "analytical illustration, not empirical observations or fitted costs",
+  "source": "sections/q3.tex: eq:q3_cost and eq:q3_newsvendor",
+  "error_definition": "e = planned purchase - realized requirement, kWh",
+  "locked_loss_over_pi": "4*max(-e,0) + max(e,0)",
+  "open_loss_over_pi": "0.5*abs(e)",
+  "locked_reference_quantile": 0.8,
+  "open_reference_quantile": 0.5,
+  "assumptions": [
+    "single-period comparison with exact purchasing at pi",
+    "no storage or inter-period coupling",
+    "unused excess in a locked period has zero salvage"
+  ],
+  "claim_limit": "0.80 is a single-period reference, not a proved bound or the optimal rolling-policy quantile; q_L=0.60 is selected by January calibration",
+  "canvas_mm": [
+    144,
+    68
+  ],
+  "font": "SimSun",
+  "plot_source": "scripts/Q3/make_newsvendor_figure.py",
+  "curve_values": "assets/tables/Q3/q3_newsvendor_loss_curve.csv",
+  "ai_assistance": "Codex, GPT-6 family (exact build not exposed); user requested the 5pi/0.83 correction and explanation of Figures 10 and 11"
+}
