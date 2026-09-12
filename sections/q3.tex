@@ -154,12 +154,12 @@
   \hat P^{\mathrm{pv}}(t)=\max\!\big(\operatorname{interp}(t\Delta t;\ 0,1,\dots,24),\ 0\big),
   \label{eq:q3_pv}
 \end{equation}
-其中插值起点 $p_0$ 取\textbf{发布前最后一个已完成 10 分钟时段的实测光伏}，而不是硬设为零：夏季 $6{:}00$、$18{:}00$ 的起点光伏明显不为零，硬设为零会系统性低估全天光伏电量。实测起点严格因果，$0{:}00$ 发布时取前一日末段（数值上为 0），因此与旧口径等价，可用作对照。图~\ref{fig:q3_pv_err} 显示四个发布时点的预报误差都集中在日照时段，$0{:}00$ 发布的全预见期平均 MAE 约 $341$ kW，这正是后文对净负荷做分位修正的直接依据。
+其中插值起点 $p_0$ 取\textbf{发布前最后一个已完成 10 分钟时段的实测光伏}，而不是硬设为零：夏季 $6{:}00$、$18{:}00$ 的起点光伏明显不为零，硬设为零会系统性低估全天光伏电量。实测起点严格因果，$0{:}00$ 发布时取前一日末段（数值上为 0），因此与旧口径等价，可用作对照。图~\ref{fig:q3_pv_err} 表明年均值几乎贴合会掩盖坏天：晴天代表日（2025-12-06）白天 MAE 仅 $81$ kW，多云代表日（2025-08-25）高达 $995$ kW；四个发布时点的误差都集中在日照时段，$0{:}00$ 发布的白天平均 MAE 约 $311$ kW。这正是后文对净负荷做分位修正的直接依据。
 
 \begin{figure}[!htbp]
   \centering
-  \includegraphics[width=0.82\linewidth]{att3_pv_forecast_error.png}
-  \caption{光伏预报误差集中在日照时段，$0{:}00$ 发布的平均 MAE 达 $341$ kW，分位余量不可省}
+  \includegraphics[width=0.90\linewidth]{att3_pv_forecast_error.png}
+  \caption{晴天白天 MAE 仅 $81$ kW、多云日达 $995$ kW；误差集中在日照时段，分位余量不可省}
   \label{fig:q3_pv_err}
 \end{figure}
 
