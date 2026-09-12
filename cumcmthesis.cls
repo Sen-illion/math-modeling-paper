@@ -455,9 +455,10 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 		\section*{\abstractname}%
 	\else
 	 \begin{center}%
-	{\zihao{4}\bfseries \abstractname\vspace{-.5em}\vspace{\z@}}%
+	{\zihao{4}\bfseries \heiti \abstractname\vspace{-.5em}\vspace{\z@}}%
 	 \end{center}%
  	 \quotation
+ 	 \zihao{5}\songti
 	\fi}
 	{\if@twocolumn\else\endquotation\newpage\null\fi}
 \renewenvironment{quotation}
@@ -473,7 +474,7 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 	\renewcommand{\mcm@tokens@keywords}{#1}
 	\par
 	\vskip1ex
-	{\noindent\zihao{-4}\heiti\mcm@cap@keywordsname：}~{\mcm@tokens@keywords}
+	{\noindent\zihao{5}\heiti\mcm@cap@keywordsname：}~{\zihao{5}\songti\mcm@tokens@keywords}
 	}
 % 定义附录
 
@@ -551,7 +552,7 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 \newcommand*{\mcm@cap@appendixname}{附录}
 \newcommand*{\mcm@cap@abstractname}{摘要}
  %%%  中文关键字
-\newcommand*{\mcm@cap@keywordsname}{关键字}
+\newcommand*{\mcm@cap@keywordsname}{关键词}
 
  %%% 承诺书中的常量
 \newcommand*\mcm@commit@string@headname{赛区评阅编号（由赛区组委会填写）：}
