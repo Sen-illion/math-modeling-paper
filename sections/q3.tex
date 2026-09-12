@@ -166,7 +166,7 @@
 \end{figure}
 
 \paragraph{负载预报：因果 XGB 与日内比例校正。}
-$0{:}00$ 的负载点预报沿用第二问的因果 Expanding XGBoost：特征含星期/月份/年内日序、滞后 $1/2/7$ 日与 $3/7/30$ 日均值等，训练只用目标日之前的数据；训练样本不足时退回上周同一星期几。$6/12/18$ 时点则用``今日已发生均值与 $0{:}00$ 预报同时段均值之比''缩放剩余负：
+$0{:}00$ 的负载点预报沿用第二问的因果 Expanding XGBoost：特征含星期/月份/年内日序、滞后 $1/2/7$ 日与 $3/7/30$ 日均值等，训练只用目标日之前的数据；训练样本不足时退回上周同一星期几。$6/12/18$ 时点则用``今日已发生均值与 $0{:}00$ 预报同时段均值之比''缩放剩余负载：
 \begin{equation}
   \hat P^{\mathrm{load}}_t \leftarrow \hat P^{\mathrm{load}}_t\cdot
   \frac{\overline{P^{\mathrm{load}}}_{\tau^-}}{\overline{\hat P^{\mathrm{load}}}_{\tau^-}},\qquad t>\tau,
@@ -174,7 +174,7 @@ $0{:}00$ 的负载点预报沿用第二问的因果 Expanding XGBoost：特征�
 \end{equation}
 其中 $\tau^{-}$ 表示当天 $\tau$ 之前已发生的时段。这一标量比例校正在诊断中明显优于字面重训（后者没有新增训练日、特征也全部在 $0{:}00$ 已知），故作为冻结口径。
 
-\paragraph{净负荷残差分位与报童论证。}
+\paragraph{净负载残差分位与报童论证。}
 设净负荷 $L_t=P^{\mathrm{load}}_t-P^{\mathrm{pv}}_t$，残差 $r_t=L_t-\hat L_t$（实际减点预报）。历史残差按``同一发布时点、同一被预报钟点''分桶，得到经验分布 $\hat F_t$。决策时把负荷预报上移 $q$ 分位、光伏预报下移 $1-q$ 分位：
 \begin{align}
   \tilde P^{\mathrm{load}}_t&=\max\!\big(\hat P^{\mathrm{load}}_t+\hat F^{-1}_{\mathrm{load},t}(q),\,0\big), \label{eq:q3_quantile_load}\\[2pt]
