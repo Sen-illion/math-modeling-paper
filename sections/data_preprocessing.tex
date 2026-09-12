@@ -1,3 +1,5 @@
+
+
 \section{数据说明与预处理}
 
 \subsection{数据来源与说明}
@@ -71,28 +73,28 @@
 \subsubsection{可视化分析}
 
 附件1的典型日曲线（图~\ref{fig:q1_price_load_pv}）显示，电价呈“夜间低谷、早晚双峰、正午次低谷”形态，全天最低 $0.3713$ 元/kWh（05:40）、最高 $1.3952$ 元/kWh（20:40）；光伏仅在 05:00--19:00 出力、正午峰值约 $7600\,\mathrm{kW}$；负载全天 $3300$--$5900\,\mathrm{kW}$、08:00--17:00 维持高位。光伏与电价低点重叠于正午，而电价高峰出现在早晚，为储能“低价充电、高价放电”提供了空间。
-\begin{figure}[htbp]
+
+\begin{figure}[H]
   \centering
-  \includegraphics[width=0.7\textwidth]{Q1_price_load_pv.png}
+  \includegraphics[width=0.60\textwidth]{Q1_price_load_pv.png}
   \caption{典型日负载与光伏出力曲线及电价峰谷分布}
   \label{fig:q1_price_load_pv}
 \end{figure}
 
 从全年日历热图（图~\ref{fig:att2_calendar}）可以看出，负载在冬夏两季整体偏高、逐日又存在明显的周内波动，光伏则只在白天出力、夏季明显强于冬季。这表明负载与光伏同时存在季节周期和日内周期，因此预测模型必须具备捕捉周期特征的能力。
 
-\begin{figure}[H]
+\begin{figure}[htbp]
   \centering
-  \begin{subfigure}{\textwidth}
+  \begin{subfigure}[t]{0.48\textwidth}
     \centering
-    \includegraphics[width=0.92\textwidth]{att2_cal_a.png}
+    \includegraphics[width=\linewidth]{att2_cal_a.png}
     \caption{小区负载}
     \label{fig:att2_calendar_a}
   \end{subfigure}
-
-  \vspace{0.5em}
-  \begin{subfigure}{\textwidth}
+  \hfill
+  \begin{subfigure}[t]{0.48\textwidth}
     \centering
-    \includegraphics[width=0.92\textwidth]{att2_cal_b.png}
+    \includegraphics[width=\linewidth]{att2_cal_b.png}
     \caption{光伏实测功率}
     \label{fig:att2_calendar_b}
   \end{subfigure}
@@ -104,14 +106,14 @@
 
 \begin{figure}[H]
   \centering
-  \begin{subfigure}[t]{0.56\textwidth}
+  \begin{subfigure}[t]{0.46\textwidth}
     \centering
     \includegraphics[width=\linewidth]{att2_energy_a.png}
     \caption{负载、光伏与净缺口的日电量及 7 日均值}
     \label{fig:att2_energy_a}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.42\textwidth}
+  \begin{subfigure}[t]{0.36\textwidth}
     \centering
     \includegraphics[width=\linewidth]{att2_energy_b.png}
     \caption{净负载持续曲线}
@@ -125,29 +127,28 @@
 
 \begin{figure}[H]
   \centering
-  \begin{subfigure}[t]{0.48\textwidth}
+  \begin{subfigure}[t]{0.36\textwidth}
     \centering
     \includegraphics[width=\linewidth]{att2_seasonal_winter.png}
     \caption{冬季}
     \label{fig:att2_season_a}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.48\textwidth}
+  \begin{subfigure}[t]{0.36\textwidth}
     \centering
     \includegraphics[width=\linewidth]{att2_seasonal_spring.png}
     \caption{春季}
     \label{fig:att2_season_b}
   \end{subfigure}
-
-  \vspace{0.6em}
-  \begin{subfigure}[t]{0.48\textwidth}
+  \hfill
+  \begin{subfigure}[t]{0.36\textwidth}
     \centering
     \includegraphics[width=\linewidth]{att2_seasonal_summer.png}
     \caption{夏季}
     \label{fig:att2_season_c}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.48\textwidth}
+  \begin{subfigure}[t]{0.36\textwidth}
     \centering
     \includegraphics[width=\linewidth]{att2_seasonal_autumn.png}
     \caption{秋季}
@@ -161,7 +162,7 @@
 
 \begin{figure}[H]
   \centering
-  \includegraphics[height=0.26\textheight,keepaspectratio]{combined_14_weekday_weekend.png}
+  \includegraphics[height=0.20\textheight,keepaspectratio]{combined_14_weekday_weekend.png}
   \caption{工作日与周末的平均负载日曲线。}
   \label{fig:weekday}
 \end{figure}
@@ -170,16 +171,16 @@
 
 \begin{figure}[H]
   \centering
-  \begin{subfigure}[t]{0.48\textwidth}
+  \begin{subfigure}[t]{0.42\textwidth}
     \centering
-    \includegraphics[height=0.28\textheight,keepaspectratio]{att3_panel_a.png}
+    \includegraphics[height=0.22\textheight,keepaspectratio]{att3_panel_a.png}
     \caption{四个发布时间的平均绝对误差}
     \label{fig:att3_a}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.48\textwidth}
+  \begin{subfigure}[t]{0.42\textwidth}
     \centering
-    \includegraphics[height=0.28\textheight,keepaspectratio]{att3_panel_b.png}
+    \includegraphics[height=0.22\textheight,keepaspectratio]{att3_panel_b.png}
     \caption{$0{:}00$ 发布预报均值与实测整点均值}
     \label{fig:att3_b}
   \end{subfigure}
@@ -193,15 +194,15 @@
   \centering
   \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[height=0.16\textheight,keepaspectratio]{att4_panel_a.png}
+    \includegraphics[height=0.13\textheight,keepaspectratio]{att4_panel_a.png}
     \caption{日历热图}
     \label{fig:att4_a}
   \end{subfigure}
 
-  \vspace{0.15em}
+  \vspace{0.1em}
   \begin{subfigure}{\textwidth}
     \centering
-    \includegraphics[height=0.16\textheight,keepaspectratio]{att4_panel_b.png}
+    \includegraphics[height=0.13\textheight,keepaspectratio]{att4_panel_b.png}
     \caption{日内中位数、四分位带及附件1典型日电价}
     \label{fig:att4_b}
   \end{subfigure}
