@@ -140,7 +140,6 @@
 
 \paragraph{48 小时展望。}
 若只在当天剩余时段内优化，$0{:}00$ 和 $18{:}00$ 的解都会在日末把储电量用尽，次日清晨就被动。把展望窗延长到``当天剩余 $+$ 次日全天''后，LP 会主动为次日留出储电余量，日末贴底天数从 $106$ 天压到 $1$ 天以下（见第~\ref{sec:q3_param} 节消融）。展望段电价按附件 1 循环延拓，次日负荷与光伏尾段用目标日前一周同星期几的已收盘数据，不用尚未发布的次日 $0{:}00$ 预报。
-
 \begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.88\linewidth]{fig_q3_rolling.png}
@@ -257,22 +256,22 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
 
   \medskip
 
-  \begin{minipage}[t]{0.41\textwidth}
+  \begin{minipage}[t]{0.35\textwidth}
     \centering\footnotesize
     \setlength{\tabcolsep}{3.5pt}
     \caption{一月定参：$q_L=0.60$ 评分最低}
     \label{tab:q3_jan}
-    \begin{tabular}{lrrr}
+    \begin{tabular}{lr}
     \toprule
-    $q_L$ & 现金/元 & 评分 $J$/元 & 紧急/kWh \\
+    $q_L$ & 评分 $J$/元 \\
     \midrule
-    \textbf{0.60} & 870,900.68 & \textbf{869,919.88} & 3,433.65 \\
-    0.63 & 871,055.16 & 870,059.40 & 2,760.25 \\
-    0.65 & 871,993.29 & 870,986.36 & 2,310.19 \\
-    0.55 & 872,521.73 & 871,583.66 & 4,701.13 \\
-    0.70 & 876,219.18 & 875,164.86 & 1,094.51 \\
-    0.50 & 877,864.13 & 876,970.04 & 6,439.14 \\
-    0.75 & 887,440.74 & 886,346.10 & 561.29 \\
+    \textbf{0.60} & \textbf{869,919.88} \\
+    0.63 & 870,059.40 \\
+    0.65 & 870,986.36 \\
+    0.55 & 871,583.66 \\
+    0.70 & 875,164.86 \\
+    0.50 & 876,970.04 \\
+    0.75 & 886,346.10 \\
     \bottomrule
     \end{tabular}
   \end{minipage}
@@ -311,105 +310,102 @@ $0{:}00$ 的负荷点预报沿用第二问的因果 Expanding XGBoost：特征�
 
 \begin{table}[!htbp]
   \centering\footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \caption{指定日期调整后购电量与全天购电费用：夏季日费用最低、冬季日最高}
+  \label{tab:q3_t1}
+  \begin{tabular}{l r r r r r r r r}
+      \toprule
+      日期 & \multicolumn{6}{c}{指定时段购电量/kWh} & 全天购电量/kWh & 全天总购电费/元 \\
+      \cmidrule(lr){2-7}
+      & 10:00--10:10 & 12:00--12:10 & 14:00--14:10 & 16:00--16:10 & 18:00--18:10 & 20:00--20:10 & & \\
+      \midrule
+      2025-03-20 & 0.00 & 523.80 & 0.00 & 620.65 & 715.88 & 0.00 & 61,909.72 & 40,736.96 \\
+      2025-06-21 & 0.00 & 0.00 & 0.00 & 55.53 & 411.32 & 0.00 & 40,973.80 & 22,107.38 \\
+      2025-09-23 & 0.00 & 357.38 & 0.00 & 505.11 & 789.37 & 0.00 & 66,868.91 & 45,502.61 \\
+      2025-12-21 & 0.00 & 1006.90 & 0.00 & 836.82 & 719.13 & 0.00 & 95,888.88 & 64,039.30 \\
+      \bottomrule
+  \end{tabular}
+\end{table}
 
-  \begin{minipage}[t]{0.52\textwidth}
-    \centering\scriptsize
-    \setlength{\tabcolsep}{1pt}
-    \caption{指定日期调整后购电量与全天购电费用：夏季日费用最低、冬季日最高}
-    \label{tab:q3_t1}
-    \begin{tabular}{l r r r r r r r r}
-        \toprule
-        日期 & \multicolumn{6}{c}{指定时段购电量/kWh} & 全天购电量/kWh & 全天总购电费/元 \\
-        \cmidrule(lr){2-7}
-        & 10:00--10:10 & 12:00--12:10 & 14:00--14:10 & 16:00--16:10 & 18:00--18:10 & 20:00--20:10 & & \\
-        \midrule
-        2025-03-20 & 0.00 & 523.80 & 0.00 & 620.65 & 715.88 & 0.00 & 61,909.72 & 40,736.96 \\
-        2025-06-21 & 0.00 & 0.00 & 0.00 & 55.53 & 411.32 & 0.00 & 40,973.80 & 22,107.38 \\
-        2025-09-23 & 0.00 & 357.38 & 0.00 & 505.11 & 789.37 & 0.00 & 66,868.91 & 45,502.61 \\
-        2025-12-21 & 0.00 & 1006.90 & 0.00 & 836.82 & 719.13 & 0.00 & 95,888.88 & 64,039.30 \\
-        \bottomrule
-    \end{tabular}
-  \end{minipage}\hfill
-  \begin{minipage}[t]{0.44\textwidth}
+\begin{table}[!htbp]
+  \centering\footnotesize
+  \setlength{\tabcolsep}{1.5pt}
+  \caption{指定日期储能充放电量及 0:00/24:00 储电量（kWh）}
+  \label{tab:q3_t2}
+  \begin{minipage}[t]{0.24\textwidth}
     \centering
-    \setlength{\tabcolsep}{1.5pt}
-    \caption{指定日期储能充放电量及 0:00/24:00 储电量（kWh）}
-    \label{tab:q3_t2}
-    \begin{minipage}[t]{0.48\textwidth}
-      \centering
-      \textbf{2025-03-20}\\[1pt]
-      \begin{tabular}{l r r}
-        \toprule
-        时段 & 充电量 & 放电量 \\
-        \midrule
+    \textbf{2025-03-20}\\[1pt]
+    \begin{tabular}{l r r}
+      \toprule
+      时段 & 充电量 & 放电量 \\
+      \midrule
       0:00--4:00 & 1,712.08 & 206.91 \\
       4:00--8:00 & 988.11 & 5,519.39 \\
       8:00--12:00 & 2,903.22 & 3,233.63 \\
       12:00--16:00 & 7,389.86 & 254.72 \\
       16:00--20:00 & 608.36 & 5,049.91 \\
       20:00--24:00 & 3,612.30 & 3,603.56 \\
-        0:00 储电量 & 8,725.30 & --- \\
-        24:00 储电量 & --- & 4,364.37 \\
-        \bottomrule
-      \end{tabular}
-    \end{minipage}\hfill
-    \begin{minipage}[t]{0.48\textwidth}
-      \centering
-      \textbf{2025-06-21}\\[1pt]
-      \begin{tabular}{l r r}
-        \toprule
-        时段 & 充电量 & 放电量 \\
-        \midrule
+      0:00 储电量 & 8,725.30 & --- \\
+      24:00 储电量 & --- & 4,364.37 \\
+      \bottomrule
+    \end{tabular}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.24\textwidth}
+    \centering
+    \textbf{2025-06-21}\\[1pt]
+    \begin{tabular}{l r r}
+      \toprule
+      时段 & 充电量 & 放电量 \\
+      \midrule
       0:00--4:00 & 719.10 & 268.88 \\
       4:00--8:00 & 1,160.70 & 1,758.41 \\
       8:00--12:00 & 10,134.27 & 0.00 \\
       12:00--16:00 & 11.72 & 0.00 \\
       16:00--20:00 & 64.55 & 5,519.43 \\
       20:00--24:00 & 8,515.24 & 3,036.00 \\
-        0:00 储电量 & 2,229.33 & --- \\
-        24:00 储电量 & --- & 9,015.78 \\
-        \bottomrule
-      \end{tabular}
-    \end{minipage}
-
-    \smallskip
-
-    \begin{minipage}[t]{0.48\textwidth}
-      \centering
-      \textbf{2025-09-23}\\[1pt]
-      \begin{tabular}{l r r}
-        \toprule
-        时段 & 充电量 & 放电量 \\
-        \midrule
+      0:00 储电量 & 2,229.33 & --- \\
+      24:00 储电量 & --- & 9,015.78 \\
+      \bottomrule
+    \end{tabular}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.24\textwidth}
+    \centering
+    \textbf{2025-09-23}\\[1pt]
+    \begin{tabular}{l r r}
+      \toprule
+      时段 & 充电量 & 放电量 \\
+      \midrule
       0:00--4:00 & 2,121.61 & 12.72 \\
       4:00--8:00 & 480.65 & 6,743.24 \\
       8:00--12:00 & 3,820.39 & 1,941.33 \\
       12:00--16:00 & 7,315.30 & 403.62 \\
       16:00--20:00 & 79.16 & 4,947.86 \\
       20:00--24:00 & 8,252.76 & 3,746.44 \\
-        0:00 储电量 & 8,517.86 & --- \\
-        24:00 储电量 & --- & 8,608.28 \\
-        \bottomrule
-      \end{tabular}
-    \end{minipage}\hfill
-    \begin{minipage}[t]{0.48\textwidth}
-      \centering
-      \textbf{2025-12-21}\\[1pt]
-      \begin{tabular}{l r r}
-        \toprule
-        时段 & 充电量 & 放电量 \\
-        \midrule
+      0:00 储电量 & 8,517.86 & --- \\
+      24:00 储电量 & --- & 8,608.28 \\
+      \bottomrule
+    \end{tabular}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.24\textwidth}
+    \centering
+    \textbf{2025-12-21}\\[1pt]
+    \begin{tabular}{l r r}
+      \toprule
+      时段 & 充电量 & 放电量 \\
+      \midrule
       0:00--4:00 & 2,095.03 & 252.72 \\
       4:00--8:00 & 1,559.13 & 775.03 \\
       8:00--12:00 & 4,442.18 & 8,573.91 \\
       12:00--16:00 & 8,695.72 & 2,001.69 \\
       16:00--20:00 & 0.00 & 5,060.59 \\
       20:00--24:00 & 8,259.26 & 3,588.17 \\
-        0:00 储电量 & 8,579.77 & --- \\
-        24:00 储电量 & --- & 8,623.60 \\
-        \bottomrule
-      \end{tabular}
-    \end{minipage}
+      0:00 储电量 & 8,579.77 & --- \\
+      24:00 储电量 & --- & 8,623.60 \\
+      \bottomrule
+    \end{tabular}
   \end{minipage}
 \end{table}
 
