@@ -1,5 +1,6 @@
 % 公共宏包和题目信息。main.tex 与 main_print.tex 共用本文件。
 \usepackage{booktabs}
+\usepackage{array}
 \usepackage{tabularx}
 \usepackage{microtype}
 \usepackage{siunitx}
@@ -8,9 +9,9 @@
 \usepackage{appendix}
 \graphicspath{{figures/}{assets/figures/}}
 \numberwithin{equation}{section}
-\renewcommand{\theequation}{\arabic{section}.\arabic{equation}}
-\captionsetup{font=small,labelfont=bf}
-\sisetup{detect-all,round-mode=places,round-precision=3}
+\captionsetup{labelfont=bf}
+\captionsetup[sub]{labelfont=bf,skip=4pt}
+\sisetup{detect-all}
 
 % ====== 只需修改以下信息 ======
 \title{在此填写论文题目}
@@ -24,3 +25,5 @@
 \yearinput{2026}
 \monthinput{09}
 \dayinput{10}
+\setcounter{secnumdepth}{3}
+\usepackage{float}
