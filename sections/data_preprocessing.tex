@@ -81,29 +81,6 @@
   \label{fig:q1_price_load_pv}
 \end{figure}
 
-从全年日历热图（图~\ref{fig:att2_calendar}）可以看出，负载在冬夏两季整体偏高、逐日又存在明显的周内波动，光伏则只在白天出力、夏季明显强于冬季。这表明负载与光伏同时存在季节周期和日内周期，因此预测模型必须具备捕捉周期特征的能力。
-
-\begin{figure}[!htbp]
-  \centering
-  \begin{subfigure}[t]{0.92\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{att2_cal_a.pdf}
-    \caption{小区负载}
-    \label{fig:att2_calendar_a}
-  \end{subfigure}
-
-  \vspace{0.35em}
-
-  \begin{subfigure}[t]{0.92\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{att2_cal_b.pdf}
-    \caption{光伏实测功率}
-    \label{fig:att2_calendar_b}
-  \end{subfigure}
-  \caption{全年负载与光伏日历热图}
-  \label{fig:att2_calendar}
-\end{figure}
-
 图~\ref{fig:att2_energy_a} 给出负载、光伏与净缺口的日电量及 7 日均值：负载全年相对平稳，光伏夏高冬低，净缺口则与光伏大致反向。图~\ref{fig:att2_energy_b} 的净负载持续曲线显示，净负载为正的时段占 $80.7\%$，全年大部分时间都需要外购电或储能放电；净负载范围 $[-6602,6688]$ kW，正负两端均超过储能接口功率 5000 kW。由此可见，储能既无法完全消纳光伏过剩，也无法补足最大缺口，因此模型必须同时设置弃光和紧急购电两个变量。
 
 \begin{figure}[htbp]
@@ -162,14 +139,7 @@
   \label{fig:att2_season}
 \end{figure}
 
-工作日与周末的平均日曲线（图~\ref{fig:weekday}）显示，工作日峰值 $6195$ kW、周末峰值 $5367$ kW，工作日高约 $15\%$，且两者峰形相近。这一差异说明负载存在明显的周周期，因此问题二的负载预测应引入星期特征。
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.78\textwidth]{combined_14_weekday_weekend.pdf}
-  \caption{工作日与周末的平均负载日曲线}
-  \label{fig:weekday}
-\end{figure}
+工作日负载峰值 $6195$ kW、周末峰值 $5367$ kW，工作日高约 $15\%$，星期结构由问题二的负载回归处理。
 
 光伏预报误差（图~\ref{fig:att3}）集中在白天，夜间 MAE 接近 0，0:00 发布的平均 MAE 达 $341$ kW，误差不可忽略。由于点预测在白天存在明显偏差，直接使用会造成供电缺口，因此需要对负载取 $q_L=0.8$、光伏取 $q_P=0.2$ 做分位保守修正。
 
