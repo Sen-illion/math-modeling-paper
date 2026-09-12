@@ -52,8 +52,8 @@
 则一天的购电总费用为计划购电费、调整偏差费和紧急购电费之和：
 \begin{equation}
   C=\sum_{t=1}^{144}\pi_t G^{\mathrm{plan}}_t
-   -\tfrac12\sum_{t=1}^{144}\pi_t\Delta^{-}_t
-   +\tfrac32\sum_{t=1}^{144}\pi_t\Delta^{+}_t
+   -\dfrac{1}{2}\sum_{t=1}^{144}\pi_t\Delta^{-}_t
+   +\dfrac{3}{2}\sum_{t=1}^{144}\pi_t\Delta^{+}_t
    +5\sum_{t=1}^{144}\pi_t G^{\mathrm{em}}_t.
   \label{eq:q3_cost}
 \end{equation}
@@ -65,7 +65,7 @@
 \begin{align}
   G^{\mathrm{adj}}_t + P^{\mathrm{pv}}_t + d_t + G^{\mathrm{em}}_t
   &= P^{\mathrm{load}}_t + c_t + w_t, \label{eq:q3_balance}\\[2pt]
-  E_t &= E_{t-1} + \eta\, c_t - d_t/\eta, \label{eq:q3_soc}\\[2pt]
+  E_t &= E_{t-1} + \eta\, c_t - d_t/\eta, \label{eq:q3_soc}\displaybreak[1]\\[2pt]
   1200\le E_t &\le 10800, \label{eq:q3_ebound}\\[2pt]
   0\le c_t,\ d_t &\le P_{\max}\Delta t, \label{eq:q3_pbound}\\[2pt]
   w_t &\ge 0, \label{eq:q3_w_nonneg}\\[2pt]
@@ -90,17 +90,21 @@
 约束为式~\eqref{eq:q3_balance}--\eqref{eq:q3_gem_nonneg}，初始储电量 $E_0=SOC_0$。其中 $\varepsilon$ 是一个极小的正则项，用于打破同时充放电的无谓退化（$\eta<1$ 时最优解本就不会同时充放，$\varepsilon$ 只是数值保险）。$G^{\mathrm{em}}_j$ 是在 LP 内部按 $5\pi_j$ 计价的\emph{虚拟紧急购电}：它保证 LP 在任何预报缺口下都可行，同时给出一个乐观的费用下界，真正的紧急电量要在回放中用实测净负荷重新计算。
 
 \paragraph{调整模型（带追索权的滚动重优化）。}
-在时点 $\tau>0$，当天剩余时段构成基准合同 $g_j$（即此前已承诺的购电量）。把从 $\tau$ 到当天结束的时段重新编号为 $j=1,\dots,n_{\mathrm{today}}$，若启用 48 h 展望则再拼接次日全天、编号至 $n$。调整模型在已承诺合同上做有代价的增减，并对展望段按普通电价重新决策：
+在时点 $\tau>0$，当天剩余时段构成基准合同 $g_j$（即此前已承诺的购电量）。把从 $\tau$ 到当天结束的时段重新编号为 $j=1,\dots,n_{\mathrm{today}}$，若启用 48 h 展望则再拼接次日全天、编号至 $n$。调整模型在已承诺合同上做有代价的增减，并对展望段按普通电价重新决策。将各时段的 $G_j$、$\delta_j^{\pm}$、$c_j$、$d_j$、$w_j$、$E_j$ 和 $G_j^{\mathrm{em}}$ 统记为决策向量 $\boldsymbol{x}$，目标函数为：
 \begin{equation}
-  \begin{aligned}
-    \min_{G_j,\,\delta^{\pm}_j,\,c_j,\,d_j,\,w_j,\,E_j,\,G^{\mathrm{em}}_j}\quad
-    &\sum_{j=1}^{n_{\mathrm{today}}}\Big(-\tfrac12\pi_j\delta^{-}_j+\tfrac32\pi_j\delta^{+}_j\Big)
-    +\sum_{j=n_{\mathrm{today}}+1}^{n}\pi_j G_j\\[2pt]
-    &+5\sum_{j=1}^{n}\pi_j G^{\mathrm{em}}_j
-    +\varepsilon\sum_{j=1}^{n}(c_j+d_j)
-    +\lambda\big|E_{n_{\mathrm{today}}}-E_{\mathrm{ref}}\big|,
-  \end{aligned}
-  \label{eq:q3_lp_adj}
+\begin{aligned}
+\min_{\boldsymbol{x}}\quad
+& \sum_{j=1}^{n_{\mathrm{today}}}\pi_j
+  \left(
+    \dfrac{3}{2}\delta_j^{+}
+    -\dfrac{1}{2}\delta_j^{-}
+  \right) \\[5pt]
+& {}+\sum_{j=n_{\mathrm{today}}+1}^{n}\pi_j G_j
+  +5\sum_{j=1}^{n}\pi_j G_j^{\mathrm{em}} \\[5pt]
+& {}+\varepsilon\sum_{j=1}^{n}(c_j+d_j)
+  +\lambda\left|E_{n_{\mathrm{today}}}-E_{\mathrm{ref}}\right|.
+\end{aligned}
+\label{eq:q3_lp_adj}
 \end{equation}
 
 \begin{equation}
