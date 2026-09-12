@@ -180,7 +180,7 @@ $0{:}00$ 的负载点预报沿用第二问的因果 Expanding XGBoost：特征�
   \tilde P^{\mathrm{load}}_t&=\max\!\big(\hat P^{\mathrm{load}}_t+\hat F^{-1}_{\mathrm{load},t}(q),\,0\big), \label{eq:q3_quantile_load}\\[2pt]
   \tilde P^{\mathrm{pv}}_t&=\max\!\big(\hat P^{\mathrm{pv}}_t+\hat F^{-1}_{\mathrm{pv},t}(1-q),\,0\big). \label{eq:q3_quantile_pv}
 \end{align}
-为便于分源调整，把覆盖水平 $q$ 分源施加：负荷上移 $q$、光伏下移 $1-q$。当负荷与光伏两类残差相互独立时，上式等价于对净负荷取 $q$ 分位；一般情形下因两源叠加而偏保守，符合``宁多勿缺''的取向。再用 $\tilde L_t=\tilde P^{\mathrm{load}}_t-\tilde P^{\mathrm{pv}}_t$ 代入式~\eqref{eq:q3_lp0}、\eqref{eq:q3_lp_adj}。分位水平 $q$ 由时段属性决定：
+为便于分源调整，把覆盖水平 $q$ 分源施加：负荷上移 $q$、光伏下移 $1-q$。当负载与光伏两类残差相互独立时，上式等价于对净负载取 $q$ 分位；一般情形下因两源叠加而偏保守，符合``宁多勿缺''的取向。再用 $\tilde L_t=\tilde P^{\mathrm{load}}_t-\tilde P^{\mathrm{pv}}_t$ 代入式~\eqref{eq:q3_lp0}、\eqref{eq:q3_lp_adj}。分位水平 $q$ 由时段属性决定：
 
 \begin{center}
 \begin{tabular}{llll}
