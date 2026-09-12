@@ -165,10 +165,12 @@ C=\sum_{t}\pi_t G_t+\sum_{t}5\pi_t e_t,
 
 由图~\ref{fig:q2_monthly} 可见：$2$--$12$ 月日费用中位数先降后升，春末最低、十二月最高，与指定日「$6$ 月 $21$ 日购电少、$12$ 月 $21$ 日购电多」同方向。$6$ 月箱体并不最高，但出现全年最贵的离群日，图注给出的原因是当月应急购电占全年应急成本的 $37.2\%$：季节抬的是计划购电，尾部抬的是 $5$ 倍紧急电。因此正文用月分布看季节，用指定日表看代表日，二者不能互相代替。
 
-\begin{table}[htbp]
+\begin{table}[!htbp]
   \centering
   \small
-  \setlength{\tabcolsep}{4pt}
+  \setlength{\tabcolsep}{3.5pt}
+  \renewcommand{\arraystretch}{0.92}
+  \captionsetup{skip=3pt}
   \caption{问题二：指定日期计划购电量及全天购电费——冬季日购电量显著高于夏季（kWh / 元）}
   \label{tab:q2_purchase}
   \begin{tabular}{lcccc}
@@ -188,12 +190,8 @@ C=\sum_{t}\pi_t G_t+\sum_{t}5\pi_t e_t,
     全天总购电费(元) & 43184.03 & 20252.71 & 44810.52 & 64123.11 \\
     \bottomrule
   \end{tabular}
-\end{table}
 
-\begin{table}[htbp]
-  \centering
-  \small
-  \setlength{\tabcolsep}{4pt}
+  \vspace{0.65em}
   \caption{问题二：指定日期储能充放电量及起止储电量——凌晨低价充电、早晚高峰放电（微网侧，kWh）}
   \label{tab:q2_storage}
   \begin{tabular}{lcccccccc}
@@ -212,12 +210,8 @@ C=\sum_{t}\pi_t G_t+\sum_{t}5\pi_t e_t,
     $24{:}00$ 储电量(kWh) & \multicolumn{2}{c}{3033.50} & \multicolumn{2}{c}{3831.65} & \multicolumn{2}{c}{2911.26} & \multicolumn{2}{c}{3199.88} \\
     \bottomrule
   \end{tabular}
-\end{table}
 
-\begin{table}[htbp]
-  \centering
-  \small
-  \setlength{\tabcolsep}{4pt}
+  \vspace{0.65em}
   \caption{问题二：指定日期紧急购电明细——仅 $9$ 月 $23$ 日晚高峰出现缺口（kWh）}
   \label{tab:q2_emergency}
   \begin{tabular}{lcc}
