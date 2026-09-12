@@ -76,7 +76,7 @@
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.60\textwidth]{Q1_price_load_pv.png}
+  \includegraphics[width=0.60\textwidth]{Q1_price_load_pv.pdf}
   \caption{典型日负载与光伏出力曲线及电价峰谷分布}
   \label{fig:q1_price_load_pv}
 \end{figure}
@@ -104,16 +104,16 @@
 
 图~\ref{fig:att2_energy_a} 给出负载、光伏与净缺口的日电量及 7 日均值：负载全年相对平稳，光伏夏高冬低，净缺口则与光伏大致反向。图~\ref{fig:att2_energy_b} 的净负载持续曲线显示，净负载为正的时段占 $80.7\%$，全年大部分时间都需要外购电或储能放电；净负载范围 $[-6602,6688]$ kW，正负两端均超过储能接口功率 5000 kW。由此可见，储能既无法完全消纳光伏过剩，也无法补足最大缺口，因此模型必须同时设置弃光和紧急购电两个变量。
 
-\begin{figure}[H]
+\begin{figure}[hbtp]
   \centering
-  \begin{subfigure}[t]{0.46\textwidth}
+  \begin{subfigure}[t]{0.4\textwidth}
     \centering
     \includegraphics[width=\linewidth]{att2_energy_a.png}
     \caption{负载、光伏与净缺口的日电量及 7 日均值}
     \label{fig:att2_energy_a}
   \end{subfigure}
   \hfill
-  \begin{subfigure}[t]{0.36\textwidth}
+  \begin{subfigure}[t]{0.4\textwidth}
     \centering
     \includegraphics[width=\linewidth]{att2_energy_b.png}
     \caption{净负载持续曲线}
@@ -164,7 +164,7 @@
 
 \begin{figure}[H]
   \centering
-  \includegraphics[height=0.20\textheight,keepaspectratio]{combined_14_weekday_weekend.png}
+  \includegraphics[height=0.20\textheight,keepaspectratio]{combined_14_weekday_weekend.pdf}
   \caption{工作日与周末的平均负载日曲线。}
   \label{fig:weekday}
 \end{figure}
