@@ -474,7 +474,7 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 	\renewcommand{\mcm@tokens@keywords}{#1}
 	\par
 	\vskip1ex
-	{\noindent\zihao{5}\heiti\mcm@cap@keywordsname：}~{\zihao{5}\songti\mcm@tokens@keywords}
+	{\noindent\zihao{5}\heiti\mcm@cap@keywordsname：~\mcm@tokens@keywords}
 	}
 % 定义附录
 
