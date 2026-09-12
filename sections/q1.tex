@@ -50,8 +50,6 @@ E_t=E_{t-1}+c_t-d_t,
 \label{eq:q1_capacity}
 \end{equation}
 
-该约束避免储能设备出现过充或过放，使所得调度方案满足实际容量限制。
-
 \textbf{（4）日初、日末储电量约束}
 
 题目要求储能设备在 $0{:}00$ 和 $24{:}00$ 的储电量相同。根据给定的初始储电量，设置
@@ -61,7 +59,6 @@ E_0=E_{144}=6000.
 \end{equation}
 
 结合式~\eqref{eq:soc_transition} 对全天 $144$ 个时段求和，可进一步得到
-
 \begin{equation}
 \sum_{t=1}^{144}c_t
 =
