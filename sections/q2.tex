@@ -112,7 +112,7 @@ r_t=P^{\mathrm{load}}_{t}\Delta t-P^{\mathrm{pv}}_{t}\Delta t-G_t.
 \min\bigl(r_t,\;\eta(E_{t-1}-\underline{E}_t),\;P_{\max}\Delta t\bigr),
 \label{eq:q2_dmax}
 \end{equation}
-其余记紧急购电 $e_t$，按 $5\pi_t$ 结算。$\rho=0$ 即原来的贪心放到 $1200$\,kWh；正式取 $\rho=0.625$。全天总费用为
+其余记紧急购电 $e_t$，按 $5\pi_t$ 结算。式中 $\rho\in[0,1]$ 是预留比例：$\rho=0$ 放到下限 $1200$\,kWh，$\rho=1$ 则完全按日前计划储电量放电，越大越不准提前把计划库存放完。正式取 $\rho=0.625$。全天总费用为
 \begin{equation}
 C=\sum_{t}\pi_t G_t+\sum_{t}5\pi_t e_t,
 \label{eq:q2_cost}
