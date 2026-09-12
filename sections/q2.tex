@@ -24,7 +24,7 @@ XGBoost 负载 / $7$ 日光伏 $\;\to\;$
 
 对第 $D$ 日第 $t$ 个时段（$t=1,\dots,144$）定义决策变量：$G_t$ 为计划购电量，$c_t$ 为微网侧充电取电量，$d_t$ 为微网侧放电供电量，$w_t$ 为弃光电量，$E_t$ 为时段末储电量，单位均为 kWh。电价 $\pi_t$ 的单位为元/kWh，负载与光伏功率 $P^{\mathrm{load}}_{t}$、$P^{\mathrm{pv}}_{t}$ 的单位为 kW，$\eta=0.9$，$E_{\min}=1200$、$E_{\max}=10800$（kWh），$P_{\max}=5000$\,kW，$\Delta t=1/6$\,h，故每时段接口上限为 $P_{\max}\Delta t\approx833.33$\,kWh。
 
-本问 $c_t$、$d_t$ 按模型假设记在微网交流侧，与问题一电池侧由 $\eta$ 换算：充电时母线取电 $c_t$、电池增加 $\eta c_t$；放电时母线供电 $d_t$、电池减少 $d_t/\eta$。接口约束因此直接写成 $c_t,d_t\le P_{\max}\Delta t$。
+本问 $c_t$、$d_t$ 按模型假设记在微网交流侧，与问题一储能设备侧由 $\eta$ 换算：充电时母线取电 $c_t$、储能设备增加 $\eta c_t$；放电时母线供电 $d_t$、储能设备减少 $d_t/\eta$。接口约束因此直接写成 $c_t,d_t\le P_{\max}\Delta t$。
 
 \subsubsection{XGBoost 训练与预测}
 
@@ -84,7 +84,7 @@ XGBoost 负载 / $7$ 日光伏 $\;\to\;$
 
 \subsubsection{日内 $\rho$ 保护回放}
 
-计划购电锁死后，逐时段用当天真实负载与光伏做因果回放。记净残差 $r_t=P^{\mathrm{load}}_{t}\Delta t-P^{\mathrm{pv}}_{t}\Delta t-G_t$。若 $r_t\le0$，仍按贪心充电、剩余弃光，紧急电不用于充电。若 $r_t>0$，并不把电池放到 $E_{\min}$，而是先按日前计划储电量构造预留线
+计划购电锁死后，逐时段用当天真实负载与光伏做因果回放。记净残差 $r_t=P^{\mathrm{load}}_{t}\Delta t-P^{\mathrm{pv}}_{t}\Delta t-G_t$。若 $r_t\le0$，仍按贪心充电、剩余弃光，紧急电不用于充电。若 $r_t>0$，并不把储能设备放到 $E_{\min}$，而是先按日前计划储电量构造预留线
 \begin{equation}
 \underline{E}_t=E_{\min}+\rho\bigl(E^{\mathrm{plan}}_{t}-E_{\min}\bigr), \label{eq:q2_reserve}
 \end{equation}
