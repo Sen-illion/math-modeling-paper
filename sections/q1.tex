@@ -74,15 +74,12 @@ E_0=E_{144}=6000.
 该式表明，储能设备全天总充电量与总放电量相等，从而保证储能经过一天调度后恢复至初始储电水平。
 
 \textbf{（5）接口充放电功率约束}
-
-储能设备最大充放电功率为 $P_{\max}=5000\,\mathrm{kW}$。由于该功率上限作用于储能与微网之间的接口，而 $c_t$ 和 $d_t$ 表示电池侧电量，因此需要结合充放电效率将两种口径进行转换：
 \begin{equation}
 0\le\frac{c_t}{\eta}\le P_{\max}\Delta t,
 \qquad
 0\le\eta d_t\le P_{\max}\Delta t.
 \label{eq:q1_power}
 \end{equation}
-
 代入 $\eta=0.9$、$P_{\max}=5000\,\mathrm{kW}$ 和 $\Delta t=1/6\,\mathrm{h}$，可得每个 $10\,\mathrm{min}$ 时段内电池侧充、放电量的上限分别为
 \begin{equation}
 0\le c_t\le750,
