@@ -120,17 +120,17 @@
 \end{equation}
 
 将 $0{:}00$ 计划模型与各调整时点模型统一为如下总括（以调整时点 $\tau>0$ 为例；$\tau=0$ 时 $n_{\mathrm{today}}=144$ 且无偏差项）：
-
 \begin{equation}
-  \boxed{\begin{aligned}
+  \begin{aligned}
     & \min_{G_j,\delta^{\pm}_j,c_j,d_j,w_j,E_j,G^{\mathrm{em}}_j}\quad
       \sum_{j=1}^{n_{\mathrm{today}}}\Big(-\tfrac12\pi_j\delta^{-}_j+\tfrac32\pi_j\delta^{+}_j\Big)
       +\sum_{j=n_{\mathrm{today}}+1}^{n}\pi_j G_j + 5\sum_{j=1}^{n}\pi_j G^{\mathrm{em}}_j\\[2pt]
     & \text{s.t.}\quad G_j=g_j+\delta^{+}_j-\delta^{-}_j,\quad \delta^{\pm}_j\ge0\ (j\le n_{\mathrm{today}}),\\[2pt]
     & \qquad G_j+P^{\mathrm{pv}}_j+d_j+G^{\mathrm{em}}_j=P^{\mathrm{load}}_j+c_j+w_j,\quad
       E_j=E_{j-1}+\eta c_j-d_j/\eta,\\[2pt]
-    & \qquad 1200\le E_j\le10800,\quad 0\le c_j,d_j\le P_{\max}\Delta t,\quad w_j\ge0,\ G^{\mathrm{em}}_j\ge0.
-  \end{aligned}}
+    & \qquad 1200\le E_j\le10800,\quad 0\le c_j,d_j\le P_{\max}\Delta t,\quad
+      w_j\ge0,\ G^{\mathrm{em}}_j\ge0.
+  \end{aligned}
   \label{eq:q3_master}
 \end{equation}
 
