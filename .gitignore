@@ -41,3 +41,11 @@ desktop.ini
 .vscode/
 .idea/
 .cursor/
+
+# Local workspace data
+.workbuddy/
+
+# Local preview scratch
+_appendix_figure_preview.html
+_q3_figure_preview.html
+_q3_preview_server.js
