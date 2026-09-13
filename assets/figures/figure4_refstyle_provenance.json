@@ -1,0 +1,27 @@
+{
+  "date": "2026-09-13",
+  "figure_label": "fig:att4",
+  "caption": "全年分时电价的日内峰谷结构与逐日波动",
+  "purpose": "Replace manuscript Figure 4 with the user-supplied composite graphic.",
+  "related_questions": [
+    "Q1",
+    "Q2",
+    "Q3",
+    "Q4"
+  ],
+  "source_script": "C:\\Users\\Lenovo\\Desktop\\国赛-integrate\\.local\\data-overview-figures\\make_data_overview_figures_refstyle.py",
+  "source_script_sha256": "24032c274579debc1269a78a13cb8eab92aa00287a0f4f8d8398aa5be57513bb",
+  "source_data": "附件4全年分时电价；附件1典型日电价",
+  "content": "365天×144时段电价热图；同刻中位数、P25–P75区间及典型日电价对照。",
+  "adoption": "User-supplied PNG and PDF copied byte-for-byte. LaTeX includes the PDF at 0.90 textwidth.",
+  "files": {
+    "fig4_price_structure_refstyle.png": {
+      "sha256": "9c6f569d31c607f9183ae1de1c3a0f0b13b44f509e5cf382fbd444724f71b4da",
+      "source": "C:\\Users\\Lenovo\\Desktop\\国赛-integrate\\.local\\data-overview-figures\\fig4_price_structure_refstyle.png"
+    },
+    "fig4_price_structure_refstyle.pdf": {
+      "sha256": "b7961d8c6ba7168e5308e21f673b3bda249a047f8e70f7f3b7bbc4ff639bdc2c",
+      "source": "C:\\Users\\Lenovo\\Desktop\\国赛-integrate\\.local\\data-overview-figures\\fig4_price_structure_refstyle.pdf"
+    }
+  }
+}
