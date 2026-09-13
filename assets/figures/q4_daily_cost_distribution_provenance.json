@@ -25,8 +25,11 @@
   "date_end": "2025-12-31",
   "data_path": "assets/tables/Q4/q43_daily_costs.csv",
   "data_sha256": "a62302b0bf04041e48a065045798a048f17adb12a4a4f57c0bcb0483bba9141b",
-  "layout": "boxplot above ECDF; same outer canvas ratio as q4_cost_structure.png",
-  "width_mm": 76.8,
-  "height_mm": 70.94438884917798,
-  "jitter_seed": 42
+  "layout": "boxplot and ECDF side by side in a full-width lower panel",
+  "width_mm": 160,
+  "height_mm": 59,
+  "jitter_seed": 42,
+  "source_script": "scripts/Q4/make_figure16_readable.py",
+  "minimum_font_pt": 8.5,
+  "legend_font_pt": 9
 }
