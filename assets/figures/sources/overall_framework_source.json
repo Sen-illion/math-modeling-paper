@@ -2,12 +2,12 @@
   "source_slide": 1,
   "files": [
     {
-      "name": "小区微网购电与储能调度_视觉增强版.pptx",
-      "sha256": "4c3a74ecbc8736c2bc2327cdbd43c6fb100c68bd425549eca837d0e9cbcde86a"
+      "name": "小区微网购电与储能调度_明亮配色版.pptx",
+      "sha256": "b430de1731d8ee952b40c993afd982eee1d956f71ad0a7b95c2e5d2d86addcba"
     }
   ],
-  "selection": "Only the first slide of the user-revised PowerPoint is used.",
-  "export": "Native Microsoft PowerPoint PDF export; only PDF page 1 retained.",
-  "source_pdf_sha256": "94730a80fd9a6167a65f3a17adbb7e0e0baceda962df24c8d8c3af01d16ca90c",
-  "content_policy": "Preserve the revised first-slide artwork without rewriting, simplifying, or redrawing."
+  "selection": "Only the first slide of the user-supplied bright-color PowerPoint is used.",
+  "export": "Native Microsoft PowerPoint 16.0 PDF export; only PDF page 1 retained.",
+  "source_pdf_sha256": "1bd208dab87737587f7640dbbd7d55e0d7a81583d5e47ac812a37c0764a0412f",
+  "content_policy": "Preserve the supplied bright-color artwork without rewriting, simplifying, or redrawing."
 }

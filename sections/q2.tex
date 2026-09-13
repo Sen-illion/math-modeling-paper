@@ -138,8 +138,6 @@ C=\sum_{t}\pi_t G_t+\sum_{t}5\pi_t e_t,
 
 由图~\ref{fig:q2_jan_grid} 可见：$\alpha=0.825$ 整面比 $0.8$ 贵约 $2.7$ 万元，故不取更厚的分位。
 
-
-
 每天 $0{:}00$ 重训 XGB，并求解一次含 $144\times5$ 个连续变量的日前线性规划，
 $334$ 天均求得最优解且无约束校验错误。全年（$2025$ 年 $2$ 月 $1$ 日至 $12$ 月 $31$ 日）
 总购电费为 $\textbf{13\,695\,403.61}$ 元，其中计划购电费 $13\,184\,604.50$ 元、
@@ -158,29 +156,35 @@ $4$--$5$ 月为 $3.07$--$3.27$ 万元最低；$6$ 月因紧急购电出现全年
 
 % =========================================================
 % 表6、表7并排
-% 表6适当增大行距，表7适当缩小行距，使两表底部基本对齐
+% 通过不同 arraystretch 使上下边界尽量同时对齐
 % =========================================================
 
 \begin{samepage}
 
 \begin{table}[H]
   \centering
-  \scriptsize
 
   % ==================== 左：表6 ====================
-  \begin{minipage}[t]{0.48\textwidth}
+  \begin{minipage}[t]{0.49\textwidth}
+    \vspace{0pt}
     \centering
 
     \caption{问题二：指定日期计划购电量及全天购电费}
     \label{tab:q2_purchase}
 
-    \vspace{0.3em}
+    \vspace{0.25em}
 
-    % 表6行数较少，因此适当增大行距
-    \renewcommand{\arraystretch}{1.18}
+    \scriptsize
+    \setlength{\tabcolsep}{1.2pt}
 
-    \resizebox{\linewidth}{!}{
-    \begin{tabular}{lcccc}
+    % 左表行数较多，因此保持较紧行距
+    \renewcommand{\arraystretch}{1.00}
+
+    \begin{tabular*}{\linewidth}{
+      @{\extracolsep{\fill}}
+      lcccc
+      @{}
+    }
       \toprule
       时间段
         & 3.20
@@ -252,26 +256,34 @@ $4$--$5$ 月为 $3.07$--$3.27$ 万元最低；$6$ 月因紧急购电出现全年
         & 64123.11 \\
 
       \bottomrule
-    \end{tabular}
-    }
+    \end{tabular*}
 
   \end{minipage}
   \hfill
   % ==================== 右：表7 ====================
-  \begin{minipage}[t]{0.50\textwidth}
+  \begin{minipage}[t]{0.49\textwidth}
+    \vspace{0pt}
     \centering
 
     \caption{问题二：指定日期储能充放电量及起止储电量}
     \label{tab:q2_storage}
 
-    \vspace{0.3em}
+    \vspace{0.25em}
 
-    % 表7多一层表头，因此适当压缩行距
-    \renewcommand{\arraystretch}{0.92}
+    \scriptsize
+    \setlength{\tabcolsep}{0.8pt}
 
-    \resizebox{\linewidth}{!}{
-    \begin{tabular}{lcccc}
+    % 右表主体行数较少，因此适当增大行距
+    % 使其底线与左表尽量对齐
+    \renewcommand{\arraystretch}{1.24}
+
+    \begin{tabular*}{\linewidth}{
+      @{\extracolsep{\fill}}
+      lcccc
+      @{}
+    }
       \toprule
+
       时间段
         & 3.20
         & 6.21
@@ -333,8 +345,7 @@ $4$--$5$ 月为 $3.07$--$3.27$ 万元最低；$6$ 月因紧急购电出现全年
         & 3199.88 \\
 
       \bottomrule
-    \end{tabular}
-    }
+    \end{tabular*}
 
   \end{minipage}
 
