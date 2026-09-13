@@ -231,14 +231,18 @@ $0.80$ 仅为单时段\emph{参考分位}，不能作为滚动模型最优分位
 
 \begin{table}[!htbp]
   \centering
-  \begin{minipage}[t]{0.63\textwidth}
-    \centering\scriptsize
-    \setlength{\tabcolsep}{2pt}
-    \captionof{table}{全年消融：48h 与分位可叠加，谷点在 $q_L=0.65$}
+  \small
+  \renewcommand{\arraystretch}{1}
+  \setlength{\tabcolsep}{3pt}
+  \captionsetup{font={song,small,bf},format=plain,justification=centering,singlelinecheck=false,skip=6pt}
+  % 两表表题均为两行；数据区均高 144pt（左 8 行、右 7 行）。
+  \begin{minipage}[t]{0.70\textwidth}
+    \vspace{0pt}\centering
+    \captionof{table}{全年消融：48h 与分位可叠加，\\谷点在 $q_L=0.65$}
     \label{tab:q3_abl}
-    \begin{tabular}{lrrrr}
+    \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}>{\rule[-5pt]{0pt}{18pt}}lrrrr@{}}
     \toprule
-    变体 & 总费用/元 & 较冻结/元 & 紧急/kWh & 贴底天数 \\
+    \multicolumn{1}{@{}l}{变体} & 总费用/元 & 较冻结/元 & 紧急/kWh & 贴底天数 \\
     \midrule
     冻结LA(24h$+\beta$) & 13,458,730.30 & 0 & 82,228.36 & 106 \\
     48h$+\beta$ & 13,421,219.84 & $-37{,}510.46$ & 70,433.46 & 0 \\
@@ -249,16 +253,15 @@ $0.80$ 仅为单时段\emph{参考分位}，不能作为滚动模型最优分位
     48h$+0.70$ & 13,308,698.92 & $-150{,}031.38$ & 26,711.59 & 1 \\
     48h$+0.75$ & 13,402,722.60 & $-56{,}007.70$ & 17,308.57 & 0 \\
     \bottomrule
-    \end{tabular}
+    \end{tabular*}
   \end{minipage}\hfill
-  \begin{minipage}[t]{0.33\textwidth}
-    \centering\footnotesize
-    \setlength{\tabcolsep}{3pt}
-    \captionof{table}{一月定参：$q_L=0.60$ 评分最低}
+  \begin{minipage}[t]{0.27\textwidth}
+    \vspace{0pt}\centering
+    \captionof{table}{一月定参：\\$q_L=0.60$ 评分最低}
     \label{tab:q3_jan}
-    \begin{tabular}{lr}
+    \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}>{\rule[-6.2857pt]{0pt}{20.5714pt}}rr@{}}
     \toprule
-    $q_L$ & 评分 $J$/元 \\
+    \multicolumn{1}{@{}r}{$q_L$} & 评分 $J$/元 \\
     \midrule
     \textbf{0.60} & \textbf{869,919.88} \\
     0.63 & 870,059.40 \\
@@ -268,7 +271,7 @@ $0.80$ 仅为单时段\emph{参考分位}，不能作为滚动模型最优分位
     0.50 & 876,970.04 \\
     0.75 & 886,346.10 \\
     \bottomrule
-    \end{tabular}
+    \end{tabular*}
   \end{minipage}
   \par
 \end{table}
