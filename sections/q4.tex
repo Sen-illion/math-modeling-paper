@@ -68,9 +68,16 @@ Q4-2 日前购电方案全年总费用为 $14\,413\,479.02$ 元。为进一步�
   \small
   \setlength{\tabcolsep}{5pt}
 
-  \begin{tabular}{@{}cccc@{}}
+  % ===== 蓝白配色 =====
+  \definecolor{headerblue}{RGB}{218,225,250}
+  \definecolor{rowblue}{RGB}{235,239,252}
+
+  \begin{tabular}{cccc}
     \toprule
+
+    \rowcolor{headerblue}
     方案 & 总费用（元） & 紧急购电量（kWh） & 较 N0 节省（元） \\
+
     \midrule
 
     N0（不调整）
@@ -78,6 +85,7 @@ Q4-2 日前购电方案全年总费用为 $14\,413\,479.02$ 元。为进一步�
       & $466\,576.26$
       & --- \\
 
+    \rowcolor{rowblue}
     M0L（选择性调整）
       & $14\,826\,830.64$
       & $218\,215.59$
@@ -140,63 +148,66 @@ Q4-2 日前购电方案全年总费用为 $14\,413\,479.02$ 元。为进一步�
   \begingroup
   \small
 
-  \begin{tabular*}{\textwidth}{
-    @{\extracolsep{\fill}}
-    ccccccc
-    @{}
+  % ===== 蓝白配色 =====
+  \definecolor{headerblue}{RGB}{218,225,250}
+  \definecolor{rowblue}{RGB}{235,239,252}
+
+  \resizebox{\textwidth}{!}{%
+    \begin{tabular}{ccccccc}
+      \toprule
+
+      \rowcolor{headerblue}
+      \raisebox{-1.35em}{日期}
+      & \multicolumn{3}{c}{Q4-2 日前购电方案}
+      & \multicolumn{3}{c}{Q4-3 日内滚动方案} \\
+
+      \rowcolor{headerblue}
+      & \shortstack{购电量\\（kWh）}
+      & \shortstack{购电费\\（元）}
+      & \shortstack{紧急购电量\\（kWh）}
+      & \shortstack{购电量\\（kWh）}
+      & \shortstack{购电费\\（元）}
+      & \shortstack{紧急购电量\\（kWh）} \\
+
+      \midrule
+
+      2025-03-20
+      & $70\,570.86$
+      & $44\,640.38$
+      & 0.00
+      & $66\,824.83$
+      & $44\,186.70$
+      & 165.68 \\
+
+      \rowcolor{rowblue}
+      2025-06-21
+      & $35\,205.93$
+      & $17\,564.67$
+      & 0.00
+      & $33\,936.26$
+      & $16\,638.47$
+      & 0.00 \\
+
+      2025-09-23
+      & $68\,848.07$
+      & $44\,716.63$
+      & 272.06
+      & $67\,439.16$
+      & $47\,671.18$
+      & 631.22 \\
+
+      \rowcolor{rowblue}
+      2025-12-21
+      & $98\,970.30$
+      & $75\,354.93$
+      & 0.00
+      & $96\,674.19$
+      & $75\,675.02$
+      & 291.73 \\
+
+      \bottomrule
+    \end{tabular}%
   }
-    \toprule
-
-    \raisebox{-1.0em}{日期}
-    & \multicolumn{3}{c}{Q4-2 日前购电方案}
-    & \multicolumn{3}{c}{Q4-3 日内滚动方案} \\
-
-    \cmidrule(lr){2-4}
-    \cmidrule(lr){5-7}
-
-    & \shortstack{购电量\\（kWh）}
-    & \shortstack{购电费\\（元）}
-    & \shortstack{紧急购电量\\（kWh）}
-    & \shortstack{购电量\\（kWh）}
-    & \shortstack{购电费\\（元）}
-    & \shortstack{紧急购电量\\（kWh）} \\
-
-    \midrule
-
-    2025-03-20
-    & $70\,570.86$
-    & $44\,640.38$
-    & 0.00
-    & $66\,824.83$
-    & $44\,186.70$
-    & 165.68 \\
-
-    2025-06-21
-    & $35\,205.93$
-    & $17\,564.67$
-    & 0.00
-    & $33\,936.26$
-    & $16\,638.47$
-    & 0.00 \\
-
-    2025-09-23
-    & $68\,848.07$
-    & $44\,716.63$
-    & 272.06
-    & $67\,439.16$
-    & $47\,671.18$
-    & 631.22 \\
-
-    2025-12-21
-    & $98\,970.30$
-    & $75\,354.93$
-    & 0.00
-    & $96\,674.19$
-    & $75\,675.02$
-    & 291.73 \\
-
-    \bottomrule
-  \end{tabular*}
 
   \endgroup
 \end{table}
