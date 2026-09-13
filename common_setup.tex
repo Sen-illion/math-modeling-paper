@@ -8,9 +8,11 @@
 \usepackage{appendix}
 \usepackage{needspace}
 \graphicspath{{figures/}{assets/figures/}}
-\numberwithin{equation}{section}
-\renewcommand{\theequation}{\arabic{section}.\arabic{equation}}
+\renewcommand{\theequation}{\arabic{equation}}
 \sisetup{detect-all,round-mode=places,round-precision=3}
+
+% 中文引导词用真正黑体，随后回到宋体；main.tex 与 main_print.tex 共用。
+\newcommand{\hei}[1]{\heiti #1\songti}
 
 % ====== 只需修改以下信息 ======
 \title{在此填写论文题目}
