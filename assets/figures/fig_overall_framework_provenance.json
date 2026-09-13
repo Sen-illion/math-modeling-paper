@@ -1,6 +1,6 @@
 {
   "source": "sources/overall_framework_slide1.pdf",
-  "source_sha256": "0838ee7b2fdf3a7a45a7da6ed7fe1c556f814339977ee010ab90e8c7aa1d7b7e",
+  "source_sha256": "94730a80fd9a6167a65f3a17adbb7e0e0baceda962df24c8d8c3af01d16ca90c",
   "source_slide": 1,
   "source_slide_count": 1,
   "crop_points": [
@@ -9,10 +9,9 @@
     1406.0,
     742.0
   ],
-  "changes": "Crop presentation title, subtitle, footer rule, and outer whitespace only; retain all framework content.",
+  "changes": "Crop outer whitespace and the presentation footer rule only; retain all framework content from the supplied first slide.",
   "paper_placement": "Section 3.5, normal portrait page, scaled uniformly to the text width before Q1.",
+  "content_policy": "Preserve all original framework text, icons, colors, arrows and arrangement; do not simplify or redraw.",
   "purpose": "Explain the Q1-Q3 progression and the two Q4 extensions.",
-  "format": "Vector PDF with embedded fonts and original raster decorative icons; PNG is a preview.",
-  "restored_original_artwork_commit": "d5384819a06f2c38dc5ce9114974a13230f44f89",
-  "content_policy": "Preserve all original framework text, icons, colors, arrows and arrangement; do not simplify or redraw."
+  "format": "Vector PDF with embedded fonts and original raster decorative icons; PNG is a preview."
 }
