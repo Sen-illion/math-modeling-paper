@@ -1,0 +1,32 @@
+{
+  "question": "Q4-3",
+  "purpose": "Layout-only rebuild of the daily cost distribution panel; costs in yuan.",
+  "source_repository": "https://github.com/Sen-illion/math-modeling",
+  "source_commit": "ada9f4744ebf2d28400bc710e42cd9b0b392adc6",
+  "source_files": {
+    "N0": {
+      "path": "results/Q4/q43_N0_daily.csv",
+      "sha256": "e0bc6d5f4dfa783b36eb99ea1f6126371711b302518f57942d30b8ccc1f7ab9e",
+      "total_cost_yuan": 15983608.51357289
+    },
+    "LA": {
+      "path": "results/Q4/q43_LA_daily.csv",
+      "sha256": "b14b81a315700f747aa6df904680442fc4953242381c3eaa24ed75bee1f5a3c0",
+      "total_cost_yuan": 14001199.256629871
+    },
+    "M0L": {
+      "path": "results/Q4/q43_M0L_daily.csv",
+      "sha256": "ed3aa5dc14d586fd1e8316409226126c848fe66d26ffbb08978e03482f9a793e",
+      "total_cost_yuan": 14826830.643235004
+    }
+  },
+  "rows_per_strategy": 334,
+  "date_start": "2025-02-01",
+  "date_end": "2025-12-31",
+  "data_path": "assets/tables/Q4/q43_daily_costs.csv",
+  "data_sha256": "a62302b0bf04041e48a065045798a048f17adb12a4a4f57c0bcb0483bba9141b",
+  "layout": "boxplot above ECDF; same outer canvas ratio as q4_cost_structure.png",
+  "width_mm": 76.8,
+  "height_mm": 70.94438884917798,
+  "jitter_seed": 42
+}
