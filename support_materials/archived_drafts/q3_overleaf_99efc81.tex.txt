@@ -1,0 +1,198 @@
+% ======================================================================
+% 问题三：日内滚动购电与调整策略的建模与求解（7 面精减版）
+% 口径：LA = 48h 展望 + 三段净负荷分位，q_L=0.60 一月定参
+% ======================================================================
+\section{问题三：日内滚动购电与调整策略的建模与求解}
+
+\subsection{问题分析与建模思路}
+
+第三问把购电决策拆成 $0/6/12/18$ 四个时点：$0{:}00$ 制定计划购电 $G^{\mathrm{plan}}$，$6/12/18$ 时点依据新光伏预报调整剩余合同 $G^{\mathrm{adj}}$。调整不是无代价的：比计划少买的部分按 $0.5\pi$ 结算，比计划多买的部分按 $1.5\pi$ 结算，实际仍缺电按 $5\pi$ 紧急购电。本问因此落在\textbf{带追索权（recourse）的多阶段滚动线性规划}（用分位点预报近似随机性）：第一阶段在预报不确定时先承诺合同，后续阶段看清新预报后再做有代价的修正。这个结构把做法也定了下来：计划阶段按净负荷分位预留安全裕量（报童思想），调整阶段在滚动线性规划里把三种电价分量显式写出来。
+
+这三关环环相扣。\emph{信息层}：附件 3 只给发布时点之后 $T{+}1,\dots,T{+}24$ 的整点光伏预报，既不是 10 分钟粒度、也没有发布当刻的起点值，必须先无泄漏地补成 10 分钟序列，否则后面算的都是错的。\emph{结算层}：$0.5/1.5/5$ 三种惩罚不对称，意味着``下一次调整前锁死的时段''要买高分位、``还能改的时段''取中位即可——这直接引出了分位设计。\emph{物理层}：储能可用区间只有 $1200\sim10800$ kWh、接口 $5000$ kW，数据诊断显示晚高峰净负荷缺口的能量远超电池晚间可交付能力，所以日末贴底才是主要失效模式，修正必须指向晚间电量预算。三关分别对应滚动 LP、三段净负荷分位、一月定参三处改进。
+
+\subsection{模型建立}
+
+沿用前两问公共假设（充放电效率各 $\eta=0.9$、运行窗 $[1200,10800]$ kWh、接口功率 $5000$ kW、不向外售电、允许弃光），另约定：电价每天重复附件 1；光伏\emph{决策}只用附件 3 预报；负荷用因果 Expanding XGBoost 并在 $6/12/18$ 点做日内比例校正；正式窗口 2 月 1 日 0:00 储电量固定为 $6000$ kWh，不强制 $E_0=E_{24}$，储电量跨日传递。一天分 $144$ 段，$\Delta t=1/6$ h，交易电价 $\pi_t$。
+
+\paragraph{结算与目标函数。}
+定义上调量与下调量
+\begin{align}
+  \Delta^{+}_t&=\max\big(G^{\mathrm{adj}}_t-G^{\mathrm{plan}}_t,\,0\big), \label{eq:q3_devp}\\[2pt]
+  \Delta^{-}_t&=\max\big(G^{\mathrm{plan}}_t-G^{\mathrm{adj}}_t,\,0\big), \label{eq:q3_devm}
+\end{align}
+则一天总费用为计划购电费、调整偏差费与紧急购电费之和：
+\begin{equation}
+  C=\sum_{t=1}^{144}\pi_t G^{\mathrm{plan}}_t
+   -\tfrac12\sum_{t=1}^{144}\pi_t\Delta^{-}_t
+   +\tfrac32\sum_{t=1}^{144}\pi_t\Delta^{+}_t
+   +5\sum_{t=1}^{144}\pi_t G^{\mathrm{em}}_t.
+  \label{eq:q3_cost}
+\end{equation}
+式中三项的物理含义是：已承诺合同按 $\pi_t$ 计价；少买退回一半电费，多买按 $1.5$ 倍计价；回放中真实缺口按 $5\pi_t$ 紧急购电。式~\eqref{eq:q3_cost} 是本问全部策略的统一评价指标。
+
+\paragraph{物理约束。}
+任意时段的功率平衡与储能动态为
+\begin{align}
+  G^{\mathrm{adj}}_t + P^{\mathrm{pv}}_t + d_t + G^{\mathrm{em}}_t
+  &= P^{\mathrm{load}}_t + c_t + w_t, \label{eq:q3_balance}\\[2pt]
+  E_t &= E_{t-1} + \eta\, c_t - d_t/\eta, \label{eq:q3_soc}\\[2pt]
+  1200\le E_t &\le 10800,\qquad 0\le c_t,\,d_t\le P_{\max}\Delta t,\qquad w_t\ge0,\ G^{\mathrm{em}}_t\ge0, \label{eq:q3_bounds}
+\end{align}
+其中 $c_t,d_t$ 为电池侧充、放电量，$w_t$ 弃光，$E_t$ 时段末储电量，$P_{\max}\Delta t\approx833.33$ kWh/段。该组约束既用于优化，也用于逐时段回放，保证``计划''与``结算''口径一致。
+
+\paragraph{滚动时域线性规划（本问核心）。}
+$0{:}00$ 以分位修正后的净负荷预报求解当天 $144$ 段 LP 得到 $G^{\mathrm{plan}}$：
+\begin{equation}
+  \min_{G_j,c_j,d_j,w_j,E_j,G^{\mathrm{em}}_j}\quad
+  \sum_{j=1}^{144}\pi_j G_j+5\sum_{j=1}^{144}\pi_j G^{\mathrm{em}}_j+\varepsilon\sum_{j=1}^{144}(c_j+d_j),
+  \label{eq:q3_lp0}
+\end{equation}
+其中 $G^{\mathrm{em}}_j$ 是 LP 内按 $5\pi_j$ 计价的\emph{虚拟紧急购电}，仅为保证可行性；$\varepsilon$ 是打破同时充放的正则小项。在时点 $\tau>0$，当天剩余合同 $g_j$ 已承诺，调整模型在其上做有代价增减、并对 48 h 展望段按普通电价重新决策，与式~\eqref{eq:q3_balance}--\eqref{eq:q3_bounds} 合并为总括模型：
+\begin{equation}
+  \boxed{\begin{aligned}
+    & \min_{G_j,\delta^{\pm}_j,c_j,d_j,w_j,E_j,G^{\mathrm{em}}_j}\quad
+      \sum_{j=1}^{n_{\mathrm{today}}}\Big(-\tfrac12\pi_j\delta^{-}_j+\tfrac32\pi_j\delta^{+}_j\Big)
+      +\sum_{j=n_{\mathrm{today}}+1}^{n}\pi_j G_j + 5\sum_{j=1}^{n}\pi_j G^{\mathrm{em}}_j\\[2pt]
+    & \text{s.t.}\quad G_j=g_j+\delta^{+}_j-\delta^{-}_j,\quad \delta^{\pm}_j\ge0\ (j\le n_{\mathrm{today}}),\\[2pt]
+    & \qquad \text{式}~\eqref{eq:q3_balance}--\eqref{eq:q3_bounds},\quad E_0=SOC_{\tau}.
+  \end{aligned}}
+  \label{eq:q3_master}
+\end{equation}
+目标里 $-0.5\pi_j\delta^{-}_j$ 与 $+1.5\pi_j\delta^{+}_j$ 就是偏差结算。每次解出后，当天剩余合同更新为新最优值，$6/12/18$ 重复此过程即构成滚动决策。
+
+\paragraph{48 小时展望的动机。}
+若只在当天剩余时段内优化，$0{:}00$ 与 $18{:}00$ 的解都会在日末把储电量耗尽，次日清晨即被动。把展望窗延长到``当天剩余 $+$ 次日全天''后，LP 会主动为次日留储电余量，全年日末贴底天数从 $106$ 天压到 $1$ 天以下（见第~\ref{sec:q3_param} 节消融）。次日负荷与光伏尾段用目标日前一周同星期几的已收盘数据，不用尚未发布的次日 $0{:}00$ 预报。
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.82\linewidth]{fig_q3_rolling.png}
+  \caption{滚动时域决策示意：以 6:00 为例，紧邻 6 小时为锁死段（$q_L=0.60$），当天剩余为可改段（$q_O=0.50$），次日为展望段（$q_E=0.50$）}
+  \label{fig:q3_rolling}
+\end{figure}
+
+\subsection{模型求解与参数选择}
+
+光伏决策只用附件 3：把发布时点对应横坐标 $0$、$T{+}k$ 对应 $k$，对 24 个整点预报线性插值到 10 分钟，插值起点取\textbf{发布前最后一个已完成时段的实测光伏}（$0{:}00$ 发布时为 0），避免夏季 $6/18$ 点起点硬设为零导致的系统性低估。负荷在 $0{:}00$ 用因果 XGBoost 预报，$6/12/18$ 点用``今日已发生均值与 $0{:}00$ 预报同时段均值之比''缩放剩余负荷。附件 3 的 $0{:}00$ 发布全预见期平均 MAE 约 $341$ kW，误差集中在日照时段，这正是分位余量省不掉的直接证据。
+
+\paragraph{三段净负荷残差分位（核心创新）。}
+设净负荷 $L_t=P^{\mathrm{load}}_t-P^{\mathrm{pv}}_t$，残差 $r_t=L_t-\hat L_t$（实际减点预报），按``同一发布时点、同一被预报钟点''分桶得经验分布 $\hat F_t$。把覆盖水平 $q$ 分源施加：
+\begin{align}
+  \tilde P^{\mathrm{load}}_t&=\max\big(\hat P^{\mathrm{load}}_t+\hat F^{-1}_{\mathrm{load},t}(q),\,0\big), \label{eq:q3_quantile_load}\\[2pt]
+  \tilde P^{\mathrm{pv}}_t&=\max\big(\hat P^{\mathrm{pv}}_t+\hat F^{-1}_{\mathrm{pv},t}(1-q),\,0\big). \label{eq:q3_quantile_pv}
+\end{align}
+当负荷与光伏两类残差相互独立时，上式等价于对净负荷取 $q$ 分位；一般情形因两源叠加而偏保守，符合``宁多勿缺''。分位水平按段属性取：锁死段 $q_L$、可改段 $q_O=0.50$、次日段 $q_E=0.50$。锁死段分位由报童临界分位定界——少买 1 kWh 的缺货净成本 $c_u=5\pi-\pi=4\pi$（省下计划费 $\pi$、之后按 $5\pi$ 紧急），多买 1 kWh 的过量成本 $c_o=\pi$，故
+\begin{equation}
+  q^{*}=\frac{c_u}{c_u+c_o}=\frac{4\pi}{4\pi+\pi}=\frac45=0.80.
+  \label{eq:q3_newsvendor}
+\end{equation}
+它只给搜索上界，不能当冻结值：锁死段缺额往往先由电池放电兜底、不必然触发 $5\pi$ 紧急，真实缺货成本 $c_u<4\pi$，故临界分位下移、$0.80$ 仅作上界；储能吸收过剩会反向抬高 $c_o$ 一侧，净效应由因果回测确认。可改段取 $q_O=0.50$ 由偏差结算的对称性直接给出——当前多承诺净代价 $\pi-0.5\pi=0.5\pi$、少承诺净代价 $1.5\pi-\pi=0.5\pi$，两侧相等，故中位数最优。于是锁死段分位只在 $q_L\in\{0.50,\dots,0.75\}$ 内做一次因果回测即可定下。把分位修正后的净负荷代入总括模型~\eqref{eq:q3_master}，用 PuLP $+$ CBC 线性规划求解，单次变量与约束均 $10^3$ 量级，全年 $334\times4=1336$ 次 LP 全部 Optimal，LA 全年回放约 $217$ s。
+
+\paragraph{回放。}
+优化给出合同后，真实费用须用实测净负荷逐段回放：锁死最终合同 $G^{\mathrm{adj}}$，逐段贪心充放、紧急电不充电。记残差 $\rho_t=P^{\mathrm{load}}_t-P^{\mathrm{pv}}_t-G^{\mathrm{adj}}_t$，则
+\begin{align}
+  c_t&=\min\big(\max(-\rho_t,0),\ \tfrac{E_{\max}-E_{t-1}}{\eta},\ P_{\max}\Delta t\big),\quad
+  w_t=\max(-\rho_t,0)-c_t, \label{eq:q3_charge}\\[2pt]
+  d_t&=\min\big(\max(\rho_t,0),\ \eta(E_{t-1}-E_{\min}),\ P_{\max}\Delta t\big),\quad
+  G^{\mathrm{em}}_t=\max(\rho_t,0)-d_t, \label{eq:q3_discharge}
+\end{align}
+再按式~\eqref{eq:q3_cost} 结算。把``优化计划''与``真实执行''分开，正是滚动模型能如实度量预报误差代价的原因。
+
+\paragraph{候选策略与两条关键杠杆。}\label{sec:q3_param}
+为回答``是否引入日内调整''，设三个同底候选：\textbf{N0}（日内不改合同）、\textbf{LA}（分位 $+$ 48 h 展望 $+$ 每次都调）、\textbf{M0L}（分位 $+$ 48 h 展望 $+$ 选择性门）。冻结之前还要把 LA 的两个关键设计拆开，单独量化``48 h 展望''与``净负荷分位''各省多少、能否叠加，故做全年 334 天因果回测的消融（表~\ref{tab:q3_abl}）。
+
+\begin{table}[!htbp]
+  \centering\footnotesize
+  \begin{minipage}[t]{0.56\textwidth}
+    \centering
+    \setlength{\tabcolsep}{3.5pt}
+    \caption{全年消融：48h 与分位可叠加，谷点在 $q_L{=}0.65$}
+    \label{tab:q3_abl}
+    \begin{tabular}{lrrrr}
+      \toprule
+      变体 & 总费用/元 & 较冻结/元 & 紧急/kWh & 贴底天数 \\
+      \midrule
+      冻结LA(24h$+\beta$) & 13,458,730.30 & 0 & 82,228.36 & 106 \\
+      48h$+\beta$ & 13,421,219.84 & $-37{,}510$ & 70,433.46 & 0 \\
+      24h$+0.65$ & 13,294,093.95 & $-164{,}636$ & 44,783.43 & 37 \\
+      \textbf{48h$+0.60$（正式）} & \textbf{13,275,795.85} & \textbf{$-182{,}934$} & \textbf{58,355.20} & \textbf{1} \\
+      48h$+0.65$ & 13,263,910.99 & $-194{,}819$ & 39,678.65 & 1 \\
+      \bottomrule
+    \end{tabular}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.40\textwidth}
+    \centering
+    \setlength{\tabcolsep}{3.5pt}
+    \caption{一月定参：$q_L{=}0.60$ 评分最低}
+    \label{tab:q3_jan}
+    \begin{tabular}{lrr}
+      \toprule
+      $q_L$ & 评分 $J$/元 & 紧急/kWh \\
+      \midrule
+      \textbf{0.60} & \textbf{869,919.88} & 3,433.65 \\
+      0.65 & 870,986.36 & 2,310.19 \\
+      0.55 & 871,583.66 & 4,701.13 \\
+      0.70 & 875,164.86 & 1,094.51 \\
+      0.75 & 886,346.10 & 561.29 \\
+      \bottomrule
+    \end{tabular}
+  \end{minipage}
+\end{table}
+
+表~\ref{tab:q3_abl} 能读出：48 h 展望单独省 $3.75$ 万元并把日末贴底从 $106$ 天降到 $0$；分位单独（24 h$+0.65$）省 $16.46$ 万元；二者叠加合计约省 $19.48$ 万元，谷点在 $q_L=0.65$。取 $q_L=0.65$ 时费用与紧急电量同向变好（$82{,}228\to39{,}679$ kWh），说明分位修的是晚间电量预算缺口，而非拿更多紧急电换账面费用（表中贴底天数由 0 到 1 的微小反复，是分位抬升个别日计划、改变日末 SOC 轨迹的边缘效应，紧急电量整体下行才是主趋势）。
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.80\linewidth]{fig_q3_ablation.png}
+  \caption{全年消融的 V 形谷点：48 h 展望叠加分位后在 $q_L=0.65$ 处最低，冻结值取一月定参的 $q_L=0.60$}
+  \label{fig:q3_ablation}
+\end{figure}
+
+\paragraph{锁死段分位的一月定参。}
+表~\ref{tab:q3_abl} 中全年谷点是 $q_L=0.65$，但它在``2--12 月''上选出，属样本内挑选。为避免评分年选参，冻结口径改为\textbf{只用 1 月 15--31 日}定参：令 $\nu=\min_t\pi_t/\eta=0.4126$ 元/kWh（全天最低电价时段买入并储存 1 个可用 kWh 的最低成本），取评分
+\begin{equation}
+  J(q_L)=C_{\mathrm{Jan}}(q_L)+\nu\big(6000-E^{\mathrm{Jan}}_{\mathrm{end}}(q_L)\big),
+  \label{eq:q3_jan}
+\end{equation}
+即一月现金费用加``把月末储电量相对 $6000$ kWh 的差额按 $\nu$ 折价''，网格上取最小者，$2$--$12$ 月只确认、不参与挑选，胜者为 $q_L=0.60$（表~\ref{tab:q3_jan}），即宁可接受 $0.08\%$（$+10{,}757$ 元）的账面损失，也不在评分期挑参。
+
+\paragraph{全年总费用与三条结论。}
+表~\ref{tab:q3_cmp} 给出全年（2025-02-01 至 2025-12-31，334 天）结算。
+
+\begin{table}[!htbp]
+  \centering\footnotesize
+  \caption{全年总费用：LA 最优，较不调整的 N0 省 192.2 万元}
+  \label{tab:q3_cmp}
+  \begin{tabular}{l r r r r r}
+    \toprule
+    策略 & 全年总费用/元 & 计划购电费/元 & 紧急购电费/元 & 紧急电量/kWh & 调整天数 \\
+    \midrule
+    \textbf{LA（赢家）} & \textbf{13,275,795.85} & 12,337,110.40 & 342,008.68 & 58,355.20 & 334 \\
+    M0L & 14,076,756.59 & 12,344,922.94 & 1,301,484.79 & 204,224.31 & 182 \\
+    N0 & 15,197,639.94 & 12,342,385.85 & 2,855,254.09 & 464,543.52 & 0 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+表~\ref{tab:q3_cmp} 能读出三条。其一，\textbf{日内调整必要}：不调整的 N0 比 LA 高 $192.2$ 万元（$+14.5\%$），紧急电量约为 LA 的 8 倍。其二，\textbf{每次都调优于选择性调}：M0L 只调 182 天、比 LA 仍贵 $80$ 万元，选择性门会漏掉``幅度不大但方向正确''的小修正。其三，LA 的紧急电量只有 N0 的 $12.6\%$，把风险压在计划阶段而非事后用 $5\pi$ 买单。图~\ref{fig:q3_dispatch} 以夏季代表日展示策略执行过程。
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.85\linewidth]{fig_q3_dispatch_0621.png}
+  \caption{夏季代表日（2025-06-21）滚动购电策略：净负荷晚高峰 $4004.9$ kW@19.2h 由储能放电削峰，调整购电较计划少买 $127$ kWh}
+  \label{fig:q3_dispatch}
+\end{figure}
+
+\subsection{模型检验}
+
+从四个角度检验结论是否经得起推敲。\emph{（1）独立复算}：导出 result3.xlsx 后由独立脚本按单元格与附件 1 电价重算合同费、偏差结算、SOC 平衡与跨日连续，全程无泄漏错误。\emph{（2）先知下界}：阶段 1（2 月 1--14 日，仅 14 天、只作方向性参考）先知——以实测净负荷解全天 144 段单日 LP 的完美信息下界——费用 $585{,}705.84$ 元，LA 仅高 $8.7\%$（$636{,}942.33$ 元），说明剩余差距主要来自预报残差而非模型结构。\emph{（3）参数稳健}：$q_L$ 在 V 形谷底附近不敏感，$0.60$ 与 $0.65$ 全年只差 $0.08\%$，无``刀尖上的最优''。\emph{（4）失效机理}：旧方案紧急电 $88.8\%$ 来自晚间储能电量耗尽而非功率触顶，$20{:}00$ 单小时占 $47.4\%$，日末贴底 $106$ 天；这解释了``加大光伏余量''与``回放留 SOC''为何都无效——前者动白天光伏、后者动合同锁定之后，都没碰到``晚间电量预算''这个真约束。新方案把修正做进 LP 本身，贴底天数降到 $1$ 天（图~\ref{fig:q3_emergency}）。
+
+\begin{figure}[!htbp]
+  \centering
+  \includegraphics[width=0.82\linewidth]{fig_q3_emergency.png}
+  \caption{紧急购电逐小时构成：88.8\% 来自晚间储能电量耗尽，20:00 单小时占 47.4\%}
+  \label{fig:q3_emergency}
+\end{figure}
+
+\subsection{本问结论}
+
+本问需要引入 $6{:}00$、$12{:}00$、$18{:}00$ 时点预报调整购电：不调整的 N0 比最优策略贵 $192.2$ 万元，说明日内调整必要；每次都调整优于选择性调整。最优策略为 \textbf{LA}——48 h 展望加三段净负荷分位（$q_L=0.60$，一月定参），全年总费用 $13{,}275{,}795.85$ 元，紧急电量较 N0 下降 $87.4\%$。完整策略见 result3.xlsx。
