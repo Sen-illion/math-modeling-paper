@@ -18,7 +18,7 @@ def main():
     source_doc = pymupdf.open(source)
     if len(source_doc) != 1:
         raise ValueError("The source must contain only slide one.")
-    # Exclude the presentation title, subtitle, footer rule, and outer whitespace.
+    # Exclude outer whitespace and the presentation footer rule.
     # Keep the data inputs, Q1-Q4 panels, links, and storage constraints intact.
     crop = pymupdf.Rect(34, 98, 1406, 742)
     figure = pymupdf.open()
@@ -36,7 +36,7 @@ def main():
         "source_slide": 1,
         "source_slide_count": 1,
         "crop_points": list(crop),
-        "changes": "Crop presentation title, subtitle, footer rule, and outer whitespace only; retain all framework content.",
+        "changes": "Crop outer whitespace and the presentation footer rule only; retain all framework content from the supplied first slide.",
         "paper_placement": "Section 3.5, normal portrait page, scaled uniformly to the text width before Q1.",
         "content_policy": "Preserve all original framework text, icons, colors, arrows and arrangement; do not simplify or redraw.",
         "purpose": "Explain the Q1-Q3 progression and the two Q4 extensions.",
