@@ -21,7 +21,7 @@
   "overall_emergency_share": "sum(emergency_cost across all strategies) / sum(total_cost across all strategies)",
   "rows_per_strategy": 334,
   "width_mm": 160,
-  "height_mm": 112,
+  "height_mm": 56,
   "minimum_font_pt": 9,
   "source_script": "scripts/Q4/make_figure16_readable.py"
 }

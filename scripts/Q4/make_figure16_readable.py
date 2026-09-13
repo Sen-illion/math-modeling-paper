@@ -27,9 +27,14 @@ STYLES = {'N0': '-', 'LA': '--', 'M0L': '-.'}
 LABELS = {'N0': 'N0（不调整）', 'LA': 'LA（本文）', 'M0L': 'M0L（选择性调整）'}
 FONT = 'SimSun'
 WIDTH_MM = 160
+COST_HEIGHT_MM = 56
+DIST_HEIGHT_MM = 50
+FONT_PATH = ROOT / 'simsun.ttc'
 
 
 def setup_style():
+    if FONT_PATH.exists():
+        font_manager.fontManager.addfont(str(FONT_PATH))
     font_manager.findfont(FONT, fallback_to_default=False)
     plt.rcParams.update({
         'font.family': FONT, 'font.size': 9.5,
@@ -76,71 +81,74 @@ def load_data():
 
 
 def make_cost_structure(data):
-    fig = plt.figure(figsize=(WIDTH_MM / 25.4, 112 / 25.4))
-    axes = [fig.add_axes((0.12, bottom, 0.74, height))
-            for bottom, height in ((0.66, 0.205), (0.365, 0.205), (0.09, 0.205))]
+    fig, axes = plt.subplots(1, 3, figsize=(WIDTH_MM / 25.4, COST_HEIGHT_MM / 25.4))
+    fig.subplots_adjust(left=0.055, right=0.93, top=0.78, bottom=0.20, wspace=0.36)
     legend = [Line2D([], [], color=COLORS[k], linestyle=STYLES[k],
                      linewidth=1.6, label=LABELS[k]) for k in KEYS]
-    fig.legend(handles=legend, loc='upper center', bbox_to_anchor=(0.51, 1.0),
-               ncol=3, frameon=False, columnspacing=1.2, handlelength=2.1)
+    fig.legend(handles=legend, loc='upper center', bbox_to_anchor=(0.40, 1.02),
+               ncol=3, frameon=False, columnspacing=1.0, handlelength=1.9, fontsize=8)
     fig.legend(handles=[Patch(facecolor='#8D8D8D', label='非紧急费用'),
                         Patch(facecolor='white', edgecolor='#777777', hatch='///',
                               label='紧急购电费用')],
-               loc='upper center', bbox_to_anchor=(0.50, 0.945), ncol=2,
-               frameon=False, columnspacing=1.7)
+               loc='upper center', bbox_to_anchor=(0.86, 1.02), ncol=2,
+               frameon=False, columnspacing=0.9, handlelength=1.5, fontsize=8)
     months = np.arange(2, 13)
-    monthly = {}
     for i, key in enumerate(KEYS):
         source = data[key]
         date_month = np.array([d.month for d in source['dates']])
         total = np.array([source['total'][date_month == m].sum() for m in months])
         emergency = np.array([source['emergency'][date_month == m].sum() for m in months])
-        monthly[key] = (total, emergency)
         x = np.arange(11) + (i - 1) * 0.25
         axes[0].bar(x, total - emergency, width=0.25, color=COLORS[key], alpha=0.9)
         axes[0].bar(x, emergency, bottom=total - emergency, width=0.25,
                     facecolor='white', edgecolor=COLORS[key], hatch='////', linewidth=0.55)
         axes[1].plot(np.arange(11), 100 * emergency / total, color=COLORS[key],
-                     linestyle=STYLES[key], marker='o', markersize=2.8, linewidth=1.3)
+                     linestyle=STYLES[key], marker='o', markersize=2.6, linewidth=1.2)
         cumulative = np.cumsum(source['total'])
         axes[2].plot(source['dates'], cumulative, color=COLORS[key],
-                     linestyle=STYLES[key], linewidth=1.3)
+                     linestyle=STYLES[key], linewidth=1.2)
     pooled_share = 100 * sum(data[k]['emergency'].sum() for k in KEYS) / sum(
         data[k]['total'].sum() for k in KEYS)
     axes[1].axhline(pooled_share, color='#777777', linestyle=':', linewidth=0.8)
-    axes[1].text(1.025, pooled_share / 30, f'总体\n{pooled_share:.1f}%',
-                 transform=axes[1].transAxes, ha='left', va='center', color='#555555')
-    for key, height in (('N0', 0.91), ('M0L', 0.62), ('LA', 0.33)):
-        source = data[key]
-        total = source['total'].sum()
-        axes[2].text(1.025, height, f'{total:,.1f}', transform=axes[2].transAxes,
-                      ha='left', va='center', color=COLORS[key], fontsize=9)
+    axes[1].text(0.03, 0.96, f'总体 {pooled_share:.1f}%', transform=axes[1].transAxes,
+                 ha='left', va='top', color='#555555', fontsize=7.5)
+    label_offset = {'N0': (3, 5), 'M0L': (3, -1), 'LA': (3, -8)}
+    for key in KEYS:
+        total = data[key]['total'].sum()
+        axes[2].annotate(
+            f'{total:,.1f}',
+            xy=(data[key]['dates'][-1], data[key]['total'].sum()),
+            xytext=label_offset[key], textcoords='offset points',
+            color=COLORS[key], fontsize=7.5, va='center', ha='left',
+            annotation_clip=False,
+        )
     for ax in axes:
         ax.grid(axis='y', color='#E2E2E2', linewidth=0.45)
+        ax.tick_params(labelsize=8)
     for ax in axes[:2]:
         ax.set_xticks(np.arange(11), [str(m) for m in months])
         ax.set_xlim(-0.65, 10.65)
-        ax.set_xlabel('月份', labelpad=1)
+        ax.set_xlabel('月份', labelpad=1, fontsize=8)
     axes[0].set_ylim(0, 225)
     axes[0].set_yticks((0, 100, 200))
-    axes[0].set_ylabel('月费用（万元）')
-    axes[1].set_ylim(0, 30)
+    axes[0].set_ylabel('月费用（万元）', fontsize=8)
+    axes[1].set_ylim(0, 32)
     axes[1].set_yticks((0, 10, 20, 30))
-    axes[1].set_ylabel('紧急费用占比（%）')
+    axes[1].set_ylabel('紧急费用占比（%）', fontsize=8)
     axes[2].set_ylim(0, 1750)
     axes[2].set_yticks((0, 800, 1600))
     axes[2].set_xlim(data['N0']['dates'][0], data['N0']['dates'][-1])
     axes[2].xaxis.set_major_locator(mdates.MonthLocator(bymonth=(2, 4, 6, 8, 10, 12)))
     axes[2].xaxis.set_major_formatter(mdates.DateFormatter('%m'))
-    axes[2].set_ylabel('累计费用（万元）')
-    axes[2].set_xlabel('月份（2025 年）', labelpad=1)
+    axes[2].set_ylabel('累计费用（万元）', fontsize=8)
+    axes[2].set_xlabel('月份（2025 年）', labelpad=1, fontsize=8)
     return fig, axes
 
 
 def make_distribution(data):
-    fig = plt.figure(figsize=(WIDTH_MM / 25.4, 59 / 25.4))
-    left = fig.add_axes((0.10, 0.25, 0.35, 0.70))
-    right = fig.add_axes((0.615, 0.25, 0.35, 0.70))
+    fig = plt.figure(figsize=(WIDTH_MM / 25.4, DIST_HEIGHT_MM / 25.4))
+    left = fig.add_axes((0.09, 0.22, 0.36, 0.72))
+    right = fig.add_axes((0.60, 0.22, 0.36, 0.72))
     boxes = left.boxplot([data[k]['total'] for k in KEYS], patch_artist=True,
                          widths=0.5, showfliers=False,
                          medianprops={'color': '#222222', 'linewidth': 1.15},
