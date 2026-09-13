@@ -155,17 +155,17 @@ $4$--$5$ 月为 $3.07$--$3.27$ 万元最低；$6$ 月因紧急购电出现全年
 表~\ref{tab:q2_storage}。
 
 % =========================================================
-% 表6、表7并排：顶线、底线同时对齐
+% 表6、表7并排
+% 通过不同 arraystretch 使上下边界尽量同时对齐
 % =========================================================
 
 \begin{samepage}
 
 \begin{table}[H]
   \centering
-  \scriptsize
 
   % ==================== 左：表6 ====================
-  \begin{minipage}[t]{0.48\textwidth}
+  \begin{minipage}[t]{0.49\textwidth}
     \vspace{0pt}
     \centering
 
@@ -174,11 +174,17 @@ $4$--$5$ 月为 $3.07$--$3.27$ 万元最低；$6$ 月因紧急购电出现全年
 
     \vspace{0.25em}
 
-    % 表6行数更多，因此压缩行距
-    \renewcommand{\arraystretch}{0.92}
+    \scriptsize
+    \setlength{\tabcolsep}{1.2pt}
 
-    \resizebox{\linewidth}{!}{
-    \begin{tabular}{lcccc}
+    % 左表行数较多，因此保持较紧行距
+    \renewcommand{\arraystretch}{1.00}
+
+    \begin{tabular*}{\linewidth}{
+      @{\extracolsep{\fill}}
+      lcccc
+      @{}
+    }
       \toprule
       时间段
         & 3.20
@@ -250,13 +256,12 @@ $4$--$5$ 月为 $3.07$--$3.27$ 万元最低；$6$ 月因紧急购电出现全年
         & 64123.11 \\
 
       \bottomrule
-    \end{tabular}
-    }
+    \end{tabular*}
 
   \end{minipage}
   \hfill
   % ==================== 右：表7 ====================
-  \begin{minipage}[t]{0.50\textwidth}
+  \begin{minipage}[t]{0.49\textwidth}
     \vspace{0pt}
     \centering
 
@@ -265,12 +270,20 @@ $4$--$5$ 月为 $3.07$--$3.27$ 万元最低；$6$ 月因紧急购电出现全年
 
     \vspace{0.25em}
 
-    % 表7行数更少，因此增大行距
-    \renewcommand{\arraystretch}{1.08}
+    \scriptsize
+    \setlength{\tabcolsep}{0.8pt}
 
-    \resizebox{\linewidth}{!}{
-    \begin{tabular}{lcccc}
+    % 右表主体行数较少，因此适当增大行距
+    % 使其底线与左表尽量对齐
+    \renewcommand{\arraystretch}{1.24}
+
+    \begin{tabular*}{\linewidth}{
+      @{\extracolsep{\fill}}
+      lcccc
+      @{}
+    }
       \toprule
+
       时间段
         & 3.20
         & 6.21
@@ -332,8 +345,7 @@ $4$--$5$ 月为 $3.07$--$3.27$ 万元最低；$6$ 月因紧急购电出现全年
         & 3199.88 \\
 
       \bottomrule
-    \end{tabular}
-    }
+    \end{tabular*}
 
   \end{minipage}
 
