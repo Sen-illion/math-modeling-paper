@@ -11,6 +11,13 @@
 \renewcommand{\floatpagefraction}{0.65}
 
 \makeatletter
+% 摘要结束后会 \newpage\null。\null 在下页顶占住一行，节标题前的弹性空白就不会被丢掉，
+% 「一、问题重述」会被空出一大截。去掉 \null，标题贴页眉下 25 mm 正文区顶。
+\patchcmd{\endabstract}
+  {\endquotation\newpage\null}
+  {\endquotation\newpage}
+  {}{\PackageWarning{layout_setup}{Could not remove the blank box after the abstract.}}
+
 % 浮动专页从顶端排起，避免把几张图表之间的空隙拉长。
 \setlength{\@fptop}{0pt}
 \setlength{\@fpsep}{8pt}
