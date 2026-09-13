@@ -53,6 +53,9 @@
 \captionsetup{skip=2pt,belowskip=0pt}
 \captionsetup[subfigure]{skip=1pt,belowskip=0pt}
 \begin{figure}[H]
+  % 上移约一行；留 4pt 并靠图内顶白，避免与上文叠字。
+  \vspace{-1\baselineskip}
+  \vspace{4pt}
   \centering
   \includegraphics[width=0.65\textwidth]{Q1_price_load_pv.pdf}
   \caption{典型日负载与光伏出力曲线及电价峰谷分布}
