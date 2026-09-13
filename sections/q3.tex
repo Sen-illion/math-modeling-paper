@@ -245,14 +245,14 @@ $0{:}00$ 的负载预报沿用问题二的因果 Expanding XGBoost；$6/12/18$ �
 
 \begin{table}[!htbp]
   \centering
-  \begin{minipage}[t]{0.55\textwidth}
+  \begin{minipage}[t]{0.52\textwidth}
     \vspace{0pt}
     \centering
     \caption{指定日期调整后购电量与全天购电费用}
     \label{tab:q3_t1}
     \footnotesize
     \setlength{\tabcolsep}{4.5pt}
-    \begin{tabular}{lrrrr}
+    \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}Xrrrr}
       \toprule
       时间段 & 3.20 & 6.21 & 9.23 & 12.21 \\
       \midrule
@@ -266,17 +266,18 @@ $0{:}00$ 的负载预报沿用问题二的因果 Expanding XGBoost；$6/12/18$ �
       全天购电量（kWh） & 61909.72 & 40973.80 & 66868.91 & 95888.88 \\
       全天总购电费（元） & 40736.96 & 22107.38 & 45502.61 & 64039.30 \\
       \bottomrule
-    \end{tabular}
-  \end{minipage}
-  \hfill
+    \end{tabularx}
+  \end{minipage}%
+  \hspace{0.10\textwidth}%
   \begin{minipage}[t]{0.36\textwidth}
     \vspace{0pt}
     \centering
     \caption{指定日期紧急购电量}
     \label{tab:q3_t3}
     \footnotesize
-    \setlength{\tabcolsep}{4.5pt}
-    \begin{tabular}{llr}
+    \setlength{\tabcolsep}{5pt}
+    \setlength{\extrarowheight}{2.4pt}
+    \begin{tabularx}{\linewidth}{@{}lXr@{}}
       \toprule
       日期 & 时段 & 购电量/kWh \\
       \midrule
@@ -290,7 +291,7 @@ $0{:}00$ 的负载预报沿用问题二的因果 Expanding XGBoost；$6/12/18$ �
       12.21 & 10:40--11:00 & 254.38 \\
       12.21 & 20:40--20:50 & 43.38 \\
       \bottomrule
-    \end{tabular}
+    \end{tabularx}
   \end{minipage}
 \end{table}
 
