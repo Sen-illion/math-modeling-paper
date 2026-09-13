@@ -20,26 +20,65 @@
   \small
   \caption{主要符号及其含义}
   \label{tab:symbols}
+
+  \begingroup
+
+  % 蓝白配色
+  \definecolor{headerblue}{RGB}{218,225,250}
+  \definecolor{rowblue}{RGB}{235,239,252}
+
+  \renewcommand{\arraystretch}{1.15}
+
   \begin{tabular}{@{}lll@{}}
     \toprule
+
+    \rowcolor{headerblue}
     符号 & 含义 & 单位 \\
+
     \midrule
+
     $\Delta t$ & 时段长度，$1/6$ & h \\
+
+    \rowcolor{rowblue}
     $\pi_t$ & 时段 $t$ 电价 & 元/kWh \\
+
     $P^{\mathrm{load}}_t$ & 小区负载功率 & kW \\
+
+    \rowcolor{rowblue}
     $P^{\mathrm{pv}}_t$ & 光伏功率（问题一为预测值） & kW \\
+
     $G_t$ & 计划购电量 & kWh \\
+
+    \rowcolor{rowblue}
     $c_t$ & 充电量（问题一为储能设备侧，问题二及之后为交流侧取电） & kWh \\
+
     $d_t$ & 放电量（问题一为储能设备侧，问题二及之后为交流侧供电） & kWh \\
+
+    \rowcolor{rowblue}
     $w_t$ & 弃光量 & kWh \\
+
     $E_t$ & 时段末储电量 & kWh \\
+
+    \rowcolor{rowblue}
     SOC & 即时段末储电量 $E_t$ & kWh \\
+
     $\eta$ & 充/放电单程效率，$0.9$ & — \\
+
+    \rowcolor{rowblue}
     $P_{\max}$ & 接口最大充放电功率，$5000$ & kW \\
+
     $\rho$ & 日内保护回放预留比例，$0$ 放到下限、$1$ 按日前计划 & — \\
+
+    \rowcolor{rowblue}
     $S^{*}$ & 日前计划的日末储电量 & kWh \\
+
     $W$ & 光伏同刻均值的日历窗长，取 $7$ & 日 \\
+
+    \rowcolor{rowblue}
     $\alpha$ & 净负载残差的预指定覆盖率，取 $0.8$ & — \\
+
     \bottomrule
   \end{tabular}
+
+  \endgroup
 \end{table}
