@@ -2,15 +2,13 @@
   "source": "sources/overall_framework_slide1.pdf",
   "source_sha256": "0838ee7b2fdf3a7a45a7da6ed7fe1c556f814339977ee010ab90e8c7aa1d7b7e",
   "source_slide": 1,
-  "source_slide_count": 1,
-  "crop_points": [
-    34.0,
-    98.0,
-    1406.0,
-    742.0
+  "changes": "Reflow first-slide content to a compact portrait-page figure; remove decorative icons and repeated explanations while retaining methods, parameters and inheritance links.",
+  "paper_placement": "Section 3.5, normal portrait page, before Q1.",
+  "canvas_mm": [
+    160,
+    102
   ],
-  "changes": "Crop presentation title, subtitle, footer rule, and outer whitespace only; retain all framework content.",
-  "paper_placement": "Section 3.5, after data preprocessing and before Q1, on a landscape page.",
+  "body_font_pt": 8.0,
   "purpose": "Explain the Q1-Q3 progression and the two Q4 extensions.",
-  "format": "Vector PDF with embedded fonts and original raster decorative icons; PNG is a preview."
+  "format": "Vector PDF and editable SVG, with PNG preview."
 }
