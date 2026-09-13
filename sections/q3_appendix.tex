@@ -10,11 +10,16 @@
 
 \begin{table}[!htbp]
   \centering
-  \small
-  \setlength{\tabcolsep}{3.5pt}
+  \setlength{\tabcolsep}{6pt}
   \caption{指定日期储能充放电量及起止储电量：夏季日正午大量充电，冬季日早晚高峰放电}
   \label{tab:q3_t2}
-  \begin{tabular}{lcccc}
+  \begin{tabularx}{0.96\textwidth}{
+    l
+    >{\centering\arraybackslash}X
+    >{\centering\arraybackslash}X
+    >{\centering\arraybackslash}X
+    >{\centering\arraybackslash}X
+  }
     \toprule
     时间段 & 3.20 & 6.21 & 9.23 & 12.21 \\
     & \multicolumn{4}{c}{充电量 / 放电量（kWh）} \\
@@ -29,7 +34,7 @@
     $0{:}00$ 储电量 & 8725.30 & 2229.33 & 8517.86 & 8579.77 \\
     $24{:}00$ 储电量 & 4364.37 & 9015.78 & 8608.28 & 8623.60 \\
     \bottomrule
-  \end{tabular}
+  \end{tabularx}
 \end{table}
 
 由表~\ref{tab:q3_t2} 可见，$6$ 月 $21$ 日 $8{:}00$--$12{:}00$ 充电 $10{,}134$ kWh、午后几乎不放电，把光伏转入晚高峰；$12$ 月 $21$ 日 $8{:}00$--$12{:}00$ 放电 $8{,}574$ kWh，早高峰主要靠储能。四日日末储电量均高于下限 $1200$ kWh，其中夏季日由 $2229$ kWh 升至 $9016$ kWh，冬季日基本持平。
