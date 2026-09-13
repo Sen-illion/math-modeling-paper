@@ -44,7 +44,7 @@ t=1,\ldots,144
 
 把预测方法与调度环节放在同一张图里对照（图~\ref{fig:q2_model_compare}）。
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.86\textwidth]{Q2_fig3_model_compare.png}
   \caption{不同预测与控制策略的全年总购电费对照}
@@ -129,7 +129,7 @@ C=\sum_{t}\pi_t G_t+\sum_{t}5\pi_t e_t,
   \item \textbf{日末 $S^{*}=2400$ 与 $\rho=0.625$。}日末留电若回到中位 $6000\,\mathrm{kWh}$，当天谷电大量留给次日；若贴近下限 $1200\,\mathrm{kWh}$，次日早高峰只能靠购电，故 $S^{*}$ 存在折中。$\rho$ 过小会提前把次日要用的电放完，过大则日内缺口几乎全买紧急电。两项参数用 $1$ 月 $15$--$31$ 日做因果标定：以 $1200\,\mathrm{kWh}$ 为步长，在 $S^{*}\in\{2400,3600,4800,6000\}$、$\rho\in\{0.5,0.625\}$、$\alpha\in\{0.8,0.825\}$ 的 $16$ 个组合上，从储电量 $6000\,\mathrm{kWh}$ 起按当天真值反事实回放，并把 $1$ 月 $31$ 日 $24{:}00$ 的储电量折成现金计入总代价，最低的一组是 $S^{*}=2400$、$\rho=0.625$（图~\ref{fig:q2_jan_grid}）。
 \end{enumerate}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
   \centering
   \includegraphics[width=0.9\textwidth]{q2_january_sensitivity_grid.pdf}
   \caption{$1$ 月参数标定网格：同一 $\alpha$ 下费用几乎只随 $S^{*}$ 上升，$\rho=0.5$ 与 $0.625$ 接近同色}

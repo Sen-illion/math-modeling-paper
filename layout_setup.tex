@@ -1,0 +1,51 @@
+% 电子版的紧凑排版；保持正文、摘要字号、正文行距及 25 mm 页边距。
+\usepackage{placeins}
+\raggedbottom
+\setlength{\textfloatsep}{7pt plus 2pt minus 2pt}
+\setlength{\floatsep}{7pt plus 2pt minus 2pt}
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}
+\captionsetup{skip=4pt}
+\setcounter{topnumber}{4}
+\setcounter{bottomnumber}{3}
+\setcounter{totalnumber}{6}
+\renewcommand{\floatpagefraction}{0.65}
+
+\makeatletter
+% 浮动专页从顶端排起，避免把几张图表之间的空隙拉长。
+\setlength{\@fptop}{0pt}
+\setlength{\@fpsep}{8pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+
+% 只收紧标题上下空白，保留原有标题字号与样式。
+\renewcommand\section{\FloatBarrier\@startsection{section}{1}{\z@}%
+  {-2.0ex plus -.5ex minus -.2ex}{1.0ex plus .2ex}%
+  {\centering\normalfont\Large\bfseries}}
+\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+  {-1.7ex plus -.4ex minus -.2ex}{.7ex plus .2ex}%
+  {\normalfont\large\bfseries}}
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+  {-1.4ex plus -.3ex minus -.2ex}{.5ex plus .2ex}%
+  {\normalfont\normalsize\bfseries}}
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+  {1.4ex plus .3ex minus .2ex}{-1em}%
+  {\normalfont\normalsize\bfseries}}
+
+% 保留表内字体，减少模板默认 1.38 倍的额外行高。
+\renewenvironment{tabular}
+  {\bgroup\renewcommand{\arraystretch}{1.12}\mcm@oldtabular}
+  {\mcm@endoldtabular\egroup}
+
+% 文献采用模板的小号字（约 11 pt），条目间不额外插入空行。
+\patchcmd{\thebibliography}{\list}{\small\list}
+  {}{\PackageError{layout_setup}{Bibliography font patch failed}{Check the bibliography definition.}}
+\patchcmd{\thebibliography}{\sloppy}
+  {\setlength{\itemsep}{0pt}\setlength{\parsep}{0pt}\sloppy}
+  {}{\PackageError{layout_setup}{Bibliography spacing patch failed}{Check the bibliography definition.}}
+
+% 公式与正文间留出清晰间隔，避免每条短公式额外占据两行。
+\g@addto@macro\normalsize{%
+  \abovedisplayskip=7pt plus 2pt minus 2pt
+  \belowdisplayskip=7pt plus 2pt minus 2pt
+  \abovedisplayshortskip=3pt plus 1pt
+  \belowdisplayshortskip=5pt plus 1pt minus 1pt}
+\makeatother
