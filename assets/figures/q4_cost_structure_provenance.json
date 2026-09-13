@@ -1,0 +1,27 @@
+{
+  "question": "Q4-3",
+  "purpose": "Readability-only redraw, preserving monthly total/non-emergency/emergency costs, emergency shares and cumulative totals",
+  "source_repository": "https://github.com/Sen-illion/math-modeling",
+  "source_commit": "ada9f4744ebf2d28400bc710e42cd9b0b392adc6",
+  "source_files": {
+    "N0": {
+      "path": "assets/tables/Q4/q43_N0_daily.csv",
+      "sha256": "e0bc6d5f4dfa783b36eb99ea1f6126371711b302518f57942d30b8ccc1f7ab9e"
+    },
+    "LA": {
+      "path": "assets/tables/Q4/q43_LA_daily.csv",
+      "sha256": "b14b81a315700f747aa6df904680442fc4953242381c3eaa24ed75bee1f5a3c0"
+    },
+    "M0L": {
+      "path": "assets/tables/Q4/q43_M0L_daily.csv",
+      "sha256": "ed3aa5dc14d586fd1e8316409226126c848fe66d26ffbb08978e03482f9a793e"
+    }
+  },
+  "non_emergency_cost": "total_cost - emergency_cost, including plan and adjustment settlement",
+  "overall_emergency_share": "sum(emergency_cost across all strategies) / sum(total_cost across all strategies)",
+  "rows_per_strategy": 334,
+  "width_mm": 160,
+  "height_mm": 112,
+  "minimum_font_pt": 9,
+  "source_script": "scripts/Q4/make_figure16_readable.py"
+}
