@@ -1,0 +1,48 @@
+{
+  "purpose": "Figure 2 layout-only compression and alignment; plotted samples retained from original source.",
+  "source_repository": "https://github.com/Sen-illion/math-modeling",
+  "source_script": "code/figures/make_attachment_figures.py",
+  "source_script_sha256": "4b10f5959a8565eb640d37ca3d5cb9a538435ad3e42fd66f10a820b0d2cfb4d8",
+  "source_attachment": "problem_files/附件/附件2.xlsx",
+  "source_attachment_sha256": "2e95fd446bfafa0d8c59577b5c2e2ea8b3f1def20dde54a3062556f4da9b4c72",
+  "reference_stats": {
+    "load_mwh_year": 40524.0549503,
+    "pv_mwh_year": 20251.242811683333,
+    "net_mwh_year": 20272.812138616668,
+    "surplus_time_frac": 0.19273211567732115,
+    "net_kw_p95": 5277.59734,
+    "net_kw_min": -6601.9911,
+    "net_kw_max": 6687.7481
+  },
+  "data_files": {
+    "daily_energy.csv": {
+      "sha256": "15e5c46ee6f9b84cdb02802a6afb79ce92fe8c88e44b3679cc572056164cdcc8"
+    },
+    "net_load_duration.csv": {
+      "sha256": "59341affe56c44cfc7167b61c00364573871d8a4ac6539374347f43691f621d1"
+    }
+  },
+  "daily_rows": 365,
+  "duration_plotted_rows": 720,
+  "duration_original_observations": 52560,
+  "duration_sample_stride": 73,
+  "daily_smoothing": "centered rolling mean, window=7, min_periods=1; original descriptive-figure grouping retained",
+  "canvas_mm": [
+    76.8,
+    52.0
+  ],
+  "axes_rectangle": [
+    0.19,
+    0.22,
+    0.78,
+    0.74
+  ],
+  "original_figures": {
+    "att2_energy_a.png": {
+      "sha256": "1e90ed5baa3ba1866b66632609884e9479c19ae010beda213c2a95558977495f"
+    },
+    "att2_energy_b.png": {
+      "sha256": "1ce722a7e6926e63e48aef642ff62bbe63313a949ae1fa66c1483b7220e28c44"
+    }
+  }
+}
