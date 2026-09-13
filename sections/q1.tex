@@ -96,57 +96,7 @@ G_t\ge0,\qquad w_t\ge0,
 
 \subsection{模型求解}
 
-完成目标函数与各项约束的建立后，问题一已转化为一个确定性线性规划问题。本文首先将各决策变量及约束整理为标准线性规划形式，再采用 CBC 求解器搜索满足全部运行约束且购电费用最小的调度方案。具体求解过程如下：
-
-\textbf{Step1：模型的矩阵化表示}
-
-为将前述目标函数与约束条件统一纳入线性规划求解框架，将全天各时段的购电量、充电量、放电量、弃电量和储电量按类别排列，构成决策变量向量
-\[
-\boldsymbol{x}=
-(G_1,\ldots,G_{144},
-c_1,\ldots,c_{144},
-d_1,\ldots,d_{144},
-w_1,\ldots,w_{144},
-E_1,\ldots,E_{144})^{\mathsf T}.
-\]
-
-其中，$\boldsymbol{x}$ 集中了全天 $144$ 个时段的所有待求变量，使各时段的购电与储能运行状态能够在同一优化模型中统一确定。
-
-根据前文建立的目标函数、电量平衡关系及储能运行约束，可进一步将模型整理为标准线性规划形式：
-\[
-\begin{aligned}
-\min_{\boldsymbol{x}}\quad
-&\boldsymbol{p}^{\mathsf T}\boldsymbol{x},\\
-\mathrm{s.t.}\quad
-&A_{\mathrm{eq}}\boldsymbol{x}=\boldsymbol{b}_{\mathrm{eq}},\\
-&A_{\mathrm{ub}}\boldsymbol{x}\le\boldsymbol{b}_{\mathrm{ub}},\\
-&\boldsymbol{\ell}\le\boldsymbol{x}\le\boldsymbol{u}.
-\end{aligned}
-\]
-
-其中，目标函数系数向量$\boldsymbol{p}$用于计算全天计划购电费用。由于只有外网购电量 $G_t$ 直接产生购电费用，因此 $G_t$ 对应的系数为各时段电价 $\pi_t$，其余变量对应的目标函数系数均为零。
-
-等式约束矩阵$A_{\mathrm{eq}}$及其右端向量$\boldsymbol{b}_{\mathrm{eq}}$用于表示各时段的电量平衡、储电量状态转移以及日初日末储电量要求；不等式约束矩阵$A_{\mathrm{ub}}$及其右端向量$\boldsymbol{b}_{\mathrm{ub}}$用于表示接口充放电功率等运行限制；变量下界$\boldsymbol{\ell}$和上界$\boldsymbol{u}$则用于限制储电量、购电量、充放电量及弃电量的取值范围。
-
-经过上述矩阵化处理，原模型中的目标函数和各类运行约束被统一表示为标准线性规划形式。
-
-\textbf{Step2：CBC 求解与全天联合优化}
-
-在标准线性规划模型的基础上，采用 CBC 求解器对全天 $144$ 个时段进行联合求解，得到最优决策向量
-\[
-\boldsymbol{x}^{*}=
-(G_1^{*},\ldots,G_{144}^{*},
-c_1^{*},\ldots,c_{144}^{*},
-d_1^{*},\ldots,d_{144}^{*},
-w_1^{*},\ldots,w_{144}^{*},
-E_1^{*},\ldots,E_{144}^{*})^{\mathsf T},
-\]
-
-以及对应的最小全天计划购电费用
-\[
-C^{*}=
-\sum_{t=1}^{144}\pi_t G_t^{*}.
-\]
+模型包含 $144$ 个时段的购电、充电、放电、弃光及储电量，共 $720$ 个连续变量。采用 PuLP 建模并调用 CBC，联合求解式~\eqref{eq:q1_objective}--\eqref{eq:q1_nonnegative}，得到最优购电与储能调度方案；求解状态为 Optimal。将结果按题目指定时段汇总，并通过电量平衡、储电量递推及运行边界检查，具体结果与检验见下文。
 
 \subsection{求解结果}
 
