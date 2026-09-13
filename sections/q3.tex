@@ -234,12 +234,17 @@ $0{:}00$ 的负荷预报沿用问题二的因果 Expanding XGBoost；$6/12/18$ �
   \end{tabular}
 \end{table}
 
+% 表13、14共用一行，表13内四个日期按2×2排列；各自保留表号。
 \begin{table}[!htbp]
-  \centering\footnotesize
-  \setlength{\tabcolsep}{1.5pt}
-  \caption{指定日期储能充放电量及 0:00/24:00 储电量（kWh）}
-  \label{tab:q3_t2}
-  \begin{minipage}[t]{0.24\textwidth}
+  \centering
+  \begin{minipage}[t]{0.64\textwidth}
+    \vspace{0pt}\centering
+    \captionsetup{justification=raggedright,singlelinecheck=false}
+    \caption{指定日期储能充放电量及 0:00/24:00 储电量（kWh）}
+    \label{tab:q3_t2}
+    \fontsize{9}{11}\selectfont
+    \setlength{\tabcolsep}{2.5pt}
+\begin{minipage}[t]{0.48\linewidth}
     \centering
     \textbf{2025-03-20}\\[1pt]
     \begin{tabular}{l r r}
@@ -257,8 +262,8 @@ $0{:}00$ 的负荷预报沿用问题二的因果 Expanding XGBoost；$6/12/18$ �
       \bottomrule
     \end{tabular}
   \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.24\textwidth}
+\hfill
+\begin{minipage}[t]{0.48\linewidth}
     \centering
     \textbf{2025-06-21}\\[1pt]
     \begin{tabular}{l r r}
@@ -276,8 +281,8 @@ $0{:}00$ 的负荷预报沿用问题二的因果 Expanding XGBoost；$6/12/18$ �
       \bottomrule
     \end{tabular}
   \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.24\textwidth}
+\par\medskip
+\begin{minipage}[t]{0.48\linewidth}
     \centering
     \textbf{2025-09-23}\\[1pt]
     \begin{tabular}{l r r}
@@ -295,8 +300,8 @@ $0{:}00$ 的负荷预报沿用问题二的因果 Expanding XGBoost；$6/12/18$ �
       \bottomrule
     \end{tabular}
   \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.24\textwidth}
+\hfill
+\begin{minipage}[t]{0.48\linewidth}
     \centering
     \textbf{2025-12-21}\\[1pt]
     \begin{tabular}{l r r}
@@ -314,19 +319,18 @@ $0{:}00$ 的负荷预报沿用问题二的因果 Expanding XGBoost；$6/12/18$ �
       \bottomrule
     \end{tabular}
   \end{minipage}
-\end{table}
-
-\begin{table}[!htbp]
-  \centering\footnotesize
-
-  \begin{minipage}{\textwidth}
-    \centering
-    \setlength{\tabcolsep}{4pt}
-    \caption{指定日期紧急购电量：集中在早、晚净负荷高峰}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.34\textwidth}
+    \vspace{0pt}\centering
+    \captionsetup{justification=raggedright,singlelinecheck=false}
+    \caption{指定日期紧急购电量（kWh）}
     \label{tab:q3_t3}
-    \begin{tabular}{l l r}
+    \fontsize{9}{11}\selectfont
+    \setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{@{}l l r@{}}
         \toprule
-        日期 & 紧急购电时间段 & 紧急购电量/kWh \\
+        日期 & 时段 & 购电量 \\
         \midrule
         2025-03-20 & 10:00--10:10 & 31.93 \\
         2025-03-20 & 20:40--20:50 & 131.05 \\
