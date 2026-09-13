@@ -1,0 +1,18 @@
+{
+  "approved_q3_commit": "51d74a17827152eae2a07cda84d85d1201bfb4c7",
+  "reason": "User confirmed retaining the approved GitHub Q3 and archiving the alternate Overleaf rewrite; preserve other current edits.",
+  "backups": [
+    {
+      "source_commit": "6b98492e533aff6a9ac1733ccae472b03452ae23",
+      "source_path": "sections/q3.tex",
+      "backup": "q3_overleaf_6b98492.tex.txt",
+      "sha256": "2e2fb1219ca1203cdaf28914cbde44e16af8ad4d99268f7d0c7ef7eb66c9e513"
+    },
+    {
+      "source_commit": "99efc8193e63eb98608c5843bbf106615d4ada67",
+      "source_path": "sections/q3.tex",
+      "backup": "q3_overleaf_99efc81.tex.txt",
+      "sha256": "67f6540c2c7e894a96e2e64bc03e039170c43e17eafa102c53a4915ffe7e4b78"
+    }
+  ]
+}
