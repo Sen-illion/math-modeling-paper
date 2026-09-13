@@ -1,0 +1,176 @@
+{
+  "model_commit": "ada9f4744ebf2d28400bc710e42cd9b0b392adc6",
+  "date": "2025-06-21",
+  "sources": [
+    {
+      "path": "results/Q3/result3.xlsx",
+      "sha256": "b0baccd80d6ecdd6010681f8d716e9b5cade69124f4b0ce05b409ecfbe7499b7"
+    },
+    {
+      "path": "results/Q3/run_manifest.json",
+      "sha256": "6eef11fb21e2422a359534e7cee99b8398ca4344f3c3f3dd6d41a25c2987b811"
+    },
+    {
+      "path": "data_raw/Q3/attachment1.xlsx",
+      "sha256": "66b87134f5ecccd68184d3539bb1293ef039f9e0fdd955a589b9bfa7f227c377"
+    },
+    {
+      "path": "data_raw/Q3/attachment2.xlsx",
+      "sha256": "2e95fd446bfafa0d8c59577b5c2e2ea8b3f1def20dde54a3062556f4da9b4c72"
+    },
+    {
+      "path": "code/Q3/config.py",
+      "sha256": "b072d0d84cb915f002e04199481f86fd3ca0008b5c7a850c4acd587a35fa490b"
+    },
+    {
+      "path": "code/Q3/load_data.py",
+      "sha256": "0f6ad57d79c0180f53cdb72f33ee1fc52cbed2b6acfc17ddf545cd6b19dcfc1c"
+    },
+    {
+      "path": "code/Q3/simulate.py",
+      "sha256": "93dc1d136e59d762f16da72383ee9cb1e48a14a93befcfa30700a9727d5a0d1a"
+    },
+    {
+      "path": "code/Q3/export_results.py",
+      "sha256": "2232785d90ef2fc6753a4a619341008f7ec85b6d07d71f97a34262d159218775"
+    },
+    {
+      "path": "code/common/time_slots.py",
+      "sha256": "3a969793e26a63e821958c09c7d1a7316c0a59bb02e897bc4f67deb2951ac23e"
+    }
+  ],
+  "time_alignment": "calendar [00:00,24:00); slot 0 from previous template row's final column",
+  "reconstructed_fields": [
+    "charge_kwh",
+    "discharge_kwh",
+    "charge_kw",
+    "discharge_kw",
+    "storage_net_output_kw",
+    "emergency_purchase_kwh",
+    "emergency_purchase_kw",
+    "curtailed_pv_kwh",
+    "curtailed_pv_kw",
+    "soc_start_kwh",
+    "soc_end_kwh",
+    "emergency_cost_yuan",
+    "total_cost_yuan"
+  ],
+  "method": "Deterministic execution replay from official final purchases and actual load/PV; no optimization rerun.",
+  "ai_assistance": "Codex prepared this export and checked source alignment and numerical consistency.",
+  "checks": [
+    {
+      "check": "calendar_day_plan_cost_yuan",
+      "passed": true,
+      "max_abs_error": 0.0,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "calendar_day_total_cost_yuan",
+      "passed": true,
+      "max_abs_error": 0.0,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "day_end_soc_kwh",
+      "passed": true,
+      "max_abs_error": 0.0,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "emergency_purchase_kwh",
+      "passed": true,
+      "max_abs_error": 0.0,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "locked_purchase_before_06h_kwh",
+      "passed": true,
+      "max_abs_error": 0.0,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "block_0_charge_kwh",
+      "passed": true,
+      "max_abs_error": 0.0,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "block_0_discharge_kwh",
+      "passed": true,
+      "max_abs_error": 0.0,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "block_1_charge_kwh",
+      "passed": true,
+      "max_abs_error": 2.2737367544323206e-13,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "block_1_discharge_kwh",
+      "passed": true,
+      "max_abs_error": 2.2737367544323206e-13,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "block_2_charge_kwh",
+      "passed": true,
+      "max_abs_error": 1.8189894035458565e-12,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "block_2_discharge_kwh",
+      "passed": true,
+      "max_abs_error": 0.0,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "block_3_charge_kwh",
+      "passed": true,
+      "max_abs_error": 2.021494083237485e-12,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "block_3_discharge_kwh",
+      "passed": true,
+      "max_abs_error": 0.0,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "block_4_charge_kwh",
+      "passed": true,
+      "max_abs_error": 0.0,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "block_4_discharge_kwh",
+      "passed": true,
+      "max_abs_error": 0.0,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "block_5_charge_kwh",
+      "passed": true,
+      "max_abs_error": 0.0,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "block_5_discharge_kwh",
+      "passed": true,
+      "max_abs_error": 4.547473508864641e-13,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "energy_balance_kwh",
+      "passed": true,
+      "max_abs_error": 1.1368683772161603e-13,
+      "tolerance": 1e-05
+    },
+    {
+      "check": "soc_dynamics_kwh",
+      "passed": true,
+      "max_abs_error": 7.958078640513122e-13,
+      "tolerance": 1e-05
+    }
+  ]
+}
