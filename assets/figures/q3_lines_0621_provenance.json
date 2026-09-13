@@ -1,0 +1,21 @@
+{
+  "question": "Q3",
+  "figure_label": "fig:q3_dispatch",
+  "date": "2025-06-21",
+  "user_selected_artwork": true,
+  "artwork_regenerated_in_this_revision": false,
+  "paper_asset": "figures/fig_q3_lines_0621.pdf",
+  "plot_source": "scripts/make_q3_lines_0621.py",
+  "purpose": "Compare load, PV, planned and adjusted purchase power with storage energy over the representative day.",
+  "sha256": {
+    "figures/fig_q3_lines_0621.png": "2ed2daa01ff8024688651f02fb722e5a9203e9ffe21027709f12b1c8fa87a2e0",
+    "figures/fig_q3_lines_0621.pdf": "d19d05df5a578a3d368910ac67cc801a78de6b55401da9aa42ddcc4e1e61b8b3",
+    "figures/fig_q3_lines_0621.svg": "b6203d685b3f374b1d45a7607faab1eeaa5ba114298addc87f306a8d71691df7",
+    "assets/figures/fig_q3_lines_0621.png": "2ed2daa01ff8024688651f02fb722e5a9203e9ffe21027709f12b1c8fa87a2e0",
+    "assets/figures/fig_q3_lines_0621.pdf": "d19d05df5a578a3d368910ac67cc801a78de6b55401da9aa42ddcc4e1e61b8b3",
+    "assets/figures/fig_q3_lines_0621.svg": "b6203d685b3f374b1d45a7607faab1eeaa5ba114298addc87f306a8d71691df7",
+    "scripts/make_q3_lines_0621.py": "9fe0e3fee56b2166a30bda15e7e424a8fcd05cd6173cfe1e901e9b87abf3a944",
+    "assets/tables/q3_figure14_20250621/plot_data_10min.csv": "44c3de9a7efb7b7540d55165b51fc0a283638013dc0338232ddf1b3b673b2421",
+    "assets/tables/q3_figure14_20250621/soc_145_points.csv": "eebe460b1777bf41ab44919b4395b64245f64c3fe913c3794c50dedd8f1ec6c8"
+  }
+}
