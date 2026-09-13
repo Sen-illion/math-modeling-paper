@@ -13,11 +13,10 @@
 
 \subsection{模型假设与本问新增符号}
 
-第三问继承第一、二问的全部公共假设：微网必须满足小区负载、不能向外网售电、允许弃光；储能容量 $12000$ kWh，运行窗 $[1200,10800]$ kWh，充放电效率各为 $\eta=0.9$；``最大充放电功率 $5000$ kW''指储能与微网的接口功率，充电时电池最多增加 $5000\eta=4500$ kW，放电时微网最多得到 $5000$ kW；时段长 $\Delta t=10$ min $=1/6$ h。本问另有四点约定：
+本问沿用前文的供需平衡、禁止售电及允许弃光假设，储能参数与时段长度保持一致；附件 1 电价按时段起点逐日循环对齐。新增约定如下：
 
 \begin{itemize}[leftmargin=2em,itemsep=0pt,topsep=2pt]
-  \item 电价每天重复使用附件 1 的 144 个时点电价，全年按``时段起点读法''循环对齐；
-  \item 光伏决策只用附件 3 的四个发布时点预报，不再使用第二问的光伏 XGB 模型；
+  \item 光伏决策采用附件 3 在 $0/6/12/18$ 时点发布的预报；
   \item 负荷在 $0{:}00$ 用与第二问相同的 Expanding XGBoost 预报，$6/12/18$ 时点再用当天已发生负荷做比例校正；
   \item 不强制 $E_0=E_{24}$，储电量跨日传递回放末值；$2$ 月 $1$ 日 $0{:}00$ 再置为 $6000$ kWh（题面只保证 $1$ 月 $1$ 日该值），$1$ 月回测不滚入。
 \end{itemize}
@@ -61,17 +60,13 @@
 
 \subsection{物理约束与储能动态}
 
-任意时刻，微网内部的功率平衡与储能动态必须成立：
-\begin{align}
-  G^{\mathrm{adj}}_t + P^{\mathrm{pv}}_t + d_t + G^{\mathrm{em}}_t
-  &= P^{\mathrm{load}}_t + c_t + w_t, \label{eq:q3_balance}\\[2pt]
-  E_t &= E_{t-1} + \eta\, c_t - d_t/\eta, \label{eq:q3_soc}\displaybreak[1]\\[2pt]
-  1200\le E_t &\le 10800, \label{eq:q3_ebound}\\[2pt]
-  0\le c_t,\ d_t &\le P_{\max}\Delta t, \label{eq:q3_pbound}\\[2pt]
-  w_t &\ge 0, \label{eq:q3_w_nonneg}\\[2pt]
-  G^{\mathrm{em}}_t &\ge 0. \label{eq:q3_gem_nonneg}
-\end{align}
-其中 $c_t,d_t$ 为电池侧充、放电量（kWh），$w_t$ 为弃光量，$E_t$ 为时段末储电量，$P_{\max}=5000$ kW 对应每时段 $P_{\max}\Delta t\approx 833.33$ kWh。式~\eqref{eq:q3_balance}--\eqref{eq:q3_gem_nonneg} 既用于优化模型，也用于最后逐时段的实际回放，二者共用同一套物理口径，保证了``模型计划''与``实际结算''的一致性。
+储能状态递推、容量及接口功率约束沿用式~\eqref{eq:q2_lp}，日末储电条件采用本问约定。以最终合同替代计划购电，并计入紧急购电后，时段电量平衡为
+\begin{equation}
+  G^{\mathrm{adj}}_t + P^{\mathrm{pv}}_t\Delta t + d_t + G^{\mathrm{em}}_t
+  = P^{\mathrm{load}}_t\Delta t + c_t + w_t.
+  \label{eq:q3_balance}
+\end{equation}
+其中 $c_t,d_t$ 为微网接口侧充、放电量（kWh），$G^{\mathrm{adj}}_t,w_t,G^{\mathrm{em}}_t\ge0$。优化使用修正预报，回放使用实测值，二者共用上述物理约束。
 
 \subsection{滚动时域线性规划模型}
 
@@ -87,7 +82,7 @@
   +\varepsilon\sum_{j=1}^{144}(c_j+d_j).
   \label{eq:q3_lp0}
 \end{equation}
-约束为式~\eqref{eq:q3_balance}--\eqref{eq:q3_gem_nonneg}，初始储电量 $E_0=SOC_0$。其中 $\varepsilon$ 是一个极小的正则项，用于打破同时充放电的无谓退化（$\eta<1$ 时最优解本就不会同时充放，$\varepsilon$ 只是数值保险）。$G^{\mathrm{em}}_j$ 是在 LP 内部按 $5\pi_j$ 计价的\emph{虚拟紧急购电}：它保证 LP 在任何预报缺口下都可行，同时给出一个乐观的费用下界，真正的紧急电量要在回放中用实测净负荷重新计算。
+约束为式~\eqref{eq:q3_balance} 及上述储能约束，初始储电量 $E_0=SOC_0$。其中 $\varepsilon$ 是一个极小的正则项，用于打破同时充放电的无谓退化（$\eta<1$ 时最优解本就不会同时充放，$\varepsilon$ 只是数值保险）。$G^{\mathrm{em}}_j$ 是在 LP 内部按 $5\pi_j$ 计价的\emph{虚拟紧急购电}：它保证 LP 在任何预报缺口下都可行，同时给出一个乐观的费用下界，真正的紧急电量要在回放中用实测净负荷重新计算。
 
 \paragraph{调整模型（带追索权的滚动重优化）。}
 在时点 $\tau>0$，当天剩余时段构成基准合同 $g_j$（即此前已承诺的购电量）。把从 $\tau$ 到当天结束的时段重新编号为 $j=1,\dots,n_{\mathrm{today}}$，若启用 48 h 展望则再拼接次日全天、编号至 $n$。调整模型在已承诺合同上做有代价的增减，并对展望段按普通电价重新决策。将各时段的 $G_j$、$\delta_j^{\pm}$、$c_j$、$d_j$、$w_j$、$E_j$ 和 $G_j^{\mathrm{em}}$ 统记为决策向量 $\boldsymbol{x}$，目标函数为：
@@ -112,24 +107,9 @@
   \label{eq:q3_adj_rel}
 \end{equation}
 
-将 $0{:}00$ 计划模型与各调整时点模型统一为如下总括（以调整时点 $\tau>0$ 为例；$\tau=0$ 时 $n_{\mathrm{today}}=144$ 且无偏差项）：
+其中 $\delta^{+}_j,\delta^{-}_j$ 分别为增购、减购量，按式~\eqref{eq:q3_cost} 结算；终端储电量惩罚系数取 $\lambda=0$。调整模型沿用式~\eqref{eq:q3_balance} 及上述储能约束，以当前实测储电量 $E_0=SOC_{\tau}$ 初始化，求解后更新后续合同，并在下一决策时点重复优化。
 
-\begin{equation}
-  \boxed{\begin{aligned}
-    & \min_{G_j,\delta^{\pm}_j,c_j,d_j,w_j,E_j,G^{\mathrm{em}}_j}\quad
-      \sum_{j=1}^{n_{\mathrm{today}}}\Big(-\tfrac12\pi_j\delta^{-}_j+\tfrac32\pi_j\delta^{+}_j\Big)
-      +\sum_{j=n_{\mathrm{today}}+1}^{n}\pi_j G_j + 5\sum_{j=1}^{n}\pi_j G^{\mathrm{em}}_j\\[2pt]
-    & \text{s.t.}\quad G_j=g_j+\delta^{+}_j-\delta^{-}_j,\quad \delta^{\pm}_j\ge0\ (j\le n_{\mathrm{today}}),\\[2pt]
-    & \qquad G_j+P^{\mathrm{pv}}_j+d_j+G^{\mathrm{em}}_j=P^{\mathrm{load}}_j+c_j+w_j,\quad
-      E_j=E_{j-1}+\eta c_j-d_j/\eta,\\[2pt]
-    & \qquad 1200\le E_j\le10800,\quad 0\le c_j,d_j\le P_{\max}\Delta t,\quad w_j\ge0,\ G^{\mathrm{em}}_j\ge0.
-  \end{aligned}}
-  \label{eq:q3_master}
-\end{equation}
-
-本文使用 Python 的 PuLP 工具构建线性规划模型，并调用开源求解器 CBC（COIN-OR Branch and Cut）求解。单次模型的变量数与约束数均为千量级，全年 $334$ 天、每日 $4$ 个决策时点，共进行 $1336$ 次求解，均在设定的数值容差内获得最优解。LA 策略全年回放与结算总耗时约为 $217\,\mathrm{s}$。
-
-其中 $\delta^{+}_j,\delta^{-}_j$ 分别是相对基准合同的增购量与减购量，目标函数中 $-0.5\pi_j\delta^{-}_j$ 与 $+1.5\pi_j\delta^{+}_j$ 正是式~\eqref{eq:q3_cost} 的偏差结算；末项是终端储电量的软约束，冻结方案取 $\lambda=0$（不强迫 $E_0=E_{24}$，让跨日 SOC 由回放自然传递）；其余约束仍为式~\eqref{eq:q3_balance}--\eqref{eq:q3_gem_nonneg}，初始储电量 $E_0=SOC_{\tau}$。解出后，当天剩余时段的合同更新为新的最优值，随后在下一时点重复这一过程。这就是完整的滚动时域线性规划。
+模型通过 PuLP 建模并调用 CBC 求解，单次变量与约束均为千量级；全年 $1336$ 次求解均在数值容差内获得最优解，LA 回放与结算总耗时约 $217\,\mathrm{s}$。
 
 \paragraph{48 小时展望。}
 若只在当天剩余时段内优化，$0{:}00$ 和 $18{:}00$ 的解都会在日末把储电量用尽，次日清晨就被动。把展望窗延长到``当天剩余 $+$ 次日全天''后，LP 会主动为次日留出储电余量，日末贴底天数从 $106$ 天压到 $1$ 天以下（见第~\ref{sec:q3_param} 节消融）。展望段电价按附件 1 循环延拓，次日负荷与光伏尾段用目标日前一周同星期几的已收盘数据，不用尚未发布的次日 $0{:}00$ 预报。
