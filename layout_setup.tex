@@ -5,6 +5,17 @@
 \setlength{\floatsep}{7pt plus 2pt minus 2pt}
 \setlength{\intextsep}{6pt plus 2pt minus 2pt}
 \captionsetup{skip=4pt}
+
+% 国赛层级：一级四号黑体 > 二级小四黑体 > 正文小四宋体 > 图题/表题/表头五号。
+% 模板把图题表题设成小四加粗，表内又常跟正文同字号，表头会看起来比小节标题更大。
+\DeclareCaptionFont{fivehao}{\zihao{5}\songti}
+\captionsetup[figure]{font={fivehao},labelfont=fivehao,textfont=fivehao}
+\captionsetup[table]{font={fivehao},labelfont=fivehao,textfont=fivehao}
+\captionsetup[subtable]{font=fivehao}
+\captionsetup[subfigure]{font=fivehao}
+\AtBeginEnvironment{table}{\zihao{5}}
+\AtBeginEnvironment{longtable}{\zihao{5}}
+
 \setcounter{topnumber}{4}
 \setcounter{bottomnumber}{3}
 \setcounter{totalnumber}{6}
@@ -23,19 +34,19 @@
 \setlength{\@fpsep}{8pt}
 \setlength{\@fpbot}{0pt plus 1fil}
 
-% 只收紧标题上下空白，保留原有标题字号与样式。
+% 收紧标题空白；一级四号黑体，二级/三级小四黑体，保证小节标题重于表题表头。
 \renewcommand\section{\FloatBarrier\@startsection{section}{1}{\z@}%
   {-2.0ex plus -.5ex minus -.2ex}{1.0ex plus .2ex}%
-  {\centering\normalfont\Large\bfseries}}
+  {\centering\normalfont\zihao{4}\heiti\bfseries}}
 \renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
   {-1.7ex plus -.4ex minus -.2ex}{.7ex plus .2ex}%
-  {\normalfont\large\bfseries}}
+  {\normalfont\zihao{-4}\heiti\bfseries}}
 \renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
   {-1.4ex plus -.3ex minus -.2ex}{.5ex plus .2ex}%
-  {\normalfont\normalsize\bfseries}}
+  {\normalfont\zihao{-4}\heiti\bfseries}}
 \renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
   {1.4ex plus .3ex minus .2ex}{-1em}%
-  {\normalfont\normalsize\bfseries}}
+  {\normalfont\zihao{-4}\heiti\bfseries}}
 
 % 保留表内字体，减少模板默认 1.38 倍的额外行高。
 \renewenvironment{tabular}
