@@ -8,163 +8,29 @@
 
 \subsection{日前电价预测模型建立}
 
-问题四中，每日 $0{:}00$ 制定购电计划时尚无法获得当天真实电价，因此需要利用此前的历史电价预测当天 $144$ 个 $10\,\mathrm{min}$ 时段的价格。考虑到附件~4 的实时电价具有较稳定的日内规律，同时存在星期差异和近期波动，本文将预测电价分解为历史同刻基础价格、星期修正和近期修正三部分。
-
-记第 $d$ 日第 $t$ 个时段的真实电价和预测电价分别为 $p_{d,t}$ 和 $\hat p_{d,t}$，则
+记第 $d$ 日时段 $t$ 的真实电价与预测电价为 $p_{d,t}$、$\hat p_{d,t}$。利用决策日前的历史数据，将预测分为同刻基础价格、星期修正与近期修正三部分：
 \begin{equation}
-\hat p_{d,t}
-=
-b_{d,t}
-+
-\Delta_{\mathrm{week},d,t}
-+
-\Delta_{\mathrm{recent},d,t},
-\qquad t=1,\ldots,144.
-\label{eq:q4_price_forecast}
+  \hat p_{d,t}=b_{d,t}+\Delta_{\mathrm{week},d,t}+\Delta_{\mathrm{recent},d,t},
+  \qquad t=1,\ldots,144.
+  \label{eq:q4_price_forecast}
 \end{equation}
+设 $n_d$ 为此前历史日数，$w(d)$ 为星期编号，$\mathcal W_d=\{j<d\mid w(j)=w(d)\}$，$m_d=\min(7,n_d)$，则
+\begin{align}
+  b_{d,t}&=\frac{1}{n_d}\sum_{j<d}p_{j,t}, \label{eq:q4_price_base}\\
+  \Delta_{\mathrm{week},d,t}&=\frac{1}{|\mathcal W_d|}\sum_{j\in\mathcal W_d}r_{j,t}, \label{eq:q4_week_correction}\\
+  \Delta_{\mathrm{recent},d,t}&=\frac{1}{m_d}\sum_{k=1}^{m_d}e_{d-k,t}. \label{eq:q4_recent_correction}
+\end{align}
+其中，$r_{j,t}=p_{j,t}-b_{j,t}$、$e_{j,t}=p_{j,t}-b_{j,t}-\Delta_{\mathrm{week},j,t}$ 为各历史日当时形成的两层残差；无相应历史样本时，修正项取零。
 
-其中，$b_{d,t}$ 为历史同刻基础价格，$\Delta_{\mathrm{week},d,t}$ 和 $\Delta_{\mathrm{recent},d,t}$ 分别为星期修正项和近期修正项。
-
-\textbf{（1）历史同刻基础价格}
-
-为提取电价稳定的日内变化规律，对决策日前所有历史日期在相同时段的真实电价取平均。设第 $d$ 日以前共有 $n_d$ 个历史日期，则
-\begin{equation}
-b_{d,t}
-=
-\frac{1}{n_d}
-\sum_{j<d}p_{j,t}.
-\label{eq:q4_price_base}
-\end{equation}
-
-\textbf{（2）星期修正项}
-
-为进一步反映不同星期日期之间的价格差异，定义第一层残差
-\begin{equation}
-r_{j,t}
-=
-p_{j,t}-b_{j,t}.
-\label{eq:q4_price_residual_week}
-\end{equation}
-
-记 $w(d)$ 为第 $d$ 日的星期编号，则取决策日前相同星期日期的第一层残差均值作为星期修正：
-\begin{equation}
-\Delta_{\mathrm{week},d,t}
-=
-\frac{1}{|\mathcal W_d|}
-\sum_{j\in\mathcal W_d}r_{j,t},
-\qquad
-\mathcal W_d=\{j<d\mid w(j)=w(d)\}.
-\label{eq:q4_week_correction}
-\end{equation}
-
-\textbf{（3）近期修正项}
-
-在扣除历史同刻价格和星期影响后，定义第二层残差
-\begin{equation}
-e_{j,t}
-=
-p_{j,t}
--
-b_{j,t}
--
-\Delta_{\mathrm{week},j,t}.
-\label{eq:q4_price_residual_recent}
-\end{equation}
-
-取决策日前最近 $7$ 个已观测日期的第二层残差进行等权平均，得到近期修正项：
-\begin{equation}
-\Delta_{\mathrm{recent},d,t}
-=
-\frac{1}{m_d}
-\sum_{k=1}^{m_d}e_{d-k,t},
-\qquad
-m_d=\min(7,n_d).
-\label{eq:q4_recent_correction}
-\end{equation}
-
-该修正用于反映近期价格变化，并通过多日平均减弱单日异常波动的影响。
-
-由此，模型依次提取长期日内规律、星期差异和近期价格变化。
-
-\textbf{（4）初始历史数据与逐日更新}
-
-附件~4 的实时电价从 $2025$ 年 $1$ 月 $1$ 日开始记录，而正式调度从 $2$ 月 $1$ 日开始，因此利用 $1$ 月数据积累电价预测所需的历史信息。由于 $1$ 月 $1$ 日缺少更早的历史电价，采用附件~1 的分时电价 $p_t^{(1)}$ 进行初始化：
-\begin{equation}
-b_{1,t}=p_t^{(1)},\qquad
-\Delta_{\mathrm{week},1,t}=0,\qquad
-\Delta_{\mathrm{recent},1,t}=0.
-\label{eq:q4_price_cold_start}
-\end{equation}
-
-此后按日期顺序逐日计算预测电价，并在当天真实电价获得后更新历史价格及残差。到 $2$ 月 $1$ 日时，基础价格由 $1$ 月 $31$ 天的同刻真实电价计算，星期修正和近期修正则根据 $1$ 月逐日形成的历史残差计算。1 月仅用于积累上述历史信息，不计入正式费用统计。
-
-正式调度期间，每日继续利用截至前一日的历史信息更新预测，得到当天的预测电价向量
-\begin{equation}
-\hat{\boldsymbol p}_d
-=
-\left(
-\hat p_{d,1},
-\hat p_{d,2},
-\ldots,
-\hat p_{d,144}
-\right)^{\mathsf T}.
-\label{eq:q4_price_vector}
-\end{equation}
-
-预测电价用于制定当天购电计划，附件~4 的真实电价用于实际费用计算，以保证决策时不使用尚未获得的电价信息。
+$1$ 月 $1$ 日以附件~1 电价初始化 $b_{1,t}$，两项修正均取零；此后每日先预测，待真实电价获得后再更新历史价格与残差。$1$ 月仅用于积累历史，不计入正式费用；$2$ 月起继续按相同规则逐日更新。
 
 \subsection{模型求解}
 
-本文沿用问题二和问题三已经确定的预测与调度方法，储电初值同样取 $2$ 月 $1$ 日 $0{:}00$ 为 $6000$\,kWh，$1$ 月回测不滚入；主要将原模型中的固定分时电价替换为前述日前预测电价，并采用附件~4 的真实实时电价进行最终费用结算。
+本问继承问题二、三的预测方法、调度参数及物理约束，将式~\eqref{eq:q2_lp}、\eqref{eq:q3_lp0}、\eqref{eq:q3_lp_adj} 中的决策电价替换为 $\hat p_{d,t}$。正式回放仍从 $2$ 月 $1$ 日 $6000$ kWh 初始储电量出发，$1$ 月储电量不滚入。
 
-对于问题二对应的日前调度，每日 $0{:}00$ 根据预测电价 $\hat p_{d,t}$ 制定全天计划购电方案，其购电费用目标为
-\begin{equation}
-\min C_d^{\mathrm{plan}}
-=
-\sum_{t=1}^{144}\hat p_{d,t}G_{d,t}.
-\end{equation}
-全天计划购电量确定后保持不变，并根据当天实际负载和光伏功率计算实际运行结果。若仍存在供电缺口，则按照对应时段真实电价的 $5$ 倍进行紧急购电。因此，每日实际费用为
-\begin{equation}
-C_d^{(4-2)}
-=
-\sum_{t=1}^{144}\pi_{d,t}G_{d,t}
-+
-5\sum_{t=1}^{144}\pi_{d,t}e_{d,t}^{\mathrm{em}},
-\label{eq:q42_actual_cost}
-\end{equation}
-其中，$\pi_{d,t}$ 为附件~4 的真实电价，$e_{d,t}^{\mathrm{em}}$ 为紧急购电量。
+Q4-2 在每日 $0{:}00$ 制定合同并保持日内不变，按问题二的规则回放。Q4-3 在 $6/12/18$ 时点根据更新的负载、光伏信息调整合同，但电价始终采用当天 $0{:}00$ 的预测；次日展望段按相同日内时刻延伸该预测电价。
 
-对于问题三对应的日内调整策略，每日 $0{:}00$ 首先利用预测电价制定初始购电计划，并在 $6{:}00$、$12{:}00$ 和 $18{:}00$ 根据新获得的负载和光伏信息调整后续尚未执行的购电计划。由于未来真实电价仍不可知，当天各次调整均继续使用 $0{:}00$ 得到的预测电价；对于延伸至次日的优化时段，将当天预测电价按照相同日内时刻扩展至次日。
-
-记初始计划购电量为 $G_{d,t}$，日内调整后的最终购电量为 $G'_{d,t}$，并定义
-\begin{equation}
-\Delta_{d,t}^{+}
-=
-\max(G'_{d,t}-G_{d,t},0),
-\qquad
-\Delta_{d,t}^{-}
-=
-\max(G_{d,t}-G'_{d,t},0).
-\end{equation}
-根据题目规定，减少的购电量按 $0.5$ 倍真实电价结算，增加的购电量按 $1.5$ 倍结算，供电缺口按 $5$ 倍真实电价紧急购电，因此每日实际费用为
-\begin{equation}
-\begin{aligned}
-C_d^{(4-3)}
-={}&
-\sum_{t=1}^{144}\pi_{d,t}G_{d,t}
--
-0.5\sum_{t=1}^{144}\pi_{d,t}\Delta_{d,t}^{-}\\
-&+
-1.5\sum_{t=1}^{144}\pi_{d,t}\Delta_{d,t}^{+}
-+
-5\sum_{t=1}^{144}\pi_{d,t}e_{d,t}^{\mathrm{em}}.
-\end{aligned}
-\label{eq:q43_actual_cost}
-\end{equation}
-
-上述模型均采用线性规划求解，并调用 CBC 求解器完成全年逐日计算，各次优化均获得最优解。最终汇总全年总费用、紧急购电量及合同调整费用，用于后续结果分析。
-
-
+两模型均调用 CBC 逐日求解，各次优化均获得最优解。实际费用分别按式~\eqref{eq:q2_cost}、\eqref{eq:q3_cost} 结算，其中电价取附件~4 的真实值 $\pi_{d,t}=p_{d,t}$，从而区分决策所用预测价与实际结算价。
 
 \subsection{求解结果}
 
