@@ -19,6 +19,12 @@
       "source_path": "sections/q3.tex",
       "backup": "q3_overleaf_46aa285.tex.txt",
       "sha256": "be49ccb3e18f566e834d5aa3b75310c78c0537856d21cef4d258610fb40be224"
+    },
+    {
+      "source_commit": "2da6b2a971ad7d4e01f5d764ec149704a3252654",
+      "source_path": "sections/q3.tex",
+      "backup": "q3_overleaf_2da6b2a.tex.txt",
+      "sha256": "39da1f8f816bb11c5b2e285bd3c8f1b7954abf2adb21319fd097cc34f6cff8d9"
     }
   ]
 }
