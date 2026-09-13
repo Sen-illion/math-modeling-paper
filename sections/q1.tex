@@ -105,6 +105,10 @@ G_t\ge0,\qquad w_t\ge0,
 \begin{table}[htbp]
   \centering
 
+  % ===== 蓝白配色 =====
+  \definecolor{headerblue}{RGB}{218,225,250}
+  \definecolor{rowblue}{RGB}{235,239,252}
+
   % ===== 左侧：购电结果 =====
   \begin{minipage}[t]{0.46\textwidth}
     \centering
@@ -112,19 +116,37 @@ G_t\ge0,\qquad w_t\ge0,
     \setlength{\tabcolsep}{5pt}
     \caption{指定时段的计划购电量及全天购电量、购电费}
     \label{tab:q1_purchase}
+
     \begin{tabular}{cc}
       \toprule
+
+      \rowcolor{headerblue}
       时间段 & 计划购电量（kWh）\\
+
       \midrule
+
       10:00--10:10 & 0.00\\
+
+      \rowcolor{rowblue}
       12:00--12:10 & 486.40\\
+
       14:00--14:10 & 0.00\\
+
+      \rowcolor{rowblue}
       16:00--16:10 & 394.93\\
+
       18:00--18:10 & 636.98\\
+
+      \rowcolor{rowblue}
       20:00--20:10 & 0.00\\
+
       \midrule
+
       全天购电量（kWh） & $59\,482.70$\\
+
+      \rowcolor{rowblue}
       全天购电费（元） & $35\,126.85$\\
+
       \bottomrule
     \end{tabular}
   \end{minipage}
@@ -136,22 +158,43 @@ G_t\ge0,\qquad w_t\ge0,
     \setlength{\tabcolsep}{4pt}
     \caption{储能设备分时段充放电量及首末储能量}
     \label{tab:q1_storage}
+
     \begin{tabular}{ccc}
       \toprule
+
+      \rowcolor{headerblue}
       时间段 & 充电量（kWh） & 放电量（kWh）\\
+
       \midrule
+
       0:00--4:00 & $4\,050.00$ & 0.00\\
+
+      \rowcolor{rowblue}
       4:00--8:00 & 750.00 & $6\,608.24$\\
+
       8:00--12:00 & $3\,559.17$ & $2\,357.13$\\
+
+      \rowcolor{rowblue}
       12:00--16:00 & $5\,507.43$ & 101.22\\
+
       16:00--20:00 & 0.00 & $5\,631.87$\\
+
+      \rowcolor{rowblue}
       20:00--24:00 & $4\,800.00$ & $3\,968.13$\\
+
       \midrule
-      0:00 储能量（kWh） & \multicolumn{2}{c}{$6\,000.00$}\\
-      24:00 储能量（kWh） & \multicolumn{2}{c}{$6\,000.00$}\\
+
+      0:00 储能量（kWh）
+      & \multicolumn{2}{c}{$6\,000.00$}\\
+
+      \rowcolor{rowblue}
+      24:00 储能量（kWh）
+      & \multicolumn{2}{c}{$6\,000.00$}\\
+
       \bottomrule
     \end{tabular}
   \end{minipage}
+
 \end{table}
 
 表~\ref{tab:q1_purchase} 中，10:00、14:00 和 20:00 的计划购电量均为 0，其中正午时段主要由光伏发电满足负载并为储能设备充电，20:00 则主要由储能设备放电满足负载。12:00 虽存在光伏富余，仍购电 $486.40\,\mathrm{kWh}$，主要由于此时电价处于低位，模型通过低价购电储能以满足后续高价时段的用电需求。由于 16:00 和 18:00 光伏发电量下降，需增加外网购电，外网购电量相对较多。
@@ -199,14 +242,36 @@ $C^{*}$ 为线性规划最优方案的全天购电费用。
   \label{tab:baseline_comparison}
   \small
   \setlength{\tabcolsep}{4pt}
+
+  \begingroup
+
+  % ===== 蓝白配色 =====
+  \definecolor{headerblue}{RGB}{218,225,250}
+  \definecolor{rowblue}{RGB}{235,239,252}
+
   \begin{tabular}{cccc}
     \toprule
+
+    \rowcolor{headerblue}
     方案 & 全天购电量/kWh & 全天购电费用/元 & 弃电量/kWh \\
+
     \midrule
-    分时贪婪 & $62\,581.85$ & $38\,870.13$ & $3\,628.93$ \\
-    线性规划 & $59\,482.70$ & $35\,126.85$ & 0.00 \\
+
+    分时贪婪
+    & $62\,581.85$
+    & $38\,870.13$
+    & $3\,628.93$ \\
+
+    \rowcolor{rowblue}
+    线性规划
+    & $59\,482.70$
+    & $35\,126.85$
+    & 0.00 \\
+
     \bottomrule
   \end{tabular}
+
+  \endgroup
 \end{table}
 
 由表~\ref{tab:baseline_comparison} 可见，线性规划方案在购电量、购电费用和弃电量三个指标上均优于分时贪婪方案。其中，全天购电量由 $62\,581.85$ kWh 降至 $59\,482.70$ kWh，弃电量由 $3\,628.93$ kWh 降至 0，全天购电费用减少 $3\,743.28$ 元，降幅为 $9.63\%$。这表明线性规划能够统筹各时段的购电、光伏利用与储能充放电，在降低购电成本的同时提高富余光伏的利用程度。

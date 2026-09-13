@@ -5,23 +5,61 @@
 附件分工见表~\ref{tab:fields}：附件~1 供问题一；附件~2 供问题二回测；附件~3、附件~4 分别供问题三预报更新与问题四电价；附件~5 为储能参数与结果模板。
 
 \begin{table}[htbp]
-\centering
-\small
-\caption{数据字段说明}
-\label{tab:fields}
-\begin{tabular}{llll}
-\toprule
-字段名称 & 字段含义 & 数据类型 & 单位 \\
-\midrule
-电价 & 分时购电价格（附件1 单日、附件4 全年） & 数值型 & 元/kWh \\
-小区负载 & 小区用电功率（附件1 单日、附件2 全年） & 数值型 & kW \\
-光伏发电预测功率 & 光伏出力预测（附件1） & 数值型 & kW \\
-光伏发电实际功率 & 光伏出力实测（附件2） & 数值型 & kW \\
-光伏日前预报 & 按发布时刻给的光伏预报（附件3） & 数值型 & kW \\
-日期 / 时间 & 记录时刻（10 min 间隔） & 时间型 & — \\
-\bottomrule
-\end{tabular}
+  \centering
+  \small
+  \caption{数据字段说明}
+  \label{tab:fields}
+
+  \begingroup
+
+  % ===== 蓝白配色 =====
+  \definecolor{headerblue}{RGB}{218,225,250}
+  \definecolor{rowblue}{RGB}{235,239,252}
+
+  \renewcommand{\arraystretch}{1.15}
+  \setlength{\tabcolsep}{6pt}
+
+  \begin{tabular}{llll}
+    \toprule
+
+    \rowcolor{headerblue}
+    字段名称 & 字段含义 & 数据类型 & 单位 \\
+
+    \midrule
+
+    电价
+    & 分时购电价格（附件1 单日、附件4 全年）
+    & 数值型 & 元/kWh \\
+
+    \rowcolor{rowblue}
+    小区负载
+    & 小区用电功率（附件1 单日、附件2 全年）
+    & 数值型 & kW \\
+
+    光伏发电预测功率
+    & 光伏出力预测（附件1）
+    & 数值型 & kW \\
+
+    \rowcolor{rowblue}
+    光伏发电实际功率
+    & 光伏出力实测（附件2）
+    & 数值型 & kW \\
+
+    光伏日前预报
+    & 按发布时刻给的光伏预报（附件3）
+    & 数值型 & kW \\
+
+    \rowcolor{rowblue}
+    日期 / 时间
+    & 记录时刻（10 min 间隔）
+    & 时间型 & — \\
+
+    \bottomrule
+  \end{tabular}
+
+  \endgroup
 \end{table}
+
 
 \subsection{数据预处理}
 
