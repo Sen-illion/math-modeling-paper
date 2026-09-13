@@ -96,7 +96,7 @@ G_t\ge0,\qquad w_t\ge0,
 
 \subsection{模型求解}
 
-模型包含 $144$ 个时段的购电、充电、放电、弃光及储电量，共 $720$ 个连续变量。采用 PuLP 建模并调用 CBC，联合求解式~\eqref{eq:q1_objective}--\eqref{eq:q1_nonnegative}，得到最优购电与储能调度方案；求解状态为 Optimal。将结果按题目指定时段汇总，并通过电量平衡、储电量递推及运行边界检查，具体结果与检验见下文。
+模型包含 $144$ 个时段的购电、充电、放电、弃光及储电量，共 $720$ 个连续变量。本文采用 Python 的 PuLP 库建立线性规划模型，并调用开源优化求解器 CBC（COIN-OR Branch and Cut）联合求解式~\eqref{eq:q1_objective}--\eqref{eq:q1_nonnegative}，得到最优购电与储能调度方案；求解状态为 Optimal。将结果按题目指定时段汇总，并通过电量平衡、储电量递推及运行边界检查，具体结果与检验见下文。
 
 \subsection{求解结果}
 
