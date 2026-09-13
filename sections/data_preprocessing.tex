@@ -144,3 +144,19 @@
 \subsection{数据处理结果小结}
 
 综上，原始数据完整、无缺失、无负值，异常点均为真实波动予以保留，处理工作集中在时间口径对齐与面向模型的特征构造。处理后得到统一 10 分钟尺度的规范数据集：附件2、附件4 各 $365\times144=52560$ 条，附件1 为 144 条，附件3 对齐至 10 分钟尺度，并构造出问题二所需的 11 个特征。后续问题一基于附件1 开展确定性线性规划，问题二基于附件2 开展滚动预测、日前优化与回测，问题三、四基于附件3、附件4 开展不确定性分析与全年电价建模。
+
+% 第一张 PPT 的全文框架单独横向排版，确保图中文字在论文中可读。
+\begin{landscape}
+\subsection{总体建模框架}
+\label{sec:overall_framework}
+
+本文在统一的电量平衡与储能运行约束下，依次研究确定性日前调度、预测条件下的日前购电及日内滚动调整，并将后两种策略扩展至波动电价环境。各问的模型关系如图~\ref{fig:overall_framework} 所示。
+
+\begin{center}
+  \includegraphics[width=\linewidth]{fig_overall_framework.pdf}
+  \captionof{figure}{四问建模框架及模型继承关系}
+  \label{fig:overall_framework}
+\end{center}
+
+由图可见，问题二、三逐步引入预测与日内修正；问题四分别继承两者的调度策略，并将其扩展至波动电价环境。
+\end{landscape}
