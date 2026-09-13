@@ -2,7 +2,7 @@
   "date": "2026-09-13",
   "authorization": "User confirmed retaining the reviewed four-part Q3 and archiving the parallel Overleaf rewrite before sync.",
   "approved_source": "86ec9ed78add6bc007bdadf68bad3ddd22e01d4f",
-  "integrated_overleaf": "8dac9cfcf81c8e7b0488cf7cb3fbda28afb37999",
+  "integrated_overleaf": "9fdebea557cb93e0accb61340ce3454651beb128",
   "backups": [
     {
       "commit": "f8cd33a671e63b300ec86e97143dd21d9c8b8da5",
@@ -17,6 +17,13 @@
       "backup_path": "support_materials/archived_drafts/q3_overleaf_8dac9cf.tex.txt",
       "sha256": "c49c9302e226464a40900c2b3181b253c35cb01cbd926fb80d31071225f60813",
       "bytes": 18315
+    },
+    {
+      "commit": "9fdebea557cb93e0accb61340ce3454651beb128",
+      "source_path": "sections/q3.tex",
+      "backup_path": "support_materials/archived_drafts/q3_overleaf_9fdebea.tex.txt",
+      "sha256": "ea907e057fa9c7f344b4080376e5df097350b0a710aa5f6f4449acde8c2426cd",
+      "bytes": 18095
     }
   ]
 }
