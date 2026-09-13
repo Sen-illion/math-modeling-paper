@@ -3,12 +3,11 @@
   "files": [
     {
       "name": "小区微网购电与储能调度_视觉增强版.pptx",
-      "sha256": "af62ce499f39bf4ae7fd82f232ac1f1e28cb79e418f38f7c70a8a96dcd8a0e59"
-    },
-    {
-      "name": "小区微网购电与储能调度_视觉增强版.pdf",
-      "sha256": "8a26480f503de0db82c24b7f2d2109b1fde180487e76144954c32b9c138df565"
+      "sha256": "4c3a74ecbc8736c2bc2327cdbd43c6fb100c68bd425549eca837d0e9cbcde86a"
     }
   ],
-  "selection": "Only the first slide, verified against slide1.xml and its preview, is used."
+  "selection": "Only the first slide of the user-revised PowerPoint is used.",
+  "export": "Native Microsoft PowerPoint PDF export; only PDF page 1 retained.",
+  "source_pdf_sha256": "94730a80fd9a6167a65f3a17adbb7e0e0baceda962df24c8d8c3af01d16ca90c",
+  "content_policy": "Preserve the revised first-slide artwork without rewriting, simplifying, or redrawing."
 }
