@@ -83,8 +83,8 @@
 
 由图~\ref{fig:q3_pv_err} 可见，晴天、多云代表日的白天 MAE 分别为 $81$、$995$ kW；多云日午间预报偏低，可能导致计划购电偏多。误差还随发布时点和被预报时刻变化，因此按这两个维度统计残差，并用新预报更新决策；实际收益由表~\ref{tab:q3_cmp} 检验。
 
-\textbf{负荷日内校正。}
-$0{:}00$ 的负荷预报沿用问题二的因果 Expanding XGBoost；$6/12/18$ 时点用当天已发生负荷与同时段预报的均值之比，校正剩余时段预报：
+\textbf{负载日内校正。}
+$0{:}00$ 的负载预报沿用问题二的因果 Expanding XGBoost；$6/12/18$ 时点用当天已发生负荷与同时段预报的均值之比，校正剩余时段预报：
 \begin{equation}
   \hat P^{\mathrm{load}}_t \leftarrow \hat P^{\mathrm{load}}_t\cdot
   \frac{\overline{P^{\mathrm{load}}}_{\tau^-}}{\overline{\hat P^{\mathrm{load}}}_{\tau^-}},\qquad t>\tau,
@@ -245,13 +245,14 @@ $0{:}00$ 的负荷预报沿用问题二的因果 Expanding XGBoost；$6/12/18$ �
 
 \begin{table}[!htbp]
   \centering
-  \begin{minipage}[t]{0.54\textwidth}
-    \vspace{0pt}\centering
-    \footnotesize
-    \setlength{\tabcolsep}{3.5pt}
-    \caption{指定日期调整后购电量与全天购电费用：夏季日最低、冬季日最高}
+  \begin{minipage}[t]{0.55\textwidth}
+    \vspace{0pt}
+    \centering
+    \caption{指定日期调整后购电量与全天购电费用}
     \label{tab:q3_t1}
-    \begin{tabular}{lcccc}
+    \footnotesize
+    \setlength{\tabcolsep}{4.5pt}
+    \begin{tabular}{lrrrr}
       \toprule
       时间段 & 3.20 & 6.21 & 9.23 & 12.21 \\
       \midrule
@@ -267,14 +268,15 @@ $0{:}00$ 的负荷预报沿用问题二的因果 Expanding XGBoost；$6/12/18$ �
       \bottomrule
     \end{tabular}
   \end{minipage}
-  \hspace{0.08\textwidth}
-  \begin{minipage}[t]{0.34\textwidth}
-    \vspace{0pt}\centering
-    \footnotesize
-    \setlength{\tabcolsep}{4pt}
-    \caption{指定日期紧急购电量：集中在早晚高峰}
+  \hfill
+  \begin{minipage}[t]{0.36\textwidth}
+    \vspace{0pt}
+    \centering
+    \caption{指定日期紧急购电量}
     \label{tab:q3_t3}
-    \begin{tabular}{l l r}
+    \footnotesize
+    \setlength{\tabcolsep}{4.5pt}
+    \begin{tabular}{llr}
       \toprule
       日期 & 时段 & 购电量/kWh \\
       \midrule
