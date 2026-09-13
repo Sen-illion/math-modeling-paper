@@ -405,7 +405,7 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 	{\zihao{4}\bfseries \heiti \abstractname\vspace{-.5em}\vspace{\z@}}%
 	 \end{center}%
  	 \quotation
- 	 \zihao{5}\songti
+    \zihao{-4}\songti
 	\fi}
 	{\if@twocolumn\else\endquotation\newpage\null\fi}
 \renewenvironment{quotation}
@@ -421,7 +421,7 @@ Just choose `xelatex', no `pdflatex' or `latex' and so on.}
 	\renewcommand{\mcm@tokens@keywords}{#1}
 	\par
 	\vskip1ex
-	{\noindent\zihao{5}\heiti\mcm@cap@keywordsname：~\mcm@tokens@keywords}
+	{\noindent\zihao{-4}\heiti\mcm@cap@keywordsname：~\mcm@tokens@keywords}
 	}
 % 定义附录
 
