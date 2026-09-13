@@ -16,7 +16,7 @@
   "claim_limit": "0.80 is a single-period reference, not a proved bound or the optimal rolling-policy quantile; q_L=0.60 is selected by January calibration",
   "canvas_mm": [
     144,
-    68
+    55
   ],
   "font": "SimSun",
   "plot_source": "scripts/Q3/make_newsvendor_figure.py",

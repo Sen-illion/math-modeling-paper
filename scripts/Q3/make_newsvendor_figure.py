@@ -17,7 +17,7 @@ import numpy as np
 
 
 ROOT = Path(__file__).resolve().parents[2]
-WIDTH_MM, HEIGHT_MM = 144, 68
+WIDTH_MM, HEIGHT_MM = 144, 55
 
 
 def build_figure():
